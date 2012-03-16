@@ -160,7 +160,7 @@ void initChangeTables(void)
 	set_sc( AL_INCAGI            , SC_INCREASEAGI     , SI_INCREASEAGI     , SCB_AGI|SCB_SPEED );
 	set_sc( AL_DECAGI            , SC_DECREASEAGI     , SI_DECREASEAGI     , SCB_AGI|SCB_SPEED );
 	set_sc( AL_CRUCIS            , SC_SIGNUMCRUCIS    , SI_SIGNUMCRUCIS    , SCB_DEF );
-	set_sc( AL_ANGELUS           , SC_ANGELUS         , SI_ANGELUS         , SCB_DEF2 );
+	set_sc( AL_ANGELUS           , SC_ANGELUS         , SI_ANGELUS         , SCB_DEF|SCB_DEF2 );
 	set_sc( AL_BLESSING          , SC_BLESSING        , SI_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
 	set_sc( AC_CONCENTRATION     , SC_CONCENTRATE     , SI_CONCENTRATE     , SCB_AGI|SCB_DEX );
 	set_sc( TF_HIDING            , SC_HIDING          , SI_HIDING          , SCB_SPEED );
@@ -4387,6 +4387,10 @@ static signed short status_calc_flee2(struct block_list *bl, struct status_chang
 	if(sc->data[SC_STEELBODY])
 		return 90;
 #endif
+#if REMODE
+	if(sc->data[SC_ANGELUS])
+		def += def * sc->data[SC_ANGELUS]->val2/100;
+#endif
 	if(sc->data[SC_ARMORCHANGE])
 		def += sc->data[SC_ARMORCHANGE]->val2;
 	if(sc->data[SC_DRUMBATTLE])
@@ -4451,8 +4455,10 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		return 0;
 	if(sc->data[SC_SUN_COMFORT])
 		def2 += sc->data[SC_SUN_COMFORT]->val2;
+#ifndef REMODE
 	if(sc->data[SC_ANGELUS])
 		def2 += def2 * sc->data[SC_ANGELUS]->val2/100;
+#endif
 	if(sc->data[SC_CONCENTRATION])
 		def2 -= def2 * sc->data[SC_CONCENTRATION]->val4/100;
 	if(sc->data[SC_POISON])
@@ -7028,7 +7034,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			val4 = 5*val1; //Def reduction
 			break;
 		case SC_ANGELUS:
-			val2 = 5*val1; //def increase
+			val2 = 5*val1; //Na renovação o aumento é na def1 enquanto antes era na def2 [Sicks]
 			break;
 		case SC_IMPOSITIO:
 			val2 = 5*val1; //watk increase
