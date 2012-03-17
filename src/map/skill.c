@@ -9510,7 +9510,11 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 		}
 		break;
 	case DC_HUMMING:
-        val1 = 2*skilllv+status->dex/10; // Hit increase
+#ifdef REMODE
+		val1 = 2*skilllv+status->dex/10; // Hit increase
+#else
+		val1 = 2*(2*skilllv+status->dex/10); // Hit increase
+#endif
 		if(sd)
 			val1 += pc_checkskill(sd,DC_DANCINGLESSON);
 		break;
@@ -9532,9 +9536,15 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 		}
 		break;
 	case BA_APPLEIDUN:
+#ifdef REMODE
+		val1 = 30+5*skilllv+5*(status->vit/10); //formula do ReaM
+		if(sd)
+			val1 += 5*pc_checkskill(sd,BA_MUSICALLESSON);
+#else
 		val1 = 5+2*skilllv+status->vit/10; // MaxHP percent increase
 		if(sd)
 			val1 += pc_checkskill(sd,BA_MUSICALLESSON);
+#endif
 		break;
 	case DC_SERVICEFORYOU:
 		val1 = 15+skilllv+(status->int_/10); // MaxSP percent increase TO-DO: this INT bonus value is guessed
