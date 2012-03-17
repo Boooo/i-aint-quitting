@@ -799,7 +799,9 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 	case MER_CRASH:
 		sc_start(bl,SC_STUN,(6*skilllv),skilllv,skill_get_time2(skillid,skilllv));
 		break;
-
+	case RG_BACKSTAP:
+		sc_start(bl,SC_STUN,(3*skilllv),skilllv,skill_get_time(skillid,skilllv));
+		break;
 	case AS_VENOMKNIFE:
 		if (sd) //Poison chance must be that of Envenom. [Skotlex]
 			skilllv = pc_checkskill(sd, TF_POISON);
