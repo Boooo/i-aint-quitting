@@ -1802,7 +1802,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 					skillratio += 100+100*skill_lv;
 					break;
 				case AS_SPLASHER:
+					#ifdef REMODE
+					skillratio += 400+75*skill_lv;//Na renovação o dano no nivel 10 aumentou de 1000% para 1250%[Sicks]
+					#else
 					skillratio += 400+50*skill_lv;
+					#endif
 					if(sd)
 						skillratio += 20 * pc_checkskill(sd,AS_POISONREACT);
 					break;
