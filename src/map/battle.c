@@ -3108,7 +3108,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 						if( status_get_lv(src) > 100 ) skillratio += skillratio * (status_get_lv(src) - 100) / 200;	// Base level bonus.
 						break;
 					case AB_ADORAMUS:
-						skillratio += 400 + 100 * skill_lv;
+						skillratio += 500 + 100 * skill_lv;
 						if( status_get_lv(src) > 100 ) skillratio += skillratio * (status_get_lv(src) - 100) / 200;	// Base level bonus.
 						break;
 					case AB_DUPLELIGHT_MAGIC:

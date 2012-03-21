@@ -1114,8 +1114,11 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 	 * Arch Bishop
 	 **/
 	case AB_ADORAMUS:
+		rate = ((skilllv*4)+(int)sd->status.job_level/2);//Blind, Decrease AGI effect chance: [(SkillLvl x 4)+JobLV/2 ]% [L.Otoni]
 		if( tsc && !tsc->data[SC_DECREASEAGI] ) //Prevent duplicate agi-down effect.
-			sc_start(bl, SC_ADORAMUS, 100, skilllv, skill_get_time(skillid, skilllv));
+			sc_start(bl, SC_ADORAMUS, rate, skilllv, skill_get_time(skillid, skilllv));
+		if( tsc && !tsc->data[SC_BLIND] ) //Prevent duplicate blinds effect.
+			sc_start(bl, SC_BLIND, rate, skilllv, skill_get_time(skillid, skilllv));
 		break;
 	/**
 	 * Warlock
@@ -4379,12 +4382,15 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 	 **/
 	case AB_HIGHNESSHEAL:
 		{
+			// Amount recovered is based on the HP recovered by Heal Lv. 10, further multiplied by a modifier based on skill level. [L.Otoni]
 			int heal = skill_calc_heal(src, bl, (skillid == AB_HIGHNESSHEAL)?AL_HEAL:skillid, (skillid == AB_HIGHNESSHEAL)?10:skilllv, true);
 			int heal_get_jobexp;
-			//Highness Heal: starts at 1.5 boost + 0.5 for each level 
-			if( skillid == AB_HIGHNESSHEAL ) {
-				heal = heal * ( 15 + 5 * skilllv ) / 10;
-			}
+			/**
+			 * Highness Heal recovery Modifier [L.Otoni]
+			 * starts at 2 boost + 0.3 for each level
+			 **/
+			if( skillid == AB_HIGHNESSHEAL)
+			 heal = heal * (2 + (0.3 * (skilllv - 1)));
 			if( status_isimmune(bl) ||
 					(dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))) ||
 					(skillid == AL_HEAL && dstsd && dstsd->sc.option&OPTION_MADOGEAR) )//Mado is immune to AL_HEAL
@@ -7157,14 +7163,13 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 		break;
 
 	case AB_CHEAL:
-		if( sd == NULL || sd->status.party_id == 0 || flag&1 )
+		//Total Heal + [(Total Heal / 100) x (# of Party Members x 10) / 4]
+		if( sd == NULL || sd->status.party_id == 0 || (flag & 1) )
 		{
-			if( sd && tstatus && !battle_check_undead(tstatus->race, tstatus->def_ele) )
-			{
-				i = skill_calc_heal(src, bl, AL_HEAL, pc_checkskill(sd, AL_HEAL), true);
-				status_heal(bl, i, 0, 1);
-				clif_skill_nodamage(bl, bl, skillid, i, 1);
-			}
+			int party_count = 1 + party_foreachsamemap(party_sub_count, sd, 0); // Quantidade de players na Party ao alcance + o caster
+			int cheal = skill_calc_heal(src, bl, skillid, pc_checkskill(sd,AL_HEAL), true);
+			cheal += ((cheal / 100) * (party_count * 10)/4);
+			clif_skill_nodamage (src, bl, skillid, status_heal(bl,cheal,0,0), 1);
 		}
 		else if( sd )
 			party_foreachsamemap(skill_area_sub, sd, skill_get_splash(skillid, skilllv), src, skillid, skilllv, tick, flag|BCT_PARTY|1, skill_castend_nodamage_id);
