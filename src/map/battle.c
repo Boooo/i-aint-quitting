@@ -4953,6 +4953,7 @@ static const struct _battle_data {
 	
 	// Cronus
 	{ "shield_penalty_rate",                &battle_config.shield_penalty_rate,             100,     0,      1000			},
+	{ "no_warp_ress",                       &battle_config.no_warp_ress,                    BL_NUL, BL_NUL, BL_ALL,         },
 };
 
 
