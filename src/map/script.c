@@ -15737,6 +15737,25 @@ BUILDIN_FUNC(showdigit)
 	clif_showdigit(sd, (unsigned char)type, value);
 	return 0;
 }
+
+/*==========================================
+ * [Paradox924X]
+ *------------------------------------------*/
+BUILDIN_FUNC(getnpcid)
+{
+	int num;
+
+	switch (num = script_getnum(st,2)) {
+	case 0:
+		script_pushint(st,st->oid);
+	break;
+	default:
+		ShowError("buildin_getnpcid: invalid parameter (%d).\n", num);
+		script_pushint(st,0);
+	break;
+	}
+}
+
 /**
  * Rune Knight
  **/
@@ -15951,6 +15970,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(checkweight,"vi"),
 	BUILDIN_DEF(readparam,"i?"),
 	BUILDIN_DEF(getcharid,"i?"),
+	BUILDIN_DEF(getnpcid,"i"),
 	BUILDIN_DEF(getpartyname,"i"),
 	BUILDIN_DEF(getpartymember,"i?"),
 	BUILDIN_DEF(getpartyleader,"i?"),
