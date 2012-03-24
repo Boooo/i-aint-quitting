@@ -13,6 +13,11 @@
  * "Constants"
  **/
 #if RECASTING
+
+	#if REMODE == 0
+		#error RECASTING requires REMODE enabled
+	#endif
+
 	#define CONST_CASTRATE_SCALE RECASTING_VMIN
 	/**
 	 * Cast Rate Formula: (DEX x 2)+INT
@@ -36,6 +41,28 @@
 #endif
 #if SECURE_NPCTIMEOUT < 0
 	#error SECURE_NPCTIMEOUT cannot be lower than 0
+#endif
+
+/**
+ * Path within the /db folder to (non-)renewal specific db files
+ **/
+#if REMODE
+	#define DBPATH "re/"
+#else
+	#define DBPATH "pre-re/"
+#endif
+
+/**
+ * DefType
+ **/
+#if REMODE
+	typedef short defType;
+	#define DEFTYPE_MIN SHRT_MIN
+	#define DEFTYPE_MAX SHRT_MAX
+#else
+	typedef signed char defType;
+	#define DEFTYPE_MIN CHAR_MIN
+	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
 /**
