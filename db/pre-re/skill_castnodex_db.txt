@@ -1,31 +1,18 @@
-//--------------------------------------------------------------
-// _________                                    
-// \_   ___ \_______  ____   ____  __ __  ______
-// /    \  \/\_  __ \/    \ /    \|  |  \/  ___/
-// \     \____|  | \(  ( ) )   |  \  |  /\___ \ 
-//  \______  /|__|   \____/|___|  /____//____  >
-//         \/                   \/           \/  
-//--------------------------------------------------------------
-// Banco de dados de Cast e Delay
-//--------------------------------------------------------------
-// Estrutura do banco de dados:
-// Id da Skill,Cast,Delay(opicional)
-//--------------------------------------------------------------
+// <Skill id>,<Cast>,<Delay (optional)>
 //
-//Cast:  0 - Tudo afeta o Tempo de Cast
-//	 1 - O tempo de Cast não é afetado pela dex
-//	 2 - O tempo de Cast não é afetado por skills (Suffragium, etc)
-//	 4 - O tempo de Cast não é afetado por bonus de Item (equipamentos,cartas)
+// Cast:  0 - everything affects the skill's cast time
+//        1 - skill's cast time is not affected by dex
+//        2 - skill's cast time is not affected by statuses (Suffragium, etc)
+//        4 - skill's cast time is not affected by item bonuses (equip, cards)
 //
-//Delay: 0 - Tudo afeta o Delay da Skill
-//	 1 - O Delay não é afetado pela dex
-//	 2 - O Delay não é afetado por Skills (Bragi, etc)
-//	 4 - O Delay não é afetado por bonus de Item (equipamentos,cartas)
+// Delay: 0 - everything affects the skill's delay
+//        1 - skill's delay is not affected by dex
+//        2 - skill's delay is not affected by Magic Strings / Bragi
+//        4 - skill's delay is not affected by item bonuses (equip, cards)
 //
-//Notas:
-//-Some os Valores para usar mais de um efeito.
-//Exemplo:
-//46,1,1 = O cast e o delay da habilidade Rajada de flechas não são afetados por dex.
+// Note: Values are bit fields, add them up to combine their effects.
+// Note: Delay setting '1' only makes sense when delay_dependon_dex is enabled.
+// Example: 46,1,1 = Double Strafe's cast time and delay is not affected by dex.
 
 136,0,2	//AS_SONICBLOW
 263,0,2	//MO_TRIPLEATTACK
