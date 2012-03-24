@@ -6,7 +6,7 @@
 //  \______  /|__|   \____/|___|  /____//____  >
 //         \/                   \/           \/  
 //--------------------------------------------------------------
-// Banco de Dados das Habilidades
+// Banco de Dados dos monstros invocáveis por Galho Seco
 //--------------------------------------------------------------
 // Estrutura do banco de dados:
 // MobID,DummyName,Rate
