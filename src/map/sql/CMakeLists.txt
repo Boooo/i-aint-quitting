@@ -29,6 +29,7 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/party.h"
 	"${SQL_MAP_SOURCE_DIR}/path.h"
 	"${SQL_MAP_SOURCE_DIR}/pc.h"
+	"${SQL_MAP_SOURCE_DIR}/pc_groups.h"
 	"${SQL_MAP_SOURCE_DIR}/pet.h"
 	"${SQL_MAP_SOURCE_DIR}/quest.h"
 	"${SQL_MAP_SOURCE_DIR}/script.h"
@@ -39,7 +40,6 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/trade.h"
 	"${SQL_MAP_SOURCE_DIR}/unit.h"
 	"${SQL_MAP_SOURCE_DIR}/vending.h"
-	"${SQL_MAP_SOURCE_DIR}/crypton1.h"
 	)
 set( SQL_MAP_SOURCES
 	"${SQL_MAP_SOURCE_DIR}/atcommand.c"
@@ -67,6 +67,7 @@ set( SQL_MAP_SOURCES
 	"${SQL_MAP_SOURCE_DIR}/party.c"
 	"${SQL_MAP_SOURCE_DIR}/path.c"
 	"${SQL_MAP_SOURCE_DIR}/pc.c"
+	"${SQL_MAP_SOURCE_DIR}/pc_groups.c"
 	"${SQL_MAP_SOURCE_DIR}/pet.c"
 	"${SQL_MAP_SOURCE_DIR}/quest.c"
 	"${SQL_MAP_SOURCE_DIR}/script.c"
@@ -77,12 +78,11 @@ set( SQL_MAP_SOURCES
 	"${SQL_MAP_SOURCE_DIR}/trade.c"
 	"${SQL_MAP_SOURCE_DIR}/unit.c"
 	"${SQL_MAP_SOURCE_DIR}/vending.c"
-	"${SQL_MAP_SOURCE_DIR}/crypton1.c"
 	)
 set( DEPENDENCIES common_sql )
 set( LIBRARIES ${GLOBAL_LIBRARIES} )
-set( INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} )
-set( DEFINITIONS "${GLOBAL_DEFINITIONS}" )
+set( INCLUDE_DIRS ${GLOBAL_INCLUDE_DIRS} ${COMMON_BASE_INCLUDE_DIRS} )
+set( DEFINITIONS "${GLOBAL_DEFINITIONS} ${COMMON_BASE_DEFINITIONS}" )
 if( WITH_PCRE )
 	message( STATUS "Enabled PCRE code" )
 	set( LIBRARIES ${LIBRARIES} ${PCRE_LIBRARIES} )

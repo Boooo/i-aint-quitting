@@ -2396,22 +2396,28 @@ int map_random_dir(struct block_list *bl, short *x, short *y)
 inline static struct mapcell map_gat2cell(int gat)
 {
 	struct mapcell cell = {0};
-	switch( gat )
-	{
-	case 0: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // walkable ground
-	case 1: cell.walkable = 0; cell.shootable = 0; cell.water = 0; break; // non-walkable ground
-	case 2: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-	case 3: cell.walkable = 1; cell.shootable = 1; cell.water = 1; break; // walkable water
-	case 4: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-	case 5: cell.walkable = 0; cell.shootable = 1; cell.water = 0; break; // gap (snipable)
-	case 6: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-	default:
+	// Tipos de GAT 
+	// 0: Chão andável e atirável 
+	// 1: Chão não-andável e não-atirável 
+	// 2: Chão andável e atirável (???) 
+	// 3: Água andável e atirável 
+	// 4: Chão andável e atirável (???) 
+	// 5: Chão não-andável e atirável 
+	// 6: Chão andável e atirável (???)
+	if ((gat < 0) || (gat > 6)) 
 		ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
-		break;
-	}
-
+	else 
+	{ 
+		if(gat == 1 || gat == 5) cell.walkable = 0; 
+ 		else cell.walkable = 1; 
+ 		if(gat == 1) cell.shootable = 0; 
+ 		else cell.shootable = 1; 
+ 		if(gat == 3) cell.water = 1; 
+ 		else cell.water = 0; 
+ 	} 
 	return cell;
 }
+
 
 static int map_cell2gat(struct mapcell cell)
 {
