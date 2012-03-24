@@ -727,4 +727,16 @@ enum {
 #error MAX_ZENY is too big
 #endif
 
+#if MAX_STORAGE > 731
+#error MAX_STORAGE is too big
+#undef MAX_STORAGE
+#define MAX_STORAGE 731
+#endif
+
+#if MAX_GUILD_STORAGE > 731
+#error MAX_GUILD_STORAGE is too big
+#undef MAX_GUILD_STORAGE
+#define MAX_GUILD_STORAGE 731
+#endif
+
 #endif /* _MMO_H_ */

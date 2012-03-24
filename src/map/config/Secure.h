@@ -17,7 +17,7 @@
  * - ? : Desired idle time in seconds (e.g. 10)
  * - 0 : Disabled
  **/
-#define SECURE_NPCTIMEOUT 0
+#define SECURE_NPCTIMEOUT 60
 
 /**
  * (Secure) Optional NPC Dialog Timer
