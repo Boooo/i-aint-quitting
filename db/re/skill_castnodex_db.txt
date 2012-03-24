@@ -14,6 +14,7 @@
 // Note: Delay setting '1' only makes sense when delay_dependon_dex is enabled.
 // Example: 46,1,1 = Double Strafe's cast time and delay is not affected by dex.
 
+157,7  //Proteção Arcana
 136,0,2	//AS_SONICBLOW
 263,0,2	//MO_TRIPLEATTACK
 272,0,2	//MO_CHAINCOMBO
