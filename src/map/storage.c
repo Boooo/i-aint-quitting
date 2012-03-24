@@ -66,11 +66,13 @@ void do_final_storage(void) // by [MC Cameri]
 	guild_storage_db->destroy(guild_storage_db,NULL);
 }
 
-
-static int storage_reconnect_sub(DBKey key,void *data,va_list ap)
-{ //Parses storage and saves 'dirty' ones upon reconnect. [Skotlex]
-
-	struct guild_storage* stor = (struct guild_storage*) data;
+/**
+ * Parses storage and saves 'dirty' ones upon reconnect. [Skotlex]
+ * @see DBApply
+ */
+static int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
+{
+	struct guild_storage *stor = db_data2ptr(data);
 	if (stor->dirty && stor->storage_status == 0) //Save closed storages.
 		storage_guild_storagesave(0, stor->guild_id,0);
 
@@ -82,41 +84,6 @@ void do_reconnect_storage(void)
 {
 	guild_storage_db->foreach(guild_storage_db, storage_reconnect_sub);
 }
-
-#ifdef STORAGE_PASSWORD
-int storage_reqstorageopen(struct map_session_data *sd)
-{
-	int curpw;
-
-	nullpo_ret(sd);
-	
-	if	(sd->state.storage_flag)
-		return 1;
-
-	curpw = pc_readaccountreg(sd, "#STORAGEPASSWORD");
-	if (curpw == 0)
-	{
-		sd->state.storage_open_progress = 2;
-
-		clif_storagepassword(sd, 0);
-	}
-	else
-	{
-		if (sd->storage_error_count > 5)
-		{
-			clif_storagepassword(sd, 8);
-		}
-		else
-		{
-			sd->state.storage_open_progress = 1;
-
-			clif_storagepassword(sd, 1);
-		}
-	}
-
-	return 0;
-}
-#endif
 
 /*==========================================
  * Opens a storage. Returns:
@@ -353,19 +320,22 @@ void storage_storage_quit(struct map_session_data* sd, int flag)
 	sd->state.storage_flag = 0;
 }
 
-
-static void* create_guildstorage(DBKey key, va_list args)
+/**
+ * @see DBCreateData
+ */
+static DBData create_guildstorage(DBKey key, va_list args)
 {
 	struct guild_storage *gs = NULL;
 	gs = (struct guild_storage *) aCalloc(sizeof(struct guild_storage), 1);
 	gs->guild_id=key.i;
-	return gs;
+	return db_ptr2data(gs);
 }
+
 struct guild_storage *guild2storage(int guild_id)
 {
 	struct guild_storage *gs = NULL;
 	if(guild_search(guild_id) != NULL)
-		gs=(struct guild_storage *) idb_ensure(guild_storage_db,guild_id,create_guildstorage);
+		gs = idb_ensure(guild_storage_db,guild_id,create_guildstorage);
 	return gs;
 }
 

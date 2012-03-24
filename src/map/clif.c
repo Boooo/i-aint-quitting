@@ -3961,7 +3961,6 @@ void clif_storageclose(struct map_session_data* sd)
 	WFIFOW(fd,0) = 0xf8; // Storage Closed
 	WFIFOSET(fd,packet_len(0xf8));
 }
-int clif_status_load_single(int fd, int id,int type,int flag,int val1, int val2, int val3);
 
 /*==========================================
  * Server tells 'sd' player client the abouts of 'dstsd' player
@@ -7049,7 +7048,7 @@ void clif_guild_masterormember(struct map_session_data *sd)
 /// 01b6 <guild id>.L <level>.L <member num>.L <member max>.L <exp>.L <max exp>.L <points>.L <honor>.L <virtue>.L <emblem id>.L <name>.24B <master name>.24B <manage land>.16B <zeny>.L (ZC_GUILD_INFO2)
 void clif_guild_basicinfo(struct map_session_data *sd)
 {
-	int fd,i,t;
+	int fd;
 	struct guild *g;
 	struct guild_castle *gc = NULL;
 
@@ -7075,13 +7074,7 @@ void clif_guild_basicinfo(struct map_session_data *sd)
 	memcpy(WFIFOP(fd,46),g->name, NAME_LENGTH);
 	memcpy(WFIFOP(fd,70),g->master, NAME_LENGTH);
 
-	for(i = 0, t = 0; i < MAX_GUILDCASTLE; i++)
-	{
-		gc = guild_castle_search(i);
-		if(gc && g->guild_id == gc->guild_id)
-			t++;
-	}
-	safestrncpy((char*)WFIFOP(fd,94),msg_txt(300+t),16); // "'N' castles"
+	safestrncpy((char*)WFIFOP(fd,94),msg_txt(300+guild_checkcastles(g)),16); // "'N' castles" 
 	WFIFOL(fd,110) = 0;  // zeny
 
 	WFIFOSET(fd,packet_len(0x1b6));
@@ -8048,6 +8041,21 @@ void clif_specialeffect_value(struct block_list* bl, int effect_id, int num, sen
 	}
 }
 
+// Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead)
+/// 02c1 <packet len>.W <id>.L <color>.L <message>.?B
+int clif_colormes(struct map_session_data * sd, enum clif_colors color, const char* msg) {
+	unsigned short msg_len = strlen(msg) + 1;
+
+	WFIFOHEAD(sd->fd,msg_len + 12);
+	WFIFOW(sd->fd,0) = 0x2C1;
+	WFIFOW(sd->fd,2) = msg_len + 12;
+	WFIFOL(sd->fd,4) = 0;
+	WFIFOL(sd->fd,8) = color_table[color];
+	safestrncpy((char*)WFIFOP(sd->fd,12), msg, msg_len);
+	clif_send(WFIFOP(sd->fd,0), WFIFOW(sd->fd,2), &sd->bl, SELF);
+
+	return 0;
+}
 
 /// Monster/NPC color chat [SnakeDrak] (ZC_NPC_CHAT).
 /// 02c1 <packet len>.W <id>.L <color>.L <message>.?B

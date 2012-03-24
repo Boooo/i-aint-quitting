@@ -1997,12 +1997,14 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 				 * Ranger
 				 **/
 				case RA_ARROWSTORM:
-					skillratio += 100 + 50 * skill_lv;
-					if( status_get_lv(src) > 100 ) skillratio += skillratio * (status_get_lv(src) - 100) / 200;	// Base level bonus.
+					skillratio += 900 + 80 * skill_lv;
+					if( status_get_lv(src) > 100 )
+						skillratio = skillratio * (status_get_lv(src) / 100); // Base level bonus.
 					break;
 				case RA_AIMEDBOLT:
 					skillratio += 400 + 50 * skill_lv;
-					if( status_get_lv(src) > 100 ) skillratio += skillratio * (status_get_lv(src) - 100) / 200;	// Base level bonus.
+					if( status_get_lv(src) > 100 )
+						skillratio = skillratio * (status_get_lv(src) / 100); // Base level bonus.
 					if( tsc && (tsc->data[SC_BITE] || tsc->data[SC_ANKLE] || tsc->data[SC_ELECTRICSHOCKER]) )
 						wd.div_ = tstatus->size + 2 + rnd()%2;
 					break;
@@ -4029,18 +4031,16 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		if (sc->data[SC_SACRIFICE])
 		{
 			int skilllv = sc->data[SC_SACRIFICE]->val1;
-			/**
-			* We need to calculate the DMG before the hp reduction, because it can kill the source.
-			* For futher information: bugreport:4950
-			**/
-			damage_lv ret_val = (damage_lv)skill_attack(BF_WEAPON,src,src,target,PA_SACRIFICE,skilllv,tick,0);
+			damage_lv ret_val;
 
 			if( --sc->data[SC_SACRIFICE]->val2 <= 0 )
 				status_change_end(src, SC_SACRIFICE, INVALID_TIMER);
+				
+			// We need to calculate the DMG before the hp reduction, because it can kill the source.
+			ret_val = (damage_lv)skill_attack(BF_WEAPON,src,src,target,PA_SACRIFICE,skilllv,tick,0);
 
 			status_zap(src, sstatus->max_hp*9/100, 0);//Damage to self is always 9%
 
-			//FIXME: invalid return type!
 			return ret_val;
 		}
 		if (sc->data[SC_MAGICALATTACK])

@@ -1496,7 +1496,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous)
 			npc_click(sd,(TBL_NPC*)target); // submitted by leinsirk10 [Celest]
 			return 0;
 		}
-		if( pc_is90overweight(sd) )
+		if( pc_is90overweight(sd) || pc_isridingwug(sd) )
 		{ // overweight - stop attacking
 			unit_stop_attack(src);
 			return 0;

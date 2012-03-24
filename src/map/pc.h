@@ -19,10 +19,6 @@
 #include "mob.h"
 #include "log.h"
 
-#ifdef STORAGE_PASSWORD_KEY
-#include "crypton1.h"
-#endif
-
 #define MAX_PC_BONUS 10
 #define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
@@ -114,7 +110,7 @@ struct map_session_data {
 		unsigned int rest : 1;
 		unsigned int storage_flag : 2; //0: closed, 1: Normal Storage open, 2: guild storage open [Skotlex]
 		unsigned int snovice_dead_flag : 1; //Explosion spirits on death: 0 off, 1 used.
-		unsigned int abra_flag : 1; // Abracadabra bugfix by Aru
+		unsigned int abra_flag : 2; // Abracadabra bugfix by Aru
 		unsigned int autocast : 1; // Autospell flag [Inkfish]
 		unsigned int autotrade : 1;	//By Fantik
 		unsigned int reg_dirty : 3; //By Skotlex (marks whether registry variables have been saved or not yet)
@@ -149,9 +145,7 @@ struct map_session_data {
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		struct guild *gmaster_flag;
 		unsigned int prevend : 1;//used to flag wheather you've spent 40sp to open the vending or not.
-#ifdef STORAGE_PASSWORD
-		unsigned int storage_open_progress : 4;
-#endif
+		unsigned int warping : 1;//states whether you're in the middle of a warp processing
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -169,6 +163,7 @@ struct map_session_data {
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 	int group_id;
 
+	int packet_ver;  // 5: old, 6: 7july04, 7: 13july04, 8: 26july04, 9: 9aug04/16aug04/17aug04, 10: 6sept04, 11: 21sept04, 12: 18oct04, 13: 25oct04 ... 18
 	struct mmo_charstatus status;
 	struct registry save_reg;
 	
@@ -223,7 +218,7 @@ struct map_session_data {
 	unsigned int ks_floodprotect_tick; // [Kill Steal Protection]
 	
 	struct {
-		int nameid;
+		short nameid;
 		unsigned int tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
 
@@ -398,7 +393,8 @@ struct map_session_data {
 	int eventtimer[MAX_EVENTTIMER];
 	unsigned short eventcount; // [celest]
 
-	unsigned char change_level; // [celest]
+	unsigned char change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
+	unsigned char change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
 
@@ -475,12 +471,6 @@ struct map_session_data {
 	const char* delunit_prevfile;
 	int delunit_prevline;
 
-#ifdef STORAGE_PASSWORD
-	int storage_error_count;
-#ifdef STORAGE_PASSWORD_KEY
-	crypton_context crypton;
-#endif
-#endif
 };
 
 //Update this max as necessary. 55 is the value needed for Super Baby currently
@@ -631,6 +621,15 @@ enum e_pc_permission {
 #define pc_iswug(sd)       ( (sd)->sc.option&OPTION_WUG )
 #define pc_isridingwug(sd) ( (sd)->sc.option&OPTION_WUGRIDER )
 
+/**
+ * New Mounts -- can this damn job not
+ **/
+#define pc_cant_newmount(sd) \
+	( \
+		( (sd)->class_&MAPID_THIRDMASK) == MAPID_RANGER || \
+		( ((sd)->class_&MAPID_BASEMASK) == MAPID_SWORDMAN && (sd)->status.class_ != JOB_SWORDMAN )  \
+	)
+
 #define pc_stop_walking(sd, type) unit_stop_walking(&(sd)->bl, type)
 #define pc_stop_attack(sd) unit_stop_attack(&(sd)->bl)
 
@@ -644,6 +643,15 @@ enum e_pc_permission {
 ||	( (class_) >= JOB_NOVICE_HIGH && (class_) <= JOB_SOUL_LINKER ) \
 ||	( (class_) >= JOB_RUNE_KNIGHT && (class_) <  JOB_MAX         ) \
 )
+
+// clientside atk display macros (values to the left/right of the "+")
+#if REMODE
+#define pc_leftside_atk(sd) ((sd)->battle_status.batk)
+#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk + (sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2)
+#else
+#define pc_leftside_atk(sd) ((sd)->battle_status.batk + (sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk)
+#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2)
+#endif
 
 int pc_class2idx(int class_);
 int pc_get_group_level(struct map_session_data *sd);
@@ -889,4 +897,8 @@ void pc_overheat(struct map_session_data *sd, int val);
  * Royal Guard
  **/
 int pc_banding(struct map_session_data *sd, short skill_lv);
+/**
+ * Item Cooldown persistency
+ **/
+void pc_itemcd_do(struct map_session_data *sd, bool load);
 #endif /* _PC_H_ */
