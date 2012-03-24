@@ -11,10 +11,27 @@ struct homun_data;
 struct mercenary_data;
 struct status_change;
 
-#define MAX_REFINE_BONUS 5
+/**
+ * Max Refine available to your server
+ * Changing this limit requires edits to refine_db.txt
+ **/
+#if REMODE
+#define MAX_REFINE 20
+#else
+#define MAX_REFINE 10
+#endif
 
-extern unsigned long StatusChangeFlagTable[];
+enum refine_type {
+	REFINE_TYPE_ARMOR   = 0,
+	REFINE_TYPE_WEAPON1 = 1,
+	REFINE_TYPE_WEAPON2 = 2,
+	REFINE_TYPE_WEAPON3 = 3,
+	REFINE_TYPE_WEAPON4 = 4,
 
+	REFINE_TYPE_MAX     = 5
+};
+
+int status_get_refine_chance(enum refine_type wlv, int refine);
 
 // Status changes listing. These code are for use by the server. 
 typedef enum sc_type {
@@ -569,7 +586,12 @@ typedef enum sc_type {
 	SC_TIDAL_WEAPON_OPTION,//505
 	SC_ROCK_CRUSHER,
 	SC_ROCK_CRUSHER_ATK,
-
+	/* Guild Aura */
+	SC_LEADERSHIP,
+	SC_GLORYWOUNDS,
+	SC_SOULCOLD, //510
+	SC_HAWKEYES,
+	SC_ODINS_POWER,
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
@@ -1151,7 +1173,10 @@ enum si_type {
 	SI_WIND_INSIGNIA = 569,
 	SI_EARTH_INSIGNIA = 570,
 	SI_EQUIPED_FLOOR = 571,
+	SI_ODINS_POWER = 583,
 	SI_ALL_RIDING = 613,//awesome 571-613 gap, we're missing quite a few stuff here.
+	SI_SITTING = 622,
+	SI_MAX,
 };
 
 // JOINTBEAT stackable ailments
@@ -1168,8 +1193,6 @@ enum e_joint_break
 
 extern int current_equip_item_index;
 extern int current_equip_card_id;
-
-extern int percentrefinery[5][MAX_REFINE+1]; //The last slot always has a 0% success chance [Skotlex]
 
 //Mode definitions to clear up code reading. [Skotlex]
 enum e_mode
@@ -1333,7 +1356,8 @@ enum scb_flag
 #define BL_CONSUME (BL_PC|BL_HOM|BL_MER)
 //Define to determine who has regen
 #define BL_REGEN (BL_PC|BL_HOM|BL_MER)
-
+//Define to determine who will receive a clif_status_change packet for effects that require one to display correctly
+#define BL_SCEFFECT (BL_PC|BL_HOM|BL_MER|BL_MOB)
 
 //Basic damage info of a weapon
 //Required because players have two of these, one in status_data
@@ -1360,13 +1384,12 @@ struct status_data {
 	short 
 		hit, flee, cri, flee2,
 		def2, mdef2,
-#if REMODE
-		/**
-		 * In RE def and mdef can go over 127 (signed char) limit, so in RE mode we use short
-		 **/
-		def,mdef,
-#endif
 		aspd_rate;
+	/**
+	 * defType is REMODE dependent and defined in src/map/config/data/const.h
+	 **/
+	defType def,mdef;
+
 	unsigned char
 		def_ele, ele_lv,
 #if REMODE
@@ -1376,13 +1399,7 @@ struct status_data {
 		wlv,
 #endif
 		size, race;
-#if REMODE == 0
-	/**
-	 * In NON-RE def and mdef are not required to be short, so we keep it signed char (ancient-default)
-	 **/
-	signed char
-		def, mdef;
-#endif
+
 	struct weapon_atk rhw, lhw; //Right Hand/Left Hand Weapon.
 };
 
@@ -1443,7 +1460,6 @@ struct status_change {
 	unsigned char count;
 	//TODO: See if it is possible to implement the following SC's without requiring extra parameters while the SC is inactive.
 	unsigned char jb_flag; //Joint Beat type flag
-	unsigned short mp_matk_min, mp_matk_max; //Previous matk min/max for ground spells (Amplify magic power)
 	//int sg_id; //ID of the previous Storm gust that hit you
 	short comet_x, comet_y; // Point where src casted Comet - required to calculate damage from this point
 /**
@@ -1458,6 +1474,8 @@ struct status_change {
 // for looking up associated data
 sc_type status_skill2sc(int skill);
 int status_sc2skill(sc_type sc);
+unsigned int status_sc2scb_flag(sc_type sc);
+int status_type2relevant_bl_types(int type);
 
 int status_damage(struct block_list *src,struct block_list *target,int hp,int sp, int walkdelay, int flag);
 //Define for standard HP damage attacks.
@@ -1497,11 +1515,7 @@ int status_get_lv(struct block_list *bl);
 #define status_get_luk(bl) status_get_status_data(bl)->luk
 #define status_get_hit(bl) status_get_status_data(bl)->hit
 #define status_get_flee(bl) status_get_status_data(bl)->flee
-#if REMODE
-	short status_get_def(struct block_list *bl);
-#else
-	signed char status_get_def(struct block_list *bl);
-#endif
+defType status_get_def(struct block_list *bl);
 #define status_get_mdef(bl) status_get_status_data(bl)->mdef
 #define status_get_flee2(bl) status_get_status_data(bl)->flee2
 #define status_get_def2(bl) status_get_status_data(bl)->def2
@@ -1580,7 +1594,6 @@ void status_calc_misc(struct block_list *bl, struct status_data *status, int lev
 void status_calc_regen(struct block_list *bl, struct status_data *status, struct regen_data *regen);
 void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 
-int status_getrefinebonus(int lv,int type);
 int status_check_skilluse(struct block_list *src, struct block_list *target, int skill_num, int flag); // [Skotlex]
 int status_check_visibility(struct block_list *src, struct block_list *target); //[Skotlex]
 

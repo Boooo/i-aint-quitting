@@ -202,12 +202,12 @@ ACMD_FUNC(send)
 
 		if(len)
 		{// show packet length
-			sprintf(atcmd_output, "Packet 0x%x length: %d", type, packet_db[1][type].len);
+			sprintf(atcmd_output, "Packet 0x%x length: %d", type, packet_db[sd->packet_ver][type].len);
 			clif_displaymessage(fd, atcmd_output);
 			return 0;
 		}
 
-		len=packet_db[1][type].len;
+		len=packet_db[sd->packet_ver][type].len;
 		off=2;
 		if(len == 0)
 		{// unknown packet - ERROR
@@ -358,7 +358,7 @@ ACMD_FUNC(send)
 			SKIP_VALUE(message);
 		}
 
-		if(packet_db[1][type].len == -1)
+		if(packet_db[sd->packet_ver][type].len == -1)
 		{// send dynamic packet
 			WFIFOW(fd,2)=TOW(off);
 			WFIFOSET(fd,off);
@@ -818,7 +818,7 @@ ACMD_FUNC(storage)
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return -1;
 
-	if (storage_reqstorageopen(sd) == 1)
+	if (storage_storageopen(sd) == 1)
 	{	//Already open.
 		clif_displaymessage(fd, msg_txt(250));
 		return -1;
@@ -1608,13 +1608,13 @@ ACMD_FUNC(help)
 		StringBuf_AppendStr(&buf, "Available aliases:");
 		command_info = get_atcommandinfo_byname(command_name);
 		iter = db_iterator(atcommand_alias_db);
-		for (alias_info = (AliasInfo*)dbi_first(iter); dbi_exists(iter); alias_info = (AliasInfo*)dbi_next(iter)) {
+		for (alias_info = dbi_first(iter); dbi_exists(iter); alias_info = dbi_next(iter)) {
 			if (alias_info->command == command_info) {
 				StringBuf_Printf(&buf, " %s", alias_info->alias);
 				has_aliases = true;
 			}
 		}
-		iter->destroy(iter);
+		dbi_destroy(iter);
 		if (has_aliases)
 			clif_displaymessage(fd, StringBuf_Value(&buf));
 		StringBuf_Destroy(&buf);
@@ -4128,13 +4128,29 @@ ACMD_FUNC(mapinfo)
 ACMD_FUNC(mount_peco)
 {
 	nullpo_retr(-1, sd);
-	if( pc_checkskill(sd,RK_DRAGONTRAINING) > 0 ) {
+
+	if (sd->disguise) {
+		clif_displaymessage(fd, msg_txt(212)); // Cannot mount while in disguise.
+		return -1;
+	}
+
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT && pc_checkskill(sd,RK_DRAGONTRAINING) > 0 ) {
 		if( !(sd->sc.option&OPTION_DRAGON1) ) {
 			clif_displaymessage(sd->fd,"You have mounted your Dragon");
 			pc_setoption(sd, sd->sc.option|OPTION_DRAGON1);
 		} else {
 			clif_displaymessage(sd->fd,"You have released your Dragon");
 			pc_setoption(sd, sd->sc.option&~OPTION_DRAGON1);
+		}
+		return 0;
+	}
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER && pc_checkskill(sd,RA_WUGRIDER) > 0 ) {
+		if( !pc_isridingwug(sd) ) {
+			clif_displaymessage(sd->fd,"You have mounted your Wug");
+			pc_setoption(sd, sd->sc.option|OPTION_WUGRIDER);
+		} else {
+			clif_displaymessage(sd->fd,"You have released your Wug");
+			pc_setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
 		}
 		return 0;
 	}
@@ -4149,21 +4165,15 @@ ACMD_FUNC(mount_peco)
 		return 0;
 	}
 	if (!pc_isriding(sd)) { // if actually no peco
-		if (!pc_checkskill(sd, KN_RIDING))
-		{
-			clif_displaymessage(fd, msg_txt(213)); // You can not mount a Peco Peco with your current job.
-			return -1;
-		}
 
-		if (sd->disguise)
-		{
-			clif_displaymessage(fd, msg_txt(212)); // Cannot mount a Peco Peco while in disguise.
+		if (!pc_checkskill(sd, KN_RIDING)) {
+			clif_displaymessage(fd, msg_txt(213)); // You can not mount a Peco Peco with your current job.
 			return -1;
 		}
 
 		pc_setoption(sd, sd->sc.option | OPTION_RIDING);
 		clif_displaymessage(fd, msg_txt(102)); // You have mounted a Peco Peco.
-	} else {	//Dismount
+	} else {//Dismount
 		pc_setoption(sd, sd->sc.option & ~OPTION_RIDING);
 		clif_displaymessage(fd, msg_txt(214)); // You have released your Peco Peco.
 	}
@@ -5254,7 +5264,7 @@ ACMD_FUNC(storeall)
 
 	if (sd->state.storage_flag != 1)
   	{	//Open storage.
-		if( storage_reqstorageopen(sd) == 1 ) {
+		if( storage_storageopen(sd) == 1 ) {
 			clif_displaymessage(fd, "You can't open the storage currently.");
 			return -1;
 		}
@@ -6396,6 +6406,7 @@ ACMD_FUNC(uptime)
 ACMD_FUNC(changesex)
 {
 	nullpo_retr(-1, sd);
+	pc_resetskill(sd,4);
 	chrif_changesex(sd);
 	return 0;
 }
@@ -7186,13 +7197,6 @@ ACMD_FUNC(adopt)
 	}
 	
 	clif_displaymessage(fd, "They are family... wish them luck");
-	return 0;
-}
-
-ACMD_FUNC(version)
-{
-	clif_displaymessage(fd,"Cronus-Emulator");
-
 	return 0;
 }
 
@@ -8114,7 +8118,8 @@ ACMD_FUNC(stats)
 		{ "Luk - %3d", 0 },
 		{ "Zeny - %d", 0 },
 		{ "Free SK Points - %d", 0 },
-		{ "JobChangeLvl - %d", 0 },
+		{ "JobChangeLvl (2nd) - %d", 0 },
+		{ "JobChangeLvl (3rd) - %d", 0 },
 		{ NULL, 0 }
 	};
 
@@ -8137,7 +8142,8 @@ ACMD_FUNC(stats)
 	output_table[11].value = sd->status.luk;
 	output_table[12].value = sd->status.zeny;
 	output_table[13].value = sd->status.skill_point;
-	output_table[14].value = sd->change_level;
+	output_table[14].value = sd->change_level_2nd;
+	output_table[15].value = sd->change_level_3rd;
 
 	sprintf(job_jobname, "Job - %s %s", job_name(sd->status.class_), "(level %d)");
 	sprintf(output, msg_txt(53), sd->status.name); // '%s' stats:
@@ -8260,7 +8266,7 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
 	AtCommandInfo* cmd;
-	DBIterator* iter = atcommand_db->iterator(atcommand_db);
+	DBIterator *iter = db_iterator(atcommand_db);
 	int count = 0;
 
 	memset(line_buff,' ',CHATBOX_SIZE);
@@ -8268,7 +8274,7 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
 
 	clif_displaymessage(fd, msg_txt(273)); // "Commands available:"
 
-	for (cmd = (AtCommandInfo*)iter->first(iter, NULL); iter->exists(iter); cmd = (AtCommandInfo*)iter->next(iter, NULL)) {
+	for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
 		unsigned int slen = 0;
 
 		if (!pc_can_use_command(sd, cmd->command, type))
@@ -8290,7 +8296,7 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
 
 		count++;
 	}
-	iter->destroy(iter);
+	dbi_destroy(iter);
 	clif_displaymessage(fd,line_buff);
 
 	sprintf(atcmd_output, msg_txt(274), count); // "%d commands found."
@@ -8318,6 +8324,12 @@ ACMD_FUNC(charcommands)
 }
 
 ACMD_FUNC(new_mount) {
+
+	if( pc_cant_newmount(sd) && !(sd->sc.option&OPTION_MOUNTING) ) {
+		clif_displaymessage(sd->fd,"Your character cannot mount a new mount");
+		return -1;
+	}
+
 	clif_displaymessage(sd->fd,"NOTICE: If you crash with mount your LUA is outdated");
 	if( !(sd->sc.option&OPTION_MOUNTING) ) {
 		clif_displaymessage(sd->fd,"You have mounted.");
@@ -8513,7 +8525,6 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(mobinfo),
 		ACMD_DEF(exp),
 		ACMD_DEF(adopt),
-		ACMD_DEF(version),
 		ACMD_DEF(mutearea),
 		ACMD_DEF(rates),
 		ACMD_DEF(iteminfo),
@@ -8845,31 +8856,19 @@ static void atcommand_config_read(const char* config_filename)
 	return;
 }
 
-static int atcommand_db_free(DBKey key, void *data, va_list va)
-{
-	aFree((AtCommandInfo*)data);
-	return 1;
-}
-
-static int atcommand_alias_db_free(DBKey key, void *data, va_list va)
-{
-	aFree((AliasInfo*)data);
-	return 1;
-}
-
 void atcommand_db_clear(void)
 {
 	if (atcommand_db != NULL)
-		atcommand_db->destroy(atcommand_db, atcommand_db_free);
+		db_destroy(atcommand_db);
 	if (atcommand_alias_db != NULL)
-		atcommand_alias_db->destroy(atcommand_alias_db, atcommand_alias_db_free);
+		db_destroy(atcommand_alias_db);
 }
 
 void atcommand_doload(void)
 {
 	atcommand_db_clear();
-	atcommand_db = stridb_alloc(DB_OPT_DUP_KEY, ATCOMMAND_LENGTH);
-	atcommand_alias_db = stridb_alloc(DB_OPT_DUP_KEY, ATCOMMAND_LENGTH);
+	atcommand_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+	atcommand_alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	atcommand_basecommands(); //fills initial atcommand_db with known commands
 	atcommand_config_read(ATCOMMAND_CONF_FILENAME);
 }

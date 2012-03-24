@@ -413,18 +413,51 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 #endif
 
 	if (bl->type&BL_CHAR) {
+
 		skill_unit_move(bl,tick,3);
 		sc = status_get_sc(bl);
-		if (sc) {
-			if (sc->count) {
+
+		if( bl->type == BL_PC && ((TBL_PC*)bl)->shadowform_id ) {//Shadow Form Target Moving
+			struct block_list *d_bl;
+			if( (d_bl = map_id2bl(((TBL_PC*)bl)->shadowform_id)) == NULL || bl->m != d_bl->m || !check_distance_bl(bl,d_bl,skill_get_range(SC_SHADOWFORM,1)) ) {
+				if( d_bl )
+					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
+				((TBL_PC*)bl)->shadowform_id = 0;
+			}
+		}
+
+		if (sc && sc->count) {
+			if (sc->data[SC_DANCING])
+				skill_unit_move_unit_group(skill_id2group(sc->data[SC_DANCING]->val2), bl->m, x1-x0, y1-y0);
+			else {
 				if (sc->data[SC_CLOAKING])
 					skill_check_cloaking(bl, sc->data[SC_CLOAKING]);
-				if (sc->data[SC_DANCING])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_DANCING]->val2), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_WARM])
 					skill_unit_move_unit_group(skill_id2group(sc->data[SC_WARM]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_BANDING])
 					skill_unit_move_unit_group(skill_id2group(sc->data[SC_BANDING]->val4), bl->m, x1-x0, y1-y0);
+				
+				if (sc->data[SC_NEUTRALBARRIER_MASTER])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_NEUTRALBARRIER_MASTER]->val2), bl->m, x1-x0, y1-y0);
+				else if (sc->data[SC_STEALTHFIELD_MASTER])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_STEALTHFIELD_MASTER]->val2), bl->m, x1-x0, y1-y0);
+				
+				if( sc->data[SC__SHADOWFORM] ) {//Shadow Form Caster Moving
+					struct block_list *d_bl;
+					if( (d_bl = map_id2bl(sc->data[SC__SHADOWFORM]->val2)) == NULL || bl->m != d_bl->m || !check_distance_bl(bl,d_bl,skill_get_range(SC_SHADOWFORM,1)) )
+						status_change_end(bl,SC__SHADOWFORM,INVALID_TIMER);	
+				}
+			}
+			/* Guild Aura Moving */
+			if( bl->type == BL_PC && ((TBL_PC*)bl)->state.gmaster_flag ) {
+				if (sc->data[SC_LEADERSHIP])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
+				if (sc->data[SC_GLORYWOUNDS])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_GLORYWOUNDS]->val4), bl->m, x1-x0, y1-y0);
+				if (sc->data[SC_SOULCOLD])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_SOULCOLD]->val4), bl->m, x1-x0, y1-y0);
+				if (sc->data[SC_HAWKEYES])
+					skill_unit_move_unit_group(skill_id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
 			}
 		}
 	} else
@@ -1313,8 +1346,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
  * to place an BL_ITEM object. Scan area is 9x9, returns 1 on success.
  * x and y are modified with the target cell when successful.
  *------------------------------------------*/
-int map_searchrandfreecell(int m,int *x,int *y,int stack)
-{
+int map_searchrandfreecell(int m,int *x,int *y,int stack) {
 	int free_cell,i,j;
 	int free_cells[9][2];
 
@@ -1324,7 +1356,7 @@ int map_searchrandfreecell(int m,int *x,int *y,int stack)
 		for(j=-1;j<=1;j++){
 			if(j+*x<0 || j+*x>=map[m].xs)
 				continue;
-			if(map_getcell(m,j+*x,i+*y,CELL_CHKNOPASS))
+			if(map_getcell(m,j+*x,i+*y,CELL_CHKNOPASS) && !map_getcell(m,j+*x,i+*y,CELL_CHKICEWALL))
 				continue;
 			//Avoid item stacking to prevent against exploits. [Skotlex]
 			if(stack && map_count_oncell(m,j+*x,i+*y, BL_ITEM) > stack)
@@ -1472,11 +1504,14 @@ int map_addflooritem(struct item *item_data,int amount,int m,int x,int y,int fir
 	return fitem->bl.id;
 }
 
-static void* create_charid2nick(DBKey key, va_list args)
+/**
+ * @see DBCreateData
+ */
+static DBData create_charid2nick(DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
-	return p;
+	return db_ptr2data(p);
 }
 
 /// Adds(or replaces) the nick of charid to nick_db and fullfils pending requests.
@@ -1490,7 +1525,7 @@ void map_addnickdb(int charid, const char* nick)
 	if( map_charid2sd(charid) )
 		return;// already online
 
-	p = (struct charid2nick*)idb_ensure(nick_db, charid, create_charid2nick);
+	p = idb_ensure(nick_db, charid, create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
 	while( p->requests )
@@ -1511,9 +1546,9 @@ void map_delnickdb(int charid, const char* name)
 	struct charid2nick* p;
 	struct charid_request* req;
 	struct map_session_data* sd;
+	DBData data;
 
-	p = (struct charid2nick*)idb_remove(nick_db, charid);
-	if( p == NULL )
+	if (!nick_db->remove(nick_db, db_i2key(charid), &data) || (p = db_data2ptr(&data)) == NULL)
 		return;
 
 	while( p->requests )
@@ -1546,7 +1581,7 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 		return;
 	}
 
-	p = (struct charid2nick*)idb_ensure(nick_db, charid, create_charid2nick);
+	p = idb_ensure(nick_db, charid, create_charid2nick);
 	if( *p->nick )
 	{
 		clif_solved_charname(sd->fd, charid, p->nick);
@@ -1635,20 +1670,25 @@ int map_quit(struct map_session_data *sd)
 
 	if( sd->bg_id )
 		bg_team_leave(sd,1);
+
+	pc_itemcd_do(sd,false);
+
 	npc_script_event(sd, NPCE_LOGOUT);
 
 	//Unit_free handles clearing the player related data, 
 	//map_quit handles extra specific data which is related to quitting normally
 	//(changing map-servers invokes unit_free but bypasses map_quit)
-	if( sd->sc.count )
-	{
+	if( sd->sc.count ) {
 		//Status that are not saved...
 		status_change_end(&sd->bl, SC_BOSSMAPINFO, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_AUTOTRADE, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_SPURT, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_BERSERK, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_TRICKDEAD, INVALID_TIMER);
-		status_change_end(&sd->bl, SC_GUILDAURA, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_LEADERSHIP, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_GLORYWOUNDS, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_SOULCOLD, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_HAWKEYES, INVALID_TIMER);
 		if(sd->sc.data[SC_ENDURE] && sd->sc.data[SC_ENDURE]->val4)
 			status_change_end(&sd->bl, SC_ENDURE, INVALID_TIMER); //No need to save infinite endure.
 		status_change_end(&sd->bl, SC_WEIGHT50, INVALID_TIMER);
@@ -1765,7 +1805,7 @@ const char* map_charid2nick(int charid)
 	if( sd )
 		return sd->status.name;// character is online, return it's name
 
-	p = (struct charid2nick*)idb_ensure(nick_db, charid, create_charid2nick);
+	p = idb_ensure(nick_db, charid, create_charid2nick);
 	if( *p->nick )
 		return p->nick;// name in nick_db
 
@@ -1876,7 +1916,7 @@ void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...)
 	struct map_session_data* sd;
 
 	iter = db_iterator(pc_db);
-	for( sd = (struct map_session_data*)iter->first(iter,NULL); iter->exists(iter); sd = (struct map_session_data*)iter->next(iter,NULL) )
+	for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) )
 	{
 		va_list args;
 		int ret;
@@ -2418,7 +2458,6 @@ inline static struct mapcell map_gat2cell(int gat)
 	return cell;
 }
 
-
 static int map_cell2gat(struct mapcell cell)
 {
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 ) return 0;
@@ -2459,13 +2498,13 @@ int map_getcellp(struct map_data* m,int x,int y,cell_chk cellchk)
 		// base gat type checks
 		case CELL_CHKWALL:
 			return (!cell.walkable && !cell.shootable);
-			//return (map_cell2gat(cell) == 1);
+
 		case CELL_CHKWATER:
 			return (cell.water);
-			//return (map_cell2gat(cell) == 3);
+
 		case CELL_CHKCLIFF:
 			return (!cell.walkable && cell.shootable);
-			//return (map_cell2gat(cell) == 5);
+
 
 		// base cell type checks
 		case CELL_CHKNPC:
@@ -2480,6 +2519,8 @@ int map_getcellp(struct map_data* m,int x,int y,cell_chk cellchk)
 			return (cell.nochat);
 		case CELL_CHKMAELSTROM:
 			return (cell.maelstrom);
+		case CELL_CHKICEWALL:
+			return (cell.icewall);
 
 		// special checks
 		case CELL_CHKPASS:
@@ -2533,6 +2574,7 @@ void map_setcell(int m, int x, int y, cell_t cell, bool flag)
 		case CELL_NOVENDING:     map[m].cell[j].novending = flag;     break;
 		case CELL_NOCHAT:        map[m].cell[j].nochat = flag;        break;
 		case CELL_MAELSTROM:	 map[m].cell[j].maelstrom = flag;	  break;
+		case CELL_ICEWALL:		 map[m].cell[j].icewall = flag;		  break;
 		default:
 			ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
 			break;
@@ -2625,15 +2667,14 @@ void map_iwall_get(struct map_session_data *sd)
 {
 	struct iwall_data *iwall;
 	DBIterator* iter;
-	DBKey key;
 	int x1, y1;
 	int i;
 
 	if( map[sd->bl.m].iwall_num < 1 )
 		return;
 
-	iter = iwall_db->iterator(iwall_db);
-	for( iwall = (struct iwall_data *)iter->first(iter,&key); iter->exists(iter); iwall = (struct iwall_data *)iter->next(iter,&key) )
+	iter = db_iterator(iwall_db);
+	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) )
 	{
 		if( iwall->m != sd->bl.m )
 			continue;
@@ -2644,7 +2685,7 @@ void map_iwall_get(struct map_session_data *sd)
 			clif_changemapcell(sd->fd, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
 		}
 	}
-	iter->destroy(iter);
+	dbi_destroy(iter);
 }
 
 void map_iwall_remove(const char *wall_name)
@@ -2669,14 +2710,17 @@ void map_iwall_remove(const char *wall_name)
 	strdb_remove(iwall_db, iwall->wall_name);
 }
 
-static void* create_map_data_other_server(DBKey key, va_list args)
+/**
+ * @see DBCreateData
+ */
+static DBData create_map_data_other_server(DBKey key, va_list args)
 {
 	struct map_data_other_server *mdos;
 	unsigned short mapindex = (unsigned short)key.ui;
 	mdos=(struct map_data_other_server *)aCalloc(1,sizeof(struct map_data_other_server));
 	mdos->index = mapindex;
 	memcpy(mdos->name, mapindex_id2name(mapindex), MAP_NAME_LENGTH);
-	return mdos;
+	return db_ptr2data(mdos);
 }
 
 /*==========================================
@@ -2686,7 +2730,7 @@ int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
 {
 	struct map_data_other_server *mdos=NULL;
 
-	mdos=(struct map_data_other_server *)uidb_ensure(map_db,(unsigned int)mapindex, create_map_data_other_server);
+	mdos= uidb_ensure(map_db,(unsigned int)mapindex, create_map_data_other_server);
 	
 	if(mdos->cell) //Local map,Do nothing. Give priority to our own local maps over ones from another server. [Skotlex]
 		return 0;
@@ -2700,12 +2744,13 @@ int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
 	return 1;
 }
 
-/*==========================================
+/**
  * 他鯖管理のマップを全て削除
- *------------------------------------------*/
-int map_eraseallipport_sub(DBKey key,void *data,va_list va)
+ * @see DBApply
+ */
+int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
 {
-	struct map_data_other_server *mdos = (struct map_data_other_server*)data;
+	struct map_data_other_server *mdos = db_data2ptr(data);
 	if(mdos->cell == NULL) {
 		db_remove(map_db,key);
 		aFree(mdos);
@@ -3432,17 +3477,23 @@ int log_sql_init(void)
 	return 0;
 }
 
-int map_db_final(DBKey k,void *d,va_list ap)
+/**
+ * @see DBApply
+ */
+int map_db_final(DBKey key, DBData *data, va_list ap)
 {
-	struct map_data_other_server *mdos = (struct map_data_other_server*)d;
+	struct map_data_other_server *mdos = db_data2ptr(data);
 	if(mdos && mdos->cell == NULL)
 		aFree(mdos);
 	return 0;
 }
 
-int nick_db_final(DBKey key, void *data, va_list args)
+/**
+ * @see DBApply
+ */
+int nick_db_final(DBKey key, DBData *data, va_list args)
 {
-	struct charid2nick* p = (struct charid2nick*)data;
+	struct charid2nick* p = db_data2ptr(data);
 	struct charid_request* req;
 
 	if( p == NULL )
@@ -3485,9 +3536,12 @@ int cleanup_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-static int cleanup_db_sub(DBKey key,void *data,va_list va)
+/**
+ * @see DBApply
+ */
+static int cleanup_db_sub(DBKey key, DBData *data, va_list va)
 {
-	return cleanup_sub((struct block_list*)data, va);
+	return cleanup_sub(db_data2ptr(data), va);
 }
 
 /*==========================================
@@ -3631,8 +3685,10 @@ static void map_helpscreen(bool do_exit)
  *------------------------------------------------------*/
 static void map_versionscreen(bool do_exit)
 {
-	ShowInfo(CL_GREEN"Site/Forum:"CL_RESET"\thttp://cronus-emulator.com/\n");
-
+	ShowInfo(CL_WHITE"rAthena SVN version:" CL_RESET"\n");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://rathena.org/\n");
+	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rathena.net/#rathena\n");
+	ShowInfo("Open "CL_WHITE"readme.html"CL_RESET" for more information.\n");
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }

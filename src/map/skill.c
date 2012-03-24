@@ -114,7 +114,7 @@ int skill_name2id(const char* name)
 	if( name == NULL )
 		return 0;
 
-	return (int)strdb_get(skilldb_name2id, name);
+	return *(int*)strdb_get(skilldb_name2id, name);
 }
 
 /// Maps skill ids to skill db offsets.
@@ -373,7 +373,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, int skill
 		 * - Min = ( [ ( BaseLvl + INT ) / 5 ] * 30 ) * (1+( %Modifier / 100)) * (HealLvl * 0.1) + StatusMATK + EquipMATK - [(WeaponMATK * WeaponLvl) / 10]
 		 * - Max = ( [ ( BaseLvl + INT ) / 5 ] * 30 ) * (1+( %Modifier / 100)) * (HealLvl * 0.1) + StatusMATK + EquipMATK + [(WeaponMATK * WeaponLvl) / 10] 
 		 **/
-		hp = ( ( ( ( status_get_lv(src) + status_get_int(src) ) / 5 ) * 30 ) * ( skill_lv / 10 ) + status_get_matk_min(src) + status_get_matk_max(src) - ( ( status_get_matk_max(src) * status_get_wlv(src) ) / 10 ) ) + rnd()%( ( ( ( status_get_lv(src) + status_get_int(src) ) / 5 ) * 30 ) * ( skill_lv / 10 ) + status_get_matk_min(src) + status_get_matk_max(src) + ( ( status_get_matk_max(src) * status_get_wlv(src) ) / 10 ) );
+		hp = ( ( ( ( status_get_lv(src) + status_get_int(src) ) / 5 ) * 3 ) * skill_lv  + status_get_matk_min(src) + status_get_matk_max(src) - ( ( status_get_matk_max(src) * status_get_wlv(src) ) / 10 ) ) + rnd()%( ( ( ( status_get_lv(src) + status_get_int(src) ) / 5 ) * 3 ) * skill_lv + status_get_matk_min(src) + status_get_matk_max(src) + ( ( status_get_matk_max(src) * status_get_wlv(src) ) / 10 ) );
 	#else
 		hp = ( status_get_lv(src) + status_get_int(src) ) / 8 * (4 + ( skill_id == AB_HIGHNESSHEAL ? ( sd ? pc_checkskill(sd,AL_HEAL) : 10 ) : skill_lv ) * 8);
 	#endif
@@ -1147,8 +1147,12 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 	 * Ranger
 	 **/
 	case RA_WUGBITE:
-		sc_start(bl, SC_BITE, 70, skilllv, skill_get_time(skillid, skilllv) + (sd ? pc_checkskill(sd,RA_TOOTHOFWUG) * 1000 : 0)); // Need official chance.
-		break;
+		{
+			int chance = (50+10*skilllv)-(sstatus->agi/4) + (sd ? pc_checkskill(sd,RA_TOOTHOFWUG)*2 : 0);
+			if(chance < 50) chance = 50;
+			sc_start(bl, SC_BITE, chance, skilllv, (skilllv + (sd ? pc_checkskill(sd,RA_TOOTHOFWUG)/2 : 0)) * 1000);
+			break;
+		}
 	case RA_SENSITIVEKEEN:
 		if( rnd()%100 < 8 * skilllv )
 			skill_castend_damage_id(src, bl, RA_WUGBITE, sd ? pc_checkskill(sd, RA_WUGBITE):skilllv, tick, SD_ANIMATION);
@@ -2738,7 +2742,7 @@ int skill_guildaura_sub (struct map_session_data* sd, int id, int strvit, int ag
 		if( sce->val3 != strvit || sce->val4 != agidex ) {
 			sce->val3 = strvit;
 			sce->val4 = agidex;
-			status_calc_bl(&sd->bl, StatusChangeFlagTable[SC_GUILDAURA]);
+			status_calc_bl(&sd->bl, status_sc2scb_flag(SC_GUILDAURA));
 		}
 		return 0;
 	}
@@ -4390,7 +4394,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			 * starts at 2 boost + 0.3 for each level
 			 **/
 			if( skillid == AB_HIGHNESSHEAL)
-			 heal = heal * (2 + (0.3 * (skilllv - 1)));
+			 heal = (int)(heal * (2 + (0.3 * (skilllv - 1))));
 			if( status_isimmune(bl) ||
 					(dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))) ||
 					(skillid == AL_HEAL && dstsd && dstsd->sc.option&OPTION_MADOGEAR) )//Mado is immune to AL_HEAL
@@ -10032,13 +10036,6 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 		if ((skillid==CR_GRANDCROSS || skillid==NPC_GRANDDARKNESS) && !battle_config.gx_allhit)
 			ts->tick += sg->interval*(map_count_oncell(bl->m,bl->x,bl->y,BL_CHAR)-1);
 	}
-	//Temporarily set magic power to have it take effect. [Skotlex]
-	if (sg->state.magic_power && sc && !sc->data[SC_MAGICPOWER])
-	{	//Store previous values.
-		swap(sstatus->matk_min, sc->mp_matk_min);
-		swap(sstatus->matk_max, sc->mp_matk_max);
-		//Note to NOT return from the function until this is unset!
-	}
 
 	switch (sg->unit_id)
 	{
@@ -10489,12 +10486,6 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			}
 			break;
 
-	}
-
-	if (sg->state.magic_power && sc && !sc->data[SC_MAGICPOWER])
-	{	//Unset magic power.
-		swap(sstatus->matk_min, sc->mp_matk_min);
-		swap(sstatus->matk_max, sc->mp_matk_max);
 	}
 
 	if (bl->type == BL_MOB && ss != bl)
@@ -11000,6 +10991,22 @@ int skill_check_condition_castbegin(struct map_session_data* sd, short skill, sh
 
 	//Can only update state when weapon/arrow info is checked.
 	sd->state.arrow_atk = require.ammo?1:0;
+	
+	// Check the skills that can be used while mounted on a warg
+	if( pc_isridingwug(sd) )
+	{
+		switch( skill )
+		{
+		case HT_SKIDTRAP:     case HT_LANDMINE:     case HT_ANKLESNARE:     case HT_SHOCKWAVE:
+		case HT_SANDMAN:      case HT_FLASHER:      case HT_FREEZINGTRAP:   case HT_BLASTMINE:
+		case HT_CLAYMORETRAP: case HT_SPRINGTRAP:   case RA_DETONATOR:      case RA_CLUSTERBOMB:
+		case RA_WUGDASH:      case RA_WUGRIDER:
+			break;
+		default:
+			clif_skill_fail(sd,skill,USESKILL_FAIL_LEVEL,0);
+			return 0;
+		}
+	}
 
 	// perform skill-specific checks (and actions)
 	switch( skill )
@@ -12475,7 +12482,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 				return;
 			}
 
-			per = percentrefinery [ditem->wlv][(int)item->refine];
+			per = status_get_refine_chance(ditem->wlv, (int)item->refine);
 			per += (((signed int)sd->status.job_level)-50)/2; //Updated per the new kro descriptions. [Skotlex]
 
 			pc_delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
@@ -13567,13 +13574,6 @@ int skill_unit_timer_sub_onplace (struct block_list* bl, va_list ap)
 
 	if( !(skill_get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) )
 		return 0; //AoE skills are ineffective. [Skotlex]
-	if(group->skill_id==WZ_STORMGUST){
-		int i,o;
-		for(i=-1;i<2;i++)
-			for(o=-1;o<2;o++)
-				if(map_getcell(bl->m, bl->x+i, bl->y+o, CELL_CHKLANDPROTECTOR))
-				return 0; // Storm Gust can be hitted around Land Protector. [Protimus]
-	}
 
 	if( battle_check_target(&unit->bl,bl,group->target_flag) <= 0 )
 		return 0;
@@ -13583,12 +13583,12 @@ int skill_unit_timer_sub_onplace (struct block_list* bl, va_list ap)
 	return 1;
 }
 
-/*==========================================
- *
- *------------------------------------------*/
-static int skill_unit_timer_sub (DBKey key, void* data, va_list ap)
+/**
+ * @see DBApply 
+ */
+static int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct skill_unit* unit = (struct skill_unit*)data;
+	struct skill_unit* unit = db_data2ptr(data);
 	struct skill_unit_group* group = unit->group;
 	unsigned int tick = va_arg(ap,unsigned int);
   	bool dissonance;
@@ -14740,10 +14740,9 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data)
 			}
 			cursor++;
 		}
-		if( cursor == 0 ) {
+		if( cursor == 0 )
 			idb_remove(skillcd_db,sd->status.char_id);
-			aFree(cd);
-		} else
+		else
 			cd->cursor = cursor;
 	}
 
@@ -14917,7 +14916,7 @@ int skill_split_atoi (char *str, int *val)
  */
 void skill_init_unit_layout (void)
 {
-	int i,j,z,size,pos = 0;
+	int i,j,size,pos = 0;
 
 	memset(skill_unit_layout,0,sizeof(skill_unit_layout));
 
@@ -14933,21 +14932,6 @@ void skill_init_unit_layout (void)
 
 	// afterwards add special ones
 	pos = i;
-	for(z=0;z<=5;z++){
-		pos++;
-		size = 7+z;
-		for (j=0; j<size*size; j++) {
-			skill_unit_layout[pos].dx[j] = j%size - size/2;
-			skill_unit_layout[pos].dy[j] = j/size - size/2 + 1;
-		}
-		skill_unit_layout[pos].count = size*size;
-		skill_db[SA_LANDPROTECTOR].unit_layout_type[z] = pos;
-		skill_db[SA_LANDPROTECTOR].unit_layout_type[++z] = pos;
-	}
-	for (;z<MAX_SKILL_LEVEL;z++)
-			skill_db[SA_LANDPROTECTOR].unit_layout_type[z] = pos;
-
-	pos++;
 	for (i=0;i<MAX_SKILL_DB;i++) {
 		if (!skill_db[i].unit_id[0] || skill_db[i].unit_layout_type[0] != -1)
 			continue;
@@ -15285,7 +15269,7 @@ void skill_cooldown_load(struct map_session_data * sd)
 static bool skill_parse_row_skilldb(char* split[], int columns, int current)
 {// id,range,hit,inf,element,nk,splash,max,list_num,castcancel,cast_defence_rate,inf2,maxcount,skill_type,blow_count,name,description
 	int id = atoi(split[0]);
-	int i;
+	int i, *idp;
 	if( (id >= GD_SKILLRANGEMIN && id <= GD_SKILLRANGEMAX)
 	||  (id >= HM_SKILLRANGEMIN && id <= HM_SKILLRANGEMAX)
 	||  (id >= MC_SKILLRANGEMIN && id <= MC_SKILLRANGEMAX) )
@@ -15325,7 +15309,9 @@ static bool skill_parse_row_skilldb(char* split[], int columns, int current)
 	skill_split_atoi(split[14],skill_db[i].blewcount);
 	safestrncpy(skill_db[i].name, trim(split[15]), sizeof(skill_db[i].name));
 	safestrncpy(skill_db[i].desc, trim(split[16]), sizeof(skill_db[i].desc));
-	strdb_put(skilldb_name2id, skill_db[i].name, (void*)id);
+	CREATE(idp, int, 1);
+	*idp = id;
+	strdb_put(skilldb_name2id, skill_db[i].name, idp);
 
 	return true;
 }
@@ -15698,12 +15684,12 @@ void skill_reload (void)
  *------------------------------------------*/
 int do_init_skill (void)
 {
-	skilldb_name2id = strdb_alloc(DB_OPT_DUP_KEY, 0);
+	skilldb_name2id = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 	skill_readdb();
 
 	group_db = idb_alloc(DB_OPT_BASE);
 	skillunit_db = idb_alloc(DB_OPT_BASE);
-	skillcd_db = idb_alloc(DB_OPT_BASE);
+	skillcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill_unit_ers = ers_new(sizeof(struct skill_unit_group));
 	skill_timer_ers  = ers_new(sizeof(struct skill_timerskill));
 
@@ -15718,20 +15704,12 @@ int do_init_skill (void)
 	return 0;
 }
 
-int skillcd_db_final(DBKey key, void *data, va_list args)
-{
-	struct skillcd *s = (struct skillcd*)data;
-	if( s != NULL)
-		aFree(s);
-	return 0;
-}
-
 int do_final_skill(void)
 {
 	db_destroy(skilldb_name2id);
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
-	skillcd_db->destroy(skillcd_db, skillcd_db_final);
+	db_destroy(skillcd_db);
 	ers_destroy(skill_unit_ers);
 	ers_destroy(skill_timer_ers);
 	return 0;
