@@ -488,15 +488,34 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 			return 0;
 		}
 
+
 		//Now damage increasing effects
 		if( sc->data[SC_AETERNA] && skill_num != PF_SOULBURN )
 		{
-			if( src->type != BL_MER || skill_num == 0 )
+		#ifdef REMODE
+			if(sce!=sc->data[SC_RAID])//Raid e Aeterna não funcionan juntos[Sicks]
+			{
+		#endif
+				if( src->type != BL_MER || skill_num == 0 )
 				damage <<= 1; // Lex Aeterna only doubles damage of regular attacks from mercenaries
 
-			if( skill_num != ASC_BREAKER || !(flag&BF_WEAPON) )
+				if( skill_num != ASC_BREAKER || !(flag&BF_WEAPON) )
 				status_change_end(bl, SC_AETERNA, INVALID_TIMER); //Shouldn't end until Breaker's non-weapon part connects.
+			}
 		}
+		#ifdef REMODE
+			if((sce=sc->data[SC_RAID]) && skill_num != PF_SOULBURN)
+				if(skill_num == 0)
+				{//Só funciona com ataques normais[Sicks]
+
+					if(sce->val2)//Checagem de MVps[Sicks]
+					damage = damage * sce->val1 * 10/100;
+					else
+					damage = damage * sce->val1 * 20/100;
+				}
+				if(--(sce->val1) <= 0)
+					status_change_end(bl, SC_RAID, INVALID_TIMER);
+		#endif
 
 		//Finally damage reductions....
 		if( sc->data[SC_ASSUMPTIO] )

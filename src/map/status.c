@@ -6362,6 +6362,15 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	if(!(flag&4)) //&4 - Do not parse val settings when loading SCs
 	switch(type)
 	{
+		case SC_RAID:
+			val1++;
+				if(is_boss(bl))
+				{
+					val2=1;
+				}else{
+					val2=0;
+				}
+			break;
 		case SC_DECREASEAGI:
 		case SC_INCREASEAGI:
 			val2 = 2 + val1; //Agi change
