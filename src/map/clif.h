@@ -741,7 +741,7 @@ int clif_poison_list(struct map_session_data *sd, int skill_lv);
  **/
 int clif_autoshadowspell_list(struct map_session_data *sd);
 /**
- * [RRInd] for the new mounts
+ * New Mounts
  **/
 int clif_status_load_notick(struct block_list *bl,int type,int flag,int val1, int val2, int val3);
 int clif_status_load_single(int fd, int id,int type,int flag,int val1, int val2, int val3);

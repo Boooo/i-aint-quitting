@@ -183,29 +183,6 @@ static int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data
 		{// mercenary is too far from the master so warp the master's position
 			unit_warp( &sd->md->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_TELEPORT );
 		}
-
-		if (sd->state.gmaster_flag &&
-			(battle_config.guild_aura&((agit_flag || agit2_flag)?2:1)) &&
-			(battle_config.guild_aura&(map_flag_gvg2(bl->m)?8:4))
-		)
-		{ //Guild Aura: Likely needs to be recoded, this method seems inefficient.
-			struct guild *g = sd->state.gmaster_flag;
-			int skill, strvit= 0, agidex = 0;
-			if ((skill = guild_checkskill(g, GD_LEADERSHIP)) > 0) strvit |= (skill&0xFFFF)<<16;
-			if ((skill = guild_checkskill(g, GD_GLORYWOUNDS)) > 0) strvit |= (skill&0xFFFF);
-			if ((skill = guild_checkskill(g, GD_SOULCOLD)) > 0) agidex |= (skill&0xFFFF)<<16;
-			if ((skill = guild_checkskill(g, GD_HAWKEYES)) > 0) agidex |= (skill&0xFFFF);
-			if (strvit || agidex)
-			{// replaced redundant foreachinrange call with smaller and much more efficient iteration
-				for( i = 0; i < g->max_member; i++ )
-				{
-					if( g->member[i].online && g->member[i].sd && sd->bl.m == g->member[i].sd->bl.m && check_distance_bl(&sd->bl, &g->member[i].sd->bl, 2) )
-					{// perform the aura on the member as appropriate
-						skill_guildaura_sub(g->member[i].sd, sd->bl.id, strvit, agidex);
-					}
-				}
-			}
-		}
 	} else if (md) {
 		if( map_getcell(bl->m,x,y,CELL_CHKNPC) ) {
 			if( npc_touch_areanpc2(md) ) return 0; // Warped
@@ -935,6 +912,7 @@ int unit_can_move(struct block_list *bl)
 			|| sc->data[SC_MAGNETICFIELD]
 			|| sc->data[SC__MANHOLE]
 			|| (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
+			|| sc->data[SC_CURSEDCIRCLE_TARGET]
 		))
 			return 0;
 	}
@@ -1142,6 +1120,12 @@ int unit_skilluse_id2(struct block_list *src, int target_id, short skill_num, sh
 				return 0;
 			}
 			break;
+		case WL_WHITEIMPRISON: 
+			if( battle_check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) { 
+				clif_skill_fail(sd,skill_num,0xb,0); 
+				return 0; 
+			} 
+		break;
 		}
 		if (!skill_check_condition_castbegin(sd, skill_num, skill_lv))
 			return 0;
@@ -1293,18 +1277,26 @@ int unit_skilluse_id2(struct block_list *src, int target_id, short skill_num, sh
 	ud->skillid      = skill_num;
 	ud->skilllv      = skill_lv;
 
- 	if( sc && sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4) && skill_num != AS_CLOAKING )
-	{
-		status_change_end(src, SC_CLOAKING, INVALID_TIMER);
-		if (!src->prev) return 0; //Warped away!
+	if( sc ) {
+		/**
+		 * why the if else chain: these 3 status do not stack, so its efficient that way.
+		 **/
+ 		if( sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4) && skill_num != AS_CLOAKING ) {
+			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
+			if (!src->prev) return 0; //Warped away!
+		} else if( sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4) && skill_num != GC_CLOAKINGEXCEED ) {
+			status_change_end(src,SC_CLOAKINGEXCEED, INVALID_TIMER);
+			if (!src->prev) return 0;
+		} else
+			status_change_end(src,SC_CAMOUFLAGE,-1);
+
+		if( sc->data[SC_CURSEDCIRCLE_ATKER] ) {
+			sc->data[SC_CURSEDCIRCLE_ATKER]->val3 = 1;
+			status_change_end(src,SC_CURSEDCIRCLE_ATKER,-1);
+		}
+
 	}
 	
-	if( sc && sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4) && skill_num != GC_CLOAKINGEXCEED )
-	{
-		status_change_end(src,SC_CLOAKINGEXCEED, INVALID_TIMER);
-		if (!src->prev) return 0;
-	}
-
 	if( casttime > 0 )
 	{
 		ud->skilltimer = add_timer( tick+casttime, skill_castend_id, src->id, 0 );
@@ -1412,16 +1404,24 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, sh
 	ud->skilly       = skill_y;
 	ud->skilltarget  = 0;
 
-	if (sc && sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4))
-	{
-		status_change_end(src, SC_CLOAKING, INVALID_TIMER);
-		if (!src->prev) return 0; //Warped away!
-	}
-	
-	if (sc && sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4))
-	{
-		status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
-		if (!src->prev) return 0;
+	if( sc ) {
+		/**
+		 * why the if else chain: these 3 status do not stack, so its efficient that way.
+		 **/
+		if (sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4)) {
+			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
+			if (!src->prev) return 0; //Warped away!
+		} else if (sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4)) {
+			status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
+			if (!src->prev) return 0;
+		} else
+			status_change_end(src,SC_CAMOUFLAGE,-1);
+
+		if( sc->data[SC_CURSEDCIRCLE_ATKER] ) {
+			sc->data[SC_CURSEDCIRCLE_ATKER]->val3 = 1;
+			status_change_end(src,SC_CURSEDCIRCLE_ATKER,-1);
+		}
+
 	}
 
 	if( casttime > 0 )
