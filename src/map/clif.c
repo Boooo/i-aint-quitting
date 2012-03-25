@@ -2760,7 +2760,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 		WFIFOL(fd,4)=sd->battle_status.amotion;
 		break;
 	case SP_ATK1:
-		WFIFOL(fd,4)=sd->battle_status.batk +sd->battle_status.rhw.atk +sd->battle_status.lhw.atk;
+		WFIFOL(fd,4)=pc_leftside_atk(sd);
 		break;
 	case SP_DEF1:
 		WFIFOL(fd,4)=sd->battle_status.def;
@@ -2769,7 +2769,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 		WFIFOL(fd,4)=sd->battle_status.mdef;
 		break;
 	case SP_ATK2:
-		WFIFOL(fd,4)=sd->battle_status.rhw.atk2 + sd->battle_status.lhw.atk2;
+		WFIFOL(fd,4)=pc_rightside_atk(sd);
 		break;
 	case SP_DEF2:
 		WFIFOL(fd,4)=sd->battle_status.def2;
@@ -3118,8 +3118,8 @@ void clif_initialstatus(struct map_session_data *sd)
 	WBUFB(buf,14)=min(sd->status.luk, UINT8_MAX);
 	WBUFB(buf,15)=pc_need_status_point(sd,SP_LUK,1);
 
-	WBUFW(buf,16) = sd->battle_status.batk + sd->battle_status.rhw.atk + sd->battle_status.lhw.atk;
-	WBUFW(buf,18) = sd->battle_status.rhw.atk2 + sd->battle_status.lhw.atk2; //atk bonus
+	WBUFW(buf,16) = pc_leftside_atk(sd);
+	WBUFW(buf,18) = pc_rightside_atk(sd);
 	WBUFW(buf,20) = sd->battle_status.matk_max;
 	WBUFW(buf,22) = sd->battle_status.matk_min;
 	WBUFW(buf,24) = sd->battle_status.def; // def
@@ -4308,6 +4308,9 @@ void clif_getareachar_item(struct map_session_data* sd,struct flooritem_data* fi
 static void clif_getareachar_skillunit(struct map_session_data *sd, struct skill_unit *unit)
 {
 	int fd = sd->fd;
+	
+	if( unit->group->state.guildaura )
+		return;
 
 #if PACKETVER >= 3
 	if(unit->group->unit_id==UNT_GRAFFITI)	{ // Graffiti [Valaris]
@@ -4349,6 +4352,9 @@ static void clif_getareachar_skillunit(struct map_session_data *sd, struct skill
 static void clif_clearchar_skillunit(struct skill_unit *unit, int fd)
 {
 	nullpo_retv(unit);
+	
+	if( unit->group->state.guildaura )
+		return;
 
 	WFIFOHEAD(fd,packet_len(0x120));
 	WFIFOW(fd, 0)=0x120;
@@ -8860,6 +8866,8 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_changemap(sd, sd->mapindex, sd->bl.x, sd->bl.y);
 		return;
 	}
+	
+	sd->state.warping = 0;
 
 	// look
 #if PACKETVER < 4
@@ -9100,6 +9108,14 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	}
 	
 	mail_clear(sd);
+	
+	/* Guild Aura Init */ 
+	if( sd->state.gmaster_flag ) { 
+		guild_guildaura_refresh(sd,GD_LEADERSHIP,guild_checkskill(sd->state.gmaster_flag,GD_LEADERSHIP)); 
+		guild_guildaura_refresh(sd,GD_GLORYWOUNDS,guild_checkskill(sd->state.gmaster_flag,GD_GLORYWOUNDS)); 
+		guild_guildaura_refresh(sd,GD_SOULCOLD,guild_checkskill(sd->state.gmaster_flag,GD_SOULCOLD)); 
+		guild_guildaura_refresh(sd,GD_HAWKEYES,guild_checkskill(sd->state.gmaster_flag,GD_HAWKEYES)); 
+	}
 
 	if(map[sd->bl.m].flag.loadevent) // Lance
 		npc_script_event(sd, NPCE_LOADMAP);
@@ -9121,10 +9137,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	// If player is dead, and is spawned (such as @refresh) send death packet. [Valaris]
 	if(pc_isdead(sd))
 		clif_clearunit_area(&sd->bl, CLR_DEAD);
+	else {
+		skill_usave_trigger(sd);
 // Uncomment if you want to make player face in the same direction he was facing right before warping. [Skotlex]
-//	else
 //		clif_changed_dir(&sd->bl, SELF);
-
+	}
 //	Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
 		skill_unit_move(&sd->bl,gettick(),1);
@@ -16440,6 +16457,16 @@ static int packetdb_readdb(void)
  *------------------------------------------*/
 int do_init_clif(void)
 {
+	const char* colors[COLOR_MAX] = { "0xFF0000" };
+	int i;
+	/**
+	 * Setup Color Table (saves unnecessary load of strtoul on every call)
+	 **/
+	for(i = 0; i < COLOR_MAX; i++) {
+		color_table[i] = strtoul(colors[i],NULL,0);
+		color_table[i] = (color_table[i] & 0x0000FF) << 16 | (color_table[i] & 0x00FF00) | (color_table[i] & 0xFF0000) >> 16;//RGB to BGR
+	}
+
 	clif_config.connect_cmd = 0;
 
 	memset(packet_db,0,sizeof(packet_db));

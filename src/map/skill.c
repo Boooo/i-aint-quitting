@@ -71,6 +71,14 @@ struct skill_cd {
 	unsigned char cursor;
 };
 
+/**
+* Skill Unit Persistency during endack routes (mostly for songs see bugreport:4574) 
+**/ 
+DBMap* skillusave_db = NULL; // char_id -> struct skill_usave 
+struct skill_usave { 
+	int skill_num, skill_lv;
+};
+
 struct s_skill_db skill_db[MAX_SKILL_DB];
 struct s_skill_produce_db skill_produce_db[MAX_SKILL_PRODUCE_DB];
 struct s_skill_arrow_db skill_arrow_db[MAX_SKILL_ARROW_DB];
@@ -4085,10 +4093,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, int 
 	case RA_WUGSTRIKE:
 	case RA_WUGBITE:
 		if( path_search(NULL,src->m,src->x,src->y,bl->x,bl->y,1,CELL_CHKNOREACH) ) {
-			if( skillid == RA_WUGSTRIKE ) {
-				if( sd && pc_isridingwug(sd) && !map_flag_gvg(src->m) && !map[src->m].flag.battleground && unit_movepos(src,bl->x,bl->y,1,1) )
-					clif_slide(src, bl->x, bl->y);
-			}
 			skill_attack(BF_WEAPON,src,src,bl,skillid,skilllv,tick,flag);
 		}
 		break;
@@ -5106,9 +5110,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 
 	case CH_SOULCOLLECT:
 		if(sd) {
+			int limit = 5; 
+			if( sd->sc.data[SC_RAISINGDRAGON] ) 
+				limit += sd->sc.data[SC_RAISINGDRAGON]->val1; 
 			clif_skill_nodamage(src,bl,skillid,skilllv,1);
-			for (i = 0; i < 5; i++)
-				pc_addspiritball(sd,skill_get_time(skillid,skilllv),5);
+			for (i = 0; i < limit; i++)
+				pc_addspiritball(sd,skill_get_time(skillid,skilllv),limit);
 		}
 		break;
 
@@ -5197,8 +5204,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 		status_change_end(src,SC_OVERHEAT_LIMITPOINT,-1);
 		status_change_end(src,SC_OVERHEAT,-1);
 		break;
-	case SR_EARTHSHAKER:
 	case SR_WINDMILL:
+		clif_skill_nodamage(src,bl,skillid,skilllv,1);
+	case SR_EARTHSHAKER:
 	case NC_INFRAREDSCAN:
 	case NPC_EARTHQUAKE:
 	case NPC_VAMPIRE_GIFT:
@@ -5930,7 +5938,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				case SC_INTFOOD:		case SC_DEXFOOD:		case SC_LUKFOOD:
 				case SC_HITFOOD:		case SC_FLEEFOOD:		case SC_BATKFOOD:
 				case SC_WATKFOOD:		case SC_MATKFOOD:		case SC_DANCING:
-				case SC_GUILDAURA:		case SC_EDP:			case SC_AUTOBERSERK:
+				case SC_EDP:			case SC_AUTOBERSERK:
 				case SC_CARTBOOST:		case SC_MELTDOWN:		case SC_SAFETYWALL:
 				case SC_SMA:			case SC_SPEEDUP0:		case SC_NOCHAT:
 				case SC_ANKLE:			case SC_SPIDERWEB:		case SC_JAILED:
@@ -5953,9 +5961,11 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				//case SC_SAVAGE_STEAK:			case SC_COCKTAIL_WARG_BLOOD:		case SC_MINOR_BBQ:
 				//case SC_SIROMA_ICE_TEA:			case SC_DROCERA_HERB_STEAMED:		case SC_PUTTI_TAILS_NOODLES:
 				case SC_NEUTRALBARRIER_MASTER:		case SC_NEUTRALBARRIER:			case SC_STEALTHFIELD_MASTER:
-				case SC_STEALTHFIELD:			case SC_GIANTGROWTH:			case SC_MILLENNIUMSHIELD:
-				case SC_REFRESH:			case SC_STONEHARDSKIN:			case SC_VITALITYACTIVATION:
-				case SC_FIGHTINGSPIRIT:			case SC_ABUNDANCE:			case SC__SHADOWFORM:
+				case SC_STEALTHFIELD:	case SC_GIANTGROWTH:    case SC_MILLENNIUMSHIELD: 
+				case SC_REFRESH:        case SC_STONEHARDSKIN:  case SC_VITALITYACTIVATION: 
+				case SC_FIGHTINGSPIRIT: case SC_ABUNDANCE:      case SC__SHADOWFORM: 
+				case SC_LEADERSHIP:     case SC_GLORYWOUNDS:	case SC_SOULCOLD: 
+				case SC_HAWKEYES:       case SC_GUILDAURA:
 					continue;
 				/**
 				 * bugreport:4888 these songs may only be dispelled if you're not in their song area anymore
@@ -7249,7 +7259,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				case SC_INTFOOD:     case SC_DEXFOOD:     case SC_LUKFOOD:
 				case SC_HITFOOD:     case SC_FLEEFOOD:    case SC_BATKFOOD:
 				case SC_WATKFOOD:    case SC_MATKFOOD:    case SC_DANCING:
-				case SC_GUILDAURA:   case SC_SPIRIT:      case SC_AUTOBERSERK:
+				case SC_SPIRIT:      case SC_AUTOBERSERK:
 				case SC_CARTBOOST:   case SC_MELTDOWN:    case SC_SAFETYWALL:
 				case SC_SMA:         case SC_SPEEDUP0:    case SC_NOCHAT:
 				case SC_ANKLE:       case SC_SPIDERWEB:   case SC_JAILED:
@@ -7277,6 +7287,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				//case SC_DROCERA_HERB_STEAMED: case SC_PUTTI_TAILS_NOODLES:
 				case SC_NEUTRALBARRIER_MASTER: case SC_NEUTRALBARRIER:
 				case SC_STEALTHFIELD_MASTER: case SC_STEALTHFIELD:
+				case SC_LEADERSHIP:		case SC_GLORYWOUNDS:	case SC_SOULCOLD: 
+				case SC_HAWKEYES:		case SC_GUILDAURA:
 					continue;
 				case SC_ASSUMPTIO:
 					if( bl->type == BL_MOB )
@@ -7987,6 +7999,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			clif_skill_nodamage (src, bl, skillid, skilllv, 1);
 
 			if( sd ) {
+				sd->state.abra_flag = 2;
 				sd->skillitem = improv_skillid;
 				sd->skillitemlv = improv_skilllv;
 				clif_item_skill(sd, improv_skillid, improv_skilllv);
@@ -8048,6 +8061,17 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			}
 			pc_setpos(sd, mapindex, x, y, CLR_TELEPORT);
 		}
+		break;
+		
+	case GM_SANDMAN: 
+		if( tsc ) { 
+			if( tsc->opt1 == OPT1_SLEEP ) 
+				tsc->opt1 = 0; 
+			else 
+				tsc->opt1 = OPT1_SLEEP; 
+			clif_changeoption(bl); 
+			clif_skill_nodamage (src, bl, skillid, skilllv, 1); 
+		} 
 		break;
 
 	default:
@@ -9633,6 +9657,12 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 		val2 = sc->data[SC_POISONINGWEAPON]->val2; // Type of Poison
 		limit = 4000 + 2000 * skilllv;
 		break;
+	case GD_LEADERSHIP: 
+	case GD_GLORYWOUNDS: 
+	case GD_SOULCOLD: 
+	case GD_HAWKEYES: 
+		limit = 1000000;//it doesn't matter 
+		break;
 	case LG_BANDING:
 		limit = -1;
 		break;
@@ -9653,6 +9683,7 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 	group->bl_flag= skill_get_unit_bl_target(skillid);
 	group->state.ammo_consume = (sd && sd->state.arrow_atk && skillid != GS_GROUNDDRIFT); //Store if this skill needs to consume ammo.
 	group->state.song_dance = (unit_flag&(UF_DANCE|UF_SONG)?1:0)|(unit_flag&UF_ENSEMBLE?2:0); //Signals if this is a song/dance/duet
+	group->state.guildaura = ( skillid >= GD_LEADERSHIP && skillid <= GD_HAWKEYES )?1:0;
 
   	//if tick is greater than current, do not invoke onplace function just yet. [Skotlex]
 	if (DIFF_TICK(group->tick, gettick()) > SKILLUNITTIMER_INTERVAL)
@@ -9962,6 +9993,14 @@ static int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, un
 			break;
 		skill_blown(ss,bl,skill_get_blewcount(sg->skill_id,sg->skill_lv),unit_getdir(bl),0);
 		break;
+
+	case UNT_GD_LEADERSHIP: 
+	case UNT_GD_GLORYWOUNDS: 
+	case UNT_GD_SOULCOLD: 
+	case UNT_GD_HAWKEYES: 
+		if ( !sce ) 
+			sc_start4(bl,type,100,sg->skill_lv,0,0,0,1000);
+		break;
 	}
 	return skillid;
 }
@@ -9991,6 +10030,10 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 	nullpo_ret(ss=map_id2bl(sg->src_id));
 	tsd = BL_CAST(BL_PC, bl);
 	tsc = status_get_sc(bl);
+	
+	if ( tsc && tsc->data[SC_HOVERING] )
+		return 0; //Under hovering characters are immune to trap and ground target skills.
+	
 	tstatus = status_get_status_data(bl);
 	type = status_skill2sc(sg->skill_id);
 	skillid = sg->skill_id;
@@ -10500,6 +10543,8 @@ int skill_unit_onout (struct skill_unit *src, struct block_list *bl, unsigned in
 	case UNT_SAFETYWALL:
 	case UNT_PNEUMA:
 	case UNT_EPICLESIS://Arch Bishop
+	case UNT_NEUTRALBARRIER:
+	case UNT_STEALTHFIELD:
 		if (sce)
 			status_change_end(bl, type, INVALID_TIMER);
 		break;
@@ -10616,6 +10661,13 @@ static int skill_unit_onleft (int skill_id, struct block_list *bl, unsigned int 
 				}
 			}
 			break;
+		case GD_LEADERSHIP: 
+		case GD_GLORYWOUNDS: 
+		case GD_SOULCOLD: 
+		case GD_HAWKEYES: 
+			if( !(sce && sce->val4) ) 
+				status_change_end(bl, type, INVALID_TIMER); 
+			break; 
 	}
 
 	return skill_id;
@@ -11728,11 +11780,16 @@ int skill_check_condition_castend(struct map_session_data* sd, short skill, shor
 	}
 
 	if( require.ammo ) { //Skill requires stuff equipped in the arrow slot.
-		if((i=sd->equip_index[EQI_AMMO]) < 0 ||
-			!sd->inventory_data[i] ||
-			sd->status.inventory[i].amount < require.ammo_qty
-		) {
+		if((i=sd->equip_index[EQI_AMMO]) < 0 || !sd->inventory_data[i] ) {
 			clif_arrow_fail(sd,0);
+			return 0; 
+		} else if( sd->status.inventory[i].amount < require.ammo_qty ) { 
+			char e_msg[100]; 
+			sprintf(e_msg,"Skill Failed. [%s] requires %dx %s.", 
+									skill_get_desc(skill), 
+									require.ammo_qty, 
+									itemdb_jname(sd->status.inventory[i].nameid)); 
+			clif_colormes(sd,COLOR_RED,e_msg);
 			return 0;
 		}
 		if (!(require.ammo&1<<sd->inventory_data[i]->look))
@@ -12632,6 +12689,12 @@ int skill_sit (struct map_session_data *sd, int type)
 		flag|=2;
 		range = skill_get_splash(TK_SPTIME, lv);
 	}
+	
+	if( type ) {
+		clif_status_load(&sd->bl,SI_SITTING,1);
+	} else {
+		clif_status_load(&sd->bl,SI_SITTING,1);
+	}
 
 	if (!flag) return 0;
 
@@ -13385,6 +13448,24 @@ int skill_delunitgroup_(struct skill_unit_group *group, const char* file, int li
 		ShowError("skill_delunitgroup: Group's source not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 		return 0;
 	}
+	
+	if( !status_isdead(src) && ((TBL_PC*)src)->state.warping && !((TBL_PC*)src)->state.changemap ) { 
+		switch( group->skill_id ) { 
+			case BA_DISSONANCE: 
+			case BA_POEMBRAGI: 
+			case BA_WHISTLE: 
+			case BA_ASSASSINCROSS: 
+			case BA_APPLEIDUN: 
+			case DC_UGLYDANCE: 
+			case DC_HUMMING: 
+			case DC_DONTFORGETME: 
+			case DC_FORTUNEKISS: 
+			case DC_SERVICEFORYOU: 
+				skill_usave_add(((TBL_PC*)src), group->skill_id, group->skill_lv); 
+			break; 
+		} 
+	} 
+	
 	if (skill_get_unit_flag(group->skill_id)&(UF_DANCE|UF_SONG|UF_ENSEMBLE))
 	{
 		struct status_change* sc = status_get_sc(src);
@@ -13582,7 +13663,7 @@ static int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap)
 	nullpo_ret(group);
 
 	// check for expiration
-	if( (DIFF_TICK(tick,group->tick) >= group->limit || DIFF_TICK(tick,group->tick) >= unit->limit) )
+	if( !group->state.guildaura && (DIFF_TICK(tick,group->tick) >= group->limit || DIFF_TICK(tick,group->tick) >= unit->limit) )
 	{// skill unit expired (inlined from skill_unit_onlimit())
 		switch( group->unit_id )
 		{
@@ -14851,7 +14932,37 @@ int skill_blockmerc_start(struct mercenary_data *md, int skillid, int tick)
 	md->blockskill[skillid] = 1;
 	return add_timer(gettick() + tick, skill_blockmerc_end, md->bl.id, skillid);
 }
+/**
+ * Adds a new skill unit entry for this player to recast after map load
+ **/
+void skill_usave_add(struct map_session_data * sd, int skill_num, int skill_lv) {
+	struct skill_usave * sus = NULL;
 
+	if( idb_exists(skillusave_db,sd->status.char_id) ) {
+		idb_remove(skillusave_db,sd->status.char_id);
+	}
+	
+	CREATE( sus, struct skill_usave, 1 );
+	idb_put( skillusave_db, sd->status.char_id, sus );
+
+	sus->skill_num = skill_num;
+	sus->skill_lv = skill_lv;
+	
+	return;
+}
+void skill_usave_trigger(struct map_session_data *sd) {
+	struct skill_usave * sus = NULL;
+
+	if( ! (sus = idb_get(skillusave_db,sd->status.char_id)) ) {
+		return;
+	}
+	
+	skill_unitsetting(&sd->bl,sus->skill_num,sus->skill_lv,sd->bl.x,sd->bl.y,0);
+
+	idb_remove(skillusave_db,sd->status.char_id);
+	
+	return;
+}
 /*
  *
  */
@@ -15467,6 +15578,7 @@ static bool skill_parse_row_unitdb(char* split[], int columns, int current)
 	else if( strcmpi(split[6],"friend")==0 ) skill_db[i].unit_target = BCT_NOENEMY;
 	else if( strcmpi(split[6],"party")==0 ) skill_db[i].unit_target = BCT_PARTY;
 	else if( strcmpi(split[6],"ally")==0 ) skill_db[i].unit_target = BCT_PARTY|BCT_GUILD;
+	else if( strcmpi(split[6],"guild")==0 ) skill_db[i].unit_target = BCT_GUILD;
 	else if( strcmpi(split[6],"all")==0 ) skill_db[i].unit_target = BCT_ALL;
 	else if( strcmpi(split[6],"enemy")==0 ) skill_db[i].unit_target = BCT_ENEMY;
 	else if( strcmpi(split[6],"self")==0 ) skill_db[i].unit_target = BCT_SELF;
@@ -15648,19 +15760,12 @@ static void skill_readdb(void)
 	// load skill databases
 	safestrncpy(skill_db[0].name, "UNKNOWN_SKILL", sizeof(skill_db[0].name));
 	safestrncpy(skill_db[0].desc, "Unknown Skill", sizeof(skill_db[0].desc));
-#if REMODE
-	sv_readdb(db_path, "re/skill_db.txt"          , ',',  17, 17, MAX_SKILL_DB, skill_parse_row_skilldb);
-	sv_readdb(db_path, "re/skill_require_db.txt"  , ',',  32, 32, MAX_SKILL_DB, skill_parse_row_requiredb);
-	sv_readdb(db_path, "re/skill_cast_db.txt"     , ',',   7,  7, MAX_SKILL_DB, skill_parse_row_castdb);
-	sv_readdb(db_path, "re/skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb);
-	sv_readdb(db_path, "re/skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
-#else
-	sv_readdb(db_path, "pre-re/skill_db.txt"          , ',',  17, 17, MAX_SKILL_DB, skill_parse_row_skilldb);
-	sv_readdb(db_path, "pre-re/skill_require_db.txt"  , ',',  32, 32, MAX_SKILL_DB, skill_parse_row_requiredb);
-	sv_readdb(db_path, "pre-re/skill_cast_db.txt"     , ',',   7,  7, MAX_SKILL_DB, skill_parse_row_castdb);
-	sv_readdb(db_path, "pre-re/skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb);
-	sv_readdb(db_path, "pre-re/skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
-#endif
+	
+	sv_readdb(db_path, DBPATH"skill_db.txt"          , ',',  17, 17, MAX_SKILL_DB, skill_parse_row_skilldb); 
+	sv_readdb(db_path, DBPATH"skill_require_db.txt"  , ',',  32, 32, MAX_SKILL_DB, skill_parse_row_requiredb); 
+ 	sv_readdb(db_path, DBPATH"skill_cast_db.txt"     , ',',   7,  7, MAX_SKILL_DB, skill_parse_row_castdb); 
+ 	sv_readdb(db_path, DBPATH"skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb); 
+ 	sv_readdb(db_path, DBPATH"skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
 
 	sv_readdb(db_path, "skill_nocast_db.txt"   , ',',   2,  2, MAX_SKILL_DB, skill_parse_row_nocastdb);
 
@@ -15693,6 +15798,7 @@ int do_init_skill (void)
 	group_db = idb_alloc(DB_OPT_BASE);
 	skillunit_db = idb_alloc(DB_OPT_BASE);
 	skillcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	skillusave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill_unit_ers = ers_new(sizeof(struct skill_unit_group));
 	skill_timer_ers  = ers_new(sizeof(struct skill_timerskill));
 
@@ -15713,6 +15819,7 @@ int do_final_skill(void)
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
 	db_destroy(skillcd_db);
+	db_destroy(skillusave_db);
 	ers_destroy(skill_unit_ers);
 	ers_destroy(skill_timer_ers);
 	return 0;
