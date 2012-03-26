@@ -7752,7 +7752,7 @@ BUILDIN_FUNC(openstorage)
 	if( sd == NULL )
 		return 0;
 
-	storage_storageopen(sd);
+	storage_reqstorageopen(sd);
 	return 0;
 }
 

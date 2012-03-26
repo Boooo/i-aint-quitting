@@ -664,6 +664,26 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 		
 		if( sc->data[SC__DEADLYINFECT] && damage > 0 && rand()%100 < 65 + 5 * sc->data[SC__DEADLYINFECT]->val1 )
 			status_change_spread(bl, src); // Deadly infect attacked side
+			
+		if( sc && sc->data[SC__SHADOWFORM] ) {
+			struct block_list *s_bl = map_id2bl(sc->data[SC__SHADOWFORM]->val2);
+			if( !s_bl ) { // If the shadow form target is not present remove the sc.
+				status_change_end(bl, SC__SHADOWFORM, -1);
+			} else if( status_isdead(s_bl) || !battle_check_target(src,s_bl,BCT_ENEMY)) { // If the shadow form target is dead or not your enemy remove the sc in both.
+				status_change_end(bl, SC__SHADOWFORM, -1);
+				if( s_bl->type == BL_PC )
+					((TBL_PC*)s_bl)->shadowform_id = 0;
+			} else {
+				if( (--sc->data[SC__SHADOWFORM]->val3) < 0 ) { // If you have exceded max hits supported, remove the sc in both.
+					status_change_end(bl, SC__SHADOWFORM, -1);
+					if( s_bl->type == BL_PC )
+						((TBL_PC*)s_bl)->shadowform_id = 0;
+				} else {
+					status_damage(src, s_bl, damage, 0, clif_damage(s_bl, s_bl, gettick(), 500, 500, damage, -1, 0, 0), 0);
+					return ATK_NONE;
+				}
+			}
+		}
 
 	}
 
@@ -752,25 +772,6 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 				element = rnd()%ELE_MAX;
 			if( element == ELE_FIRE || element == ELE_WATER )
 				pc_overheat(sd,element == ELE_FIRE ? 1 : -1);
-		}
-	}
-	if( sc && sc->data[SC__SHADOWFORM] ) {
-		struct block_list *s_bl = map_id2bl(sc->data[SC__SHADOWFORM]->val2);
-		if( !s_bl ) { // If the shadow form target is not present remove the sc.
-			status_change_end(bl, SC__SHADOWFORM, -1);
-		} else if( status_isdead(s_bl) || !battle_check_target(src,s_bl,BCT_ENEMY)) { // If the shadow form target is dead or not your enemy remove the sc in both.
-			status_change_end(bl, SC__SHADOWFORM, -1);
-			if( s_bl->type == BL_PC )
-				((TBL_PC*)s_bl)->shadowform_id = 0;
-		} else {
-			if( (--sc->data[SC__SHADOWFORM]->val3) < 0 ) { // If you have exceded max hits supported, remove the sc in both.
-				status_change_end(bl, SC__SHADOWFORM, -1);
-				if( s_bl->type == BL_PC )
-					((TBL_PC*)s_bl)->shadowform_id = 0;
-			} else {
-				status_damage(src, s_bl, damage, 0, clif_damage(s_bl, s_bl, gettick(), 500, 500, damage, -1, 0, 0), 0);
-				return ATK_NONE;
-			}
 		}
 	}
 	return damage;
@@ -1259,7 +1260,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 				flag.arrow = 1;
 				break;
 
+#if isOFF(REMODE)
 			case CR_SHIELDBOOMERANG:
+#endif
 			case PA_SHIELDCHAIN:
 			case LG_SHIELDPRESS:
 			case LG_EARTHDRIVE:
@@ -2401,11 +2404,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 		if (!flag.idef || !flag.idef2)
 		{	//Defense reduction
 			short vit_def;
-#if REMODE
-			short def1 = status_get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
-#else
-			signed char def1 = status_get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
-#endif
+			defType def1 = status_get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
 			short def2 = (short)tstatus->def2;
 
 			if( sd )
@@ -2570,6 +2569,14 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 				wd.damage2 += battle_attr_fix(src, target, damage, sc->data[SC_WATK_ELEMENT]->val1, tstatus->def_ele, tstatus->ele_lv);
 			}
 		}
+#if REMODE
+		/**
+		 * In RE Shield Bommerang takes weapon element only for damage calculation,
+		 * - resist calculation is always against neutral
+		 **/
+		if ( skill_num == CR_SHIELDBOOMERANG )
+			s_ele = s_ele_ = ELE_NEUTRAL;
+#endif
 	}
 
 	if(skill_num == CR_GRANDCROSS || skill_num == NPC_GRANDDARKNESS)
@@ -3382,11 +3389,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 		}
 
 		if(!flag.imdef){
-#if REMODE
-			short mdef = tstatus->mdef;
-#else
-			char mdef = tstatus->mdef;
-#endif
+			defType mdef = tstatus->mdef;
 			int mdef2= tstatus->mdef2;
 			if(sd) {
 				i = sd->ignore_mdef[is_boss(target)?RC_BOSS:RC_NONBOSS];
@@ -3890,6 +3893,11 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 					if (rdamage < 1) rdamage = 1;
 				}
 			}
+			if( sc && sc->data[SC_CRESCENTELBOW] && !(flag&BF_SKILL) && !is_boss(src) && rand()%100 < sc->data[SC_CRESCENTELBOW]->val2 )
+			{	// Stimated formula from test
+				rdamage += (int)((*dmg) + (*dmg) * status_get_hp(src) * 2.15 / 100000);
+				if( rdamage < 1 ) rdamage = 1;
+			}
 		}
 	} else {
 		if (sd && sd->long_weapon_damage_return) {
@@ -4100,6 +4108,10 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				return ATK_DEF;
 			return ATK_MISS;
 		}
+		if( sc->data[SC_GT_ENERGYGAIN] ) { 
+			if( sd && rand()%100 < 10 + 5 * sc->data[SC_GT_ENERGYGAIN]->val1) 
+				pc_addspiritball(sd, skill_get_time(MO_CALLSPIRITS, sc->data[SC_GT_ENERGYGAIN]->val1),  sc->data[SC_GT_ENERGYGAIN]->val1); 
+		}
 	}
 
 	if (sc)
@@ -4235,7 +4247,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	}
 	if (sd) {
 		if( wd.flag&BF_SHORT && sc && sc->data[SC__AUTOSHADOWSPELL] && rand()%100 < sc->data[SC__AUTOSHADOWSPELL]->val3 &&
-			sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].id != 0 && sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].flag == 13 )
+			sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].id != 0 && sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].flag == SKILL_FLAG_PLAGIARIZED )
 		{
 			int r_skill = sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].id,
 				r_lv = sc->data[SC__AUTOSHADOWSPELL]->val2;

@@ -9139,8 +9139,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_clearunit_area(&sd->bl, CLR_DEAD);
 	else {
 		skill_usave_trigger(sd);
-// Uncomment if you want to make player face in the same direction he was facing right before warping. [Skotlex]
-//		clif_changed_dir(&sd->bl, SELF);
+		clif_changed_dir(&sd->bl, SELF);
 	}
 //	Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
@@ -12682,6 +12681,14 @@ void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd)
 	int i, f_fd;
 
 	f_sd = map_nick2sd((char*)RFIFOP(fd,2));
+	
+	// ensure that the request player's friend list is not full 
+	ARR_FIND(0, MAX_FRIENDS, i, sd->status.friends[i].char_id == 0); 
+
+	if( i == MAX_FRIENDS ) { 
+		clif_friendslist_reqack(sd, f_sd, 2); 
+		return; 
+	}
 
 	// Friend doesn't exist (no player with this name)
 	if (f_sd == NULL) {
@@ -12706,12 +12713,6 @@ void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd)
 			clif_displaymessage(fd, "Friend already exists.");
 			return;
 		}
-	}
-
-	if (i == MAX_FRIENDS) {
-		//No space, list full.
-		clif_friendslist_reqack(sd, f_sd, 2);
-		return;
 	}
 
 	f_sd->friend_req = sd->status.char_id;
@@ -15758,7 +15759,7 @@ int clif_autoshadowspell_list(struct map_session_data *sd) {
 	WFIFOHEAD(fd, 2 * 6 + 4);
 	WFIFOW(fd,0) = 0x442;
 	for( i = 0, c = 0; i < MAX_SKILL; i++ )
-		if( sd->status.skill[i].flag == 13 && sd->status.skill[i].id > 0 &&
+		if( sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 &&
 				sd->status.skill[i].id < GS_GLITTERING && skill_get_type(sd->status.skill[i].id) == BF_MAGIC )
 		{ // Can't auto cast both Extended class and 3rd class skills.
 			WFIFOW(fd,8+c*2) = sd->status.skill[i].id;
@@ -15832,6 +15833,23 @@ void clif_msgtable_num(int fd, int line, int num) {
 	WFIFOSET(fd, packet_len(0x7e2));
 #endif
 }
+
+/*========================================== 
+ * used by SC_AUTOSHADOWSPELL 
+ *------------------------------------------*/ 
+void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
+{ 
+	if( sd->menuskill_id != SC_AUTOSHADOWSPELL ) 
+		return; 
+ 
+	if( pc_istrading(sd) ) { 
+		clif_skill_fail(sd,sd->ud.skillid,0,0); 
+		sd->menuskill_val = sd->menuskill_id = 0; 
+		return; 
+	} 
+	skill_select_menu(sd,RFIFOL(fd,2),RFIFOW(fd,6)); 
+	sd->menuskill_val = sd->menuskill_id = 0; 
+} 
 
 /*==========================================
  * Main client packet processing function
@@ -16152,6 +16170,7 @@ static void packetdb_addpacket(short cmd, int len, char *func, ...)
 		{clif_parse_BattleChat,"battlechat"},
 		{clif_parse_mercenary_action,"mermenu"},
 		{clif_parse_progressbar,"progressbar"},
+		{clif_parse_SkillSelectMenu,"skillselectmenu"},
 #if PACKETVER >= 20091229
 		{clif_parse_PartyBookingRegisterReq,"bookingregreq"},
 		{clif_parse_PartyBookingSearchReq,"bookingsearchreq"},

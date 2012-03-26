@@ -12,3 +12,6 @@
 /vcproj-10/login-server_sql
 /vcproj-10/mapcache
 /vcproj-10/map-server_sql
+char-server_sql
+login-server_sql
+map-server_sql
