@@ -3175,6 +3175,10 @@ static const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, con
 		map[m].flag.guildlock=state;
 	else if (!strcmpi(w3,"reset"))
 		map[m].flag.reset=state;
+	else if (!strcmpi(w3,"nostorage")) 
+		map[m].flag.nostorage=state; 
+	else if (!strcmpi(w3,"noguildstorage")) 
+		map[m].flag.noguildstorage=state;
 	else
 		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));
 

@@ -361,7 +361,9 @@ enum {
 	MF_MONSTER_NOTELEPORT,
 	MF_PVP_NOCALCRANK,	//50
 	MF_BATTLEGROUND,
-	MF_RESET
+	MF_RESET,
+	MF_NOSTORAGE,
+	MF_NOGUILDSTORAGE
 };
 
 const char* script_op2name(int op)
@@ -9734,6 +9736,8 @@ BUILDIN_FUNC(getmapflag)
 			case MF_PVP_NOCALCRANK:		script_pushint(st,map[m].flag.pvp_nocalcrank); break;
 			case MF_BATTLEGROUND:		script_pushint(st,map[m].flag.battleground); break;
 			case MF_RESET:				script_pushint(st,map[m].flag.reset); break;
+			case MF_NOSTORAGE:			script_pushint(st,map[m].flag.nostorage); break;
+			case MF_NOGUILDSTORAGE:		script_pushint(st,map[m].flag.noguildstorage); break;
 		}
 	}
 
@@ -9812,6 +9816,8 @@ BUILDIN_FUNC(setmapflag)
 			case MF_PVP_NOCALCRANK:		map[m].flag.pvp_nocalcrank = 1; break;
 			case MF_BATTLEGROUND:		map[m].flag.battleground = (!val || atoi(val) < 0 || atoi(val) > 2) ? 1 : atoi(val); break;
 			case MF_RESET:				map[m].flag.reset = 1; break;
+			case MF_NOSTORAGE:			map[m].flag.nostorage=1; break;
+			case MF_NOGUILDSTORAGE:		map[m].flag.noguildstorage=1; break;
 		}
 	}
 
@@ -9892,6 +9898,8 @@ BUILDIN_FUNC(removemapflag)
 			case MF_PVP_NOCALCRANK:		map[m].flag.pvp_nocalcrank = 0; break;
 			case MF_BATTLEGROUND:		map[m].flag.battleground = 0; break;
 			case MF_RESET:				map[m].flag.reset = 0; break;
+			case MF_NOSTORAGE:			map[m].flag.nostorage=0; break;
+			case MF_NOGUILDSTORAGE:		map[m].flag.noguildstorage=0; break;
 		}
 	}
 
