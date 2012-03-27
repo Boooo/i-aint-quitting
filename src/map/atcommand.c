@@ -817,6 +817,12 @@ ACMD_FUNC(storage)
 	
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return -1;
+	
+	if (map[sd->bl.m].flag.nostorage)
+	{
+		clif_displaymessage(sd->fd, "Você não pode abrir o armazém neste mapa.");
+		return -1;
+	}
 
 	if (storage_reqstorageopen(sd) == 1)
 	{	//Already open.
@@ -844,6 +850,12 @@ ACMD_FUNC(guildstorage)
 
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading)
 		return -1;
+		
+	if (map[sd->bl.m].flag.noguildstorage)
+	{ 
+		clif_displaymessage(sd->fd, "Você não pode abrir o armazém do clã neste mapa.");
+		return -1;
+	}
 
 	if (sd->state.storage_flag == 1) {
 		clif_displaymessage(fd, msg_txt(250));
