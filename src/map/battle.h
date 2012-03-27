@@ -475,6 +475,7 @@ extern struct Battle_Config
 	// Cronus
 	int shield_penalty_rate; // [Vianna]
 	int no_warp_ress;
+	int show_mvp_info; // [mkbu95]
 } battle_config;
 
 void do_init_battle(void);
