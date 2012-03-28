@@ -1222,7 +1222,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 		sc_start(bl, SC_STUN, 30 + 8 * skilllv, skilllv, skill_get_time(skillid,skilllv));
 		break;
 	case LG_PINPOINTATTACK:
-		rate = 12 + (10 * skilllv + (sstatus->agi / 100) ) * 140 / 100;
+		rate = 30 + (((5 * (sd?pc_checkskill(sd,LG_PINPOINTATTACK):skilllv)) + (sstatus->agi + status_get_lv(src))) / 10);
 		switch( skilllv ) {
 			case 1:
 				sc_start(bl,SC_BLEEDING,rate,skilllv,skill_get_time(skillid,skilllv));
@@ -1232,7 +1232,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 					pc_delspiritball(dstsd, dstsd->spiritball, 0);
 				break;
 			default:
-				skill_break_equip(bl,(skilllv == 3) ? EQP_SHIELD : (skilllv == 4) ? EQP_ARMOR : EQP_WEAPON,rate,BCT_ENEMY);
+				skill_break_equip(bl,(skilllv == 3) ? EQP_SHIELD : (skilllv == 4) ? EQP_ARMOR : EQP_WEAPON,rate * 100,BCT_ENEMY);
 				break;
 		}
 		break;
@@ -2140,7 +2140,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 		/**
 		 * Official Magic Reflection Behavior : damage reflected depends on gears caster wears, not target
 		 **/
-		#if RR_MAGIC_REFLECTION
+		#if MAGIC_REFLECTION_TYPE
 			if( dmg.dmg_lv != ATK_MISS )//Wiz SL cancelled and consumed fragment
 				dmg = battle_calc_attack(BF_MAGIC,bl,bl,skillid,skilllv,flag&0xFFF);
 		#endif
@@ -5538,14 +5538,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			status_change_end(bl, SC_STONE, INVALID_TIMER);
 			status_change_end(bl, SC_SLEEP, INVALID_TIMER);
 			status_change_end(bl, SC_STUN, INVALID_TIMER);
+			status_change_end(bl, SC_WHITEIMPRISON, INVALID_TIMER);
 		}
 		//Is this equation really right? It looks so... special.
 		if(battle_check_undead(tstatus->race,tstatus->def_ele))
 		{
-			status_change_start(bl, SC_BLIND,
-				100*(100-(tstatus->int_/2+tstatus->vit/3+tstatus->luk/10)),
-				1,0,0,0,
-				skill_get_time2(skillid, skilllv) * (100-(tstatus->int_+tstatus->vit)/2)/100,0);
+			status_change_start(bl, SC_BLIND, 100 * (100 - ((tstatus->int_ / 2) + (tstatus->vit / 3) + (tstatus->luk / 10))), 1, 0, 0, 0, skill_get_time2(skillid, skilllv) * (100 - (tstatus->int_ + tstatus->vit) / 2) / 100, 0);
 		}
 		clif_skill_nodamage(src,bl,skillid,skilllv,1);
 		if(dstmd)
@@ -10261,14 +10259,17 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 					sg->val2 = bl->id;
 				} else
 					sec = 3000; //Couldn't trap it?
-				clif_skillunit_update(&src->bl);
+				
+				if( sg->unit_id == UNT_ANKLESNARE ) {
+					clif_skillunit_update(&src->bl);
 
-				/**
-				 * If you're snared from a trap that was invisible this makes the trap be
-				 * visible again -- being you stepped on it (w/o this the trap remains invisible and you go "WTF WHY I CANT MOVE")
-				 * bugreport:3961
-				 **/
-				clif_changetraplook(&src->bl, UNT_ANKLESNARE);
+					/**
+					 * If you're snared from a trap that was invisible this makes the trap be
+					 * visible again -- being you stepped on it (w/o this the trap remains invisible and you go "WTF WHY I CANT MOVE")
+					 * bugreport:3961
+					 **/
+					clif_changetraplook(&src->bl, UNT_ANKLESNARE);
+				}
 
 				sg->limit = DIFF_TICK(tick,sg->tick)+sec;
 				sg->interval = -1;
@@ -11769,10 +11770,6 @@ int skill_check_condition_castend(struct map_session_data* sd, short skill, shor
 	case PR_BENEDICTIO:
 		skill_check_pc_partner(sd, skill, &lv, 1, 1);
 		break;
-	case AB_ADORAMUS:
-		//if( skill_check_pc_partner(sd,skill,&lv, 1, 2) )
-		//	sd->state.no_gemstone = 1; // Mark this skill as it don't consume ammo because partners gives SP
-		break;
 	case AM_CANNIBALIZE:
 	case AM_SPHEREMINE:
 	{
@@ -12015,19 +12012,27 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, short 
 			continue;
 
 		switch( skill )
-		{
-		case AM_CALLHOMUN:
-			if (sd->status.hom_id) //Don't delete items when hom is already out.
-				continue;
-			break;
-		case NC_SHAPESHIFT:
-			if( i < 4 )
-				continue;
-			break;
-		case WZ_FIREPILLAR: // celest
-			if (lv <= 5)	// no gems required at level 1-5
-				continue;
-			break;
+		{ 
+			case AM_CALLHOMUN: 
+				if (sd->status.hom_id) //Don't delete items when hom is already out. 
+					continue; 
+				break; 
+			case NC_SHAPESHIFT: 
+				if( i < 4 ) 
+					continue; 
+				break; 
+			case WZ_FIREPILLAR: // celest 
+				if (lv <= 5)    // no gems required at level 1-5 
+					continue; 
+				break; 
+			case AB_ADORAMUS: 
+				if( itemid_isgemstone(skill_db[j].itemid[i]) && skill_check_pc_partner(sd,skill,&lv, 1, 2) ) 
+					continue; 
+				break; 
+			case WL_COMET: 
+				if( itemid_isgemstone(skill_db[j].itemid[i]) && skill_check_pc_partner(sd,skill,&lv, 1, 0) ) 
+					continue; 
+				break;
 		}
 
 		req.itemid[i] = skill_db[j].itemid[i];
