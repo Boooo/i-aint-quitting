@@ -1234,8 +1234,17 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 	tsd = BL_CAST(BL_PC, target);
 
 	if(sd)
-		wd.blewcount += battle_blewcount_bonus(sd, skill_num);
-
+	{
+		if (tsd->special_state.blew_immune)
+		{// Check if the target is immune to pushback (bAddSkillBlow bonus)
+			wd.blewcount = 0;
+		}
+		else
+		{
+			wd.blewcount += battle_blewcount_bonus(sd, skill_num);
+		}
+	}
+		
 	//Set miscellaneous data that needs be filled regardless of hit/miss
 	if(
 		(sd && sd->state.arrow_atk) ||

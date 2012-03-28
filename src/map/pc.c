@@ -2575,6 +2575,10 @@ int pc_bonus(struct map_session_data *sd,int type,int val)
 		if(sd->state.lr_flag != 2)
 			sd->sp_base_matk += val;
 		break;
+	case SP_SKILL_BLOW_IMMUNITY:
+		if (sd->state.lr_flag != 2)
+			sd->special_state.blew_immune = 1;
+		break;
 	default:
 		ShowWarning("pc_bonus: unknown type %d %d !\n",type,val);
 		break;
