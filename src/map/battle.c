@@ -3035,8 +3035,11 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 		switch (skill_num)
 		{	//Calc base damage according to skill
-			case AL_HEAL:
 			case PR_BENEDICTIO:
+				ad.damage = skill_calc_heal(src, target, skill_num, skill_lv, false);
+				flag.imdef = 1;//a Skill não deve ser afetada pela defesa[Sicks]
+				break;
+			case AL_HEAL:
 			case PR_SANCTUARY:
 			/**
 			 * Arch Bishop
