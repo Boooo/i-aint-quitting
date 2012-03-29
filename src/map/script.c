@@ -49,6 +49,10 @@
 #include "script.h"
 #include "quest.h"
 
+#ifdef PCRE_SUPPORT
+	#include <pcre.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15866,6 +15870,123 @@ BUILDIN_FUNC(freeloop) {
 	return 0;
 }
 
+#ifdef PCRE_SUPPORT
+/// Searches a string for matches through a regexp pattern
+/// preg_search "<subject>","<pattern>"[,<matches>...]
+BUILDIN_FUNC(preg_search)
+{
+	const char* subject;
+	const char* pattern;
+	const char* error = NULL;
+	int erroffset = 0;
+	pcre* re;
+
+	subject = script_getstr(st,2);
+	pattern = script_getstr(st,3);  // TODO: make this a built-in type so it needs to be compiled only once? (it can be studied then once as well)
+
+	if( ( re = pcre_compile(pattern, 0, &error, &erroffset, NULL) ) != NULL )
+	{
+		int* match, result, count = 0;
+
+		pcre_fullinfo(re, NULL, PCRE_INFO_CAPTURECOUNT, &count);
+
+		count = (count+1)*3;  // +1 for entire pattern match, 1/3 is used internally by pcre_exec
+		match = aMalloc(count*sizeof(int));
+
+		if( ( result = pcre_exec(re, NULL, subject, strlen(subject), 0, 0, match, count) ) > 0 )
+		{
+			int i;
+
+			for( i = 0; i < result && script_hasdata(st,i+4); i++ )
+			{
+				const char* name;
+				const char* str;
+				struct map_session_data* sd = NULL;
+				struct script_data* data;
+				int32 idx, id;
+
+				data = script_getdata(st,i+4);
+
+				if( !data_isreference(data) )
+				{
+					ShowError("buildin_preg_search: Parameter %d is not a variable.\n", i+3);
+					break;
+				}
+
+				id   = reference_getid(data);
+				idx  = reference_getindex(data);
+				name = reference_getname(data);
+
+				if( !is_string_variable(name) )
+				{
+					ShowError("buildin_preg_search: Parameter %d is not a string variable.\n", i+3);
+					break;
+				}
+
+				if( not_server_variable(name[0]) && ( sd = script_rid2sd(st) ) == NULL )
+				{
+					aFree(match);
+					pcre_free(re);
+					script_pushint(st,0);
+					return 0;
+				}
+
+				if( pcre_get_substring(subject, match, result, i, &str) < 0 )
+				{
+					ShowError("buildin_preg_search: pcre_get_substring error.\n");
+					break;
+				}
+
+				set_reg(st, sd, reference_uid(id, idx), name, (const void*)str, script_getref(st,i+4));
+
+				pcre_free_substring(str);
+			}
+
+			if( i == result || !script_hasdata(st,i+4) )
+			{// success
+				aFree(match);
+				pcre_free(re);
+				script_pushint(st,result);
+				return 0;
+			}
+		}
+		else if( result == 0 )
+		{// match vector buffer too small, should not happen, since we get the required size in advance
+			ShowDebug("buildin_preg_search: Match vector is too small (subject='%s', pattern=/%s/, count=%s). Please report this!\n", subject, pattern, count);
+		}
+		else if( result == PCRE_ERROR_NOMATCH )
+		{// nothing matched (not an actual error)
+			aFree(match);
+			pcre_free(re);
+			script_pushint(st,0);
+			return 0;
+		}
+		else
+		{// failure
+			ShowError("buildin_preg_search: pcre_exec error: %d (subject='%s', pattern=/%s/)\n", result, subject, pattern);
+		}
+
+		aFree(match);
+	}
+	else
+	{
+		ShowError("buildin_preg_search: pcre_compile error: %s (pattern /%s/ failed at offset %d)\n", error, pattern, erroffset);
+	}
+
+	if( re )
+	{
+		pcre_free(re);
+	}
+
+	// terminate script
+	script_pushint(st,0);
+	st->state = END;
+	return 1;
+}
+
+
+#endif  // PCRE_SUPPORT
+
 /*==========================================
  * Comandos customizados Cronus
  *------------------------------------------*/
@@ -16180,6 +16301,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(activatepset,"i"), // Activate a pattern set [MouseJstr]
 	BUILDIN_DEF(deactivatepset,"i"), // Deactive a pattern set [MouseJstr]
 	BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
+	BUILDIN_DEF(preg_search,"ss*"), // String matching [ai4rei]
 #endif
 	BUILDIN_DEF(dispbottom,"s"), //added from jA [Lupus]
 	BUILDIN_DEF(getusersname,""),
