@@ -1,13 +1,10 @@
-//===== rAthena Script =======================================
-//= Map flags that disable dead branching
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita o uso do item Galho Seco no mapa.
+//===== Por: =================================================
 //= rAthena Dev Team
-//= 1.2 [Lupus]
-//= 1.3 [massdriller]
-//= 1.6a [Lupus]
-//= 1.7 Added all novice maps. [L0ne_W0lf]
-//= 1.8 Removed restriction on PVP maps. [L0ne_W0lf]
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.8
+//============================================================
 
 // Cities ======================
 ayo_in01	mapflag	nobranch

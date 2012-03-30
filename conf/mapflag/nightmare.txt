@@ -1,8 +1,10 @@
-//===== rAthena Script =======================================
-//= Map flags that allow players to drop items/equips on death
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Habilita chance de ao morrer, o jogador dropar equipamentos.
+//===== Por: =================================================
 //= rAthena Dev Team
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.0
+//============================================================
 
 
 //Nightmare Equipment Drops PVP

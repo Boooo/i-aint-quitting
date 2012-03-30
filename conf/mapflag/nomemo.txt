@@ -1,14 +1,10 @@
-//===== rAthena Script =======================================
-//= Map flags that disable warp portal memory
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita opção de memorizar o mapa na habilidade Portal.
+//===== Por: =================================================
 //= rAthena Dev Team
-//= 1.6a added up to Hugel maps. [Lupus]
-//= 1.6b Added job_knt map. [Samuray22]
-//= 1.7 Added all novice maps. [L0ne_W0lf]
-//= 1.8 Added nameless_i location [Lupus]
-//= 1.8a Removed duplicate gef_cas nomemo mapflags [Yommy]
-//= 1.8b Removed duplicate arug_dun01 & schg_dun01 entries [Gepard]
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.8b
+//============================================================
 
 
 // Towns  ====================

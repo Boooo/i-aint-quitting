@@ -4,6 +4,8 @@
 *.sdf
 *.opensdf
 *.suo
+*.html
+/vcproj-9/*.user
 /vcproj-9/char-server_sql
 /vcproj-9/login-server_sql
 /vcproj-9/mapcache

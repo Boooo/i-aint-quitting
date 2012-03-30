@@ -1,10 +1,10 @@
-//===== rAthena Script =======================================
-//= Map flag that disable party modification.
-//= Currently not used officially by any maps.
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita modificação do grupo no mapa.
+//===== Por: =================================================
 //= rAthena Dev Team
-//= v 1.0
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.0
+//============================================================
 
 // Sealed Shrine ==================
 1@cata	mapflag	partylock

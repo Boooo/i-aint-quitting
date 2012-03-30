@@ -1,13 +1,9 @@
-//===== rAthena Script =======================================
-//= Map Flags for maps where the night is visible.
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Habilita o efeito de noite no mapa.
+//===== Por: =================================================
 //= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.0 [Skotlex]
-//===== Compatible With: =====================================
-//=
-//===== Description: =========================================
-//= 'nightenabled' specifies which maps can display "night".
+//===== Versão Atual: ========================================
+//= 1.0
 //============================================================
 
 alb2trea	mapflag	nightenabled

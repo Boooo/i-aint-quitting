@@ -1,10 +1,10 @@
-//===== rAthena Script =======================================
-//= Map flags that disable skills on a map
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita o uso de habilidades no mapa.
+//===== Por: =================================================
 //= rAthena Dev Team
-//= 1.0 [L0ne_W0lf]
-//= 1.1 Added additional maps. [L0ne_W0lf]
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.1
+//============================================================
 
 //Prontera Arena ===============
 prt_are_in	mapflag	noskill
