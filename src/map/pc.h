@@ -410,6 +410,10 @@ struct map_session_data {
 	int duel_invite;
 
 	int killerrid, killedrid;
+	
+#if PAGE_STORAGE
+	int storage_page;  // storage paging [ai4rei]
+#endif
 
 	int cashPoints, kafraPoints;
 	int rental_timer;

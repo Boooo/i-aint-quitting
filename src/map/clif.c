@@ -2420,6 +2420,15 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 	const int cmd = 28;
 #endif
 
+#if PAGE_STORAGE
+	int skip_e = 0, skip_s = 0, max_e = 20480/cmd, max_s = 20480/s;
+ 
+	if( sd->storage_page < 0 )
+	{// storage paging
+		sd->storage_page = 0;
+	}
+#endif
+
 	buf = (unsigned char*)aMalloc(items_length * s + 4);
 	bufe = (unsigned char*)aMalloc(items_length * cmd + 4);
 
@@ -2430,6 +2439,20 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 		id = itemdb_search(items[i].nameid);
 		if( !itemdb_isstackable2(id) )
 		{ //Equippable
+#if PAGE_STORAGE	
+			if( sd->storage_page )
+			{// storage paging
+				if( skip_e/max_e < sd->storage_page-1 )
+				{
+					skip_e++;
+					continue;
+				}
+				else if( ne >= max_e )
+				{
+					continue;
+				}
+			}
+#endif
 			WBUFW(bufe,ne*cmd+4)=i+1;
 			clif_item_sub(bufe, ne*cmd+6, &items[i], id, id->equip);
 			clif_addcards(WBUFP(bufe, ne*cmd+16), &items[i]);
@@ -2441,6 +2464,20 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 		}
 		else
 		{ //Stackable
+#if PAGE_STORAGE			
+			if( sd->storage_page )
+			{// storage paging
+				if( skip_s/max_s < sd->storage_page-1 )
+				{
+					skip_s++;
+					continue;
+				}
+				else if( n >= max_s )
+				{
+					continue;
+				}
+			}
+#endif
 			WBUFW(buf,n*s+4)=i+1;
 			clif_item_sub(buf, n*s+6, &items[i], id,-1);
 #if PACKETVER >= 5

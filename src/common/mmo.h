@@ -112,8 +112,12 @@
 #define DEFAULT_WALK_SPEED 150
 #define MIN_WALK_SPEED 0
 #define MAX_WALK_SPEED 1000
+
 #define MAX_STORAGE 600
 #define MAX_GUILD_STORAGE 600
+#define PAGE_STORAGE 0	// Ativa o sistema de paginamento de armazém.
+						// Extremamente recomendado quando o MAX_STORAGE ou MAX_GUILD_STORAGE forem maiores que 731.
+
 #define MAX_PARTY 12
 #define MAX_GUILD 16+10*6	// increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 20	// increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
@@ -725,18 +729,6 @@ enum {
 // sanity checks...
 #if MAX_ZENY > INT_MAX
 #error MAX_ZENY is too big
-#endif
-
-#if MAX_STORAGE > 731
-#error MAX_STORAGE is too big
-#undef MAX_STORAGE
-#define MAX_STORAGE 731
-#endif
-
-#if MAX_GUILD_STORAGE > 731
-#error MAX_GUILD_STORAGE is too big
-#undef MAX_GUILD_STORAGE
-#define MAX_GUILD_STORAGE 731
 #endif
 
 #endif /* _MMO_H_ */

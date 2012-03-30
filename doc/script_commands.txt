@@ -7336,5 +7336,32 @@ for name and 0 for all other types.
 
 ----------------------------------------
 
+*GetNPCInfo(Type{, "NPCName"});
+Type - determines which value will be returned
+NPCName - name of the npc which should be checked
+
+allowed types:
+0 - map name
+1 - x coordinate
+2 - y coordinate
+3 - view direction
+4 - sprite id
+5 - GID
+6 - subtype (0 - warp | 1 - shop | 2 - script | 3 - cashshop)
+
+----------------------------------------
+
+*preg_search(<"subject">,<"pattern">{,<matches>...});
+-subject
+String or string variable to search in.
+-pattern
+Regular expression to use on the string. Sub-patterns (parenthesed sub-expressions) yield separate matches.
+-matches
+String variables that receive matched strings. The first match is always the entire matched string, all others receive matches from sub-patterns.
+
+Return value is amount of matches (regardless of whether they were stored inside variables or not. If there were no matches, the return value is zero.
+
+----------------------------------------
+
 Whew.
 That's about all of them.
