@@ -7759,6 +7759,17 @@ BUILDIN_FUNC(openstorage)
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return 0;
+		
+#if PAGE_STORAGE
+	if( script_hasdata(st,2) )
+	{// storage paging
+		sd->storage_page = script_getnum(st,2);
+	}
+	else
+	{
+		sd->storage_page = 0;
+	}
+#endif
 
 	storage_reqstorageopen(sd);
 	return 0;
@@ -7772,6 +7783,17 @@ BUILDIN_FUNC(guildopenstorage)
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return 0;
+		
+#if PAGE_STORAGE
+	if( script_hasdata(st,2) )
+	{// storage paging
+		sd->storage_page = script_getnum(st,2);
+	}
+	else
+	{
+		sd->storage_page = 0;
+	}
+#endif
 
 	ret = storage_guild_storageopen(sd);
 	script_pushint(st,ret);
@@ -15987,6 +16009,55 @@ BUILDIN_FUNC(preg_search)
 
 #endif  // PCRE_SUPPORT
 
+// [Kenpachi]
+// GetNPCInfo(type{, "NPCname"});
+BUILDIN_FUNC(getnpcinfo)
+{
+	struct npc_data *nd;
+
+	if(script_hasdata(st, 3))
+	{
+		nd = npc_name2id(script_getstr(st, 3));
+		if(nd == NULL)
+		{
+			ShowError("getnpcgid: NPC not found: %s\n", script_getstr(st, 3));
+			script_pushint(st, -1);
+			return 0;
+		}
+	}
+	else
+		nd = (struct npc_data *)map_id2bl(st->oid);
+
+	switch(script_getnum(st, 2))
+	{
+	case 0: // map
+		script_pushstrcopy(st, map[nd->bl.m].name);
+		break;
+	case 1: // x
+		script_pushint(st, nd->bl.x);
+		break;
+	case 2: // y
+		script_pushint(st, nd->bl.y);
+		break;
+	case 3: // view direction
+		script_pushint(st, nd->ud.dir);
+		break;
+	case 4: // sprite id
+		script_pushint(st, nd->class_);
+		break;
+	case 5: // GID
+		script_pushint(st, nd->bl.id);
+		break;
+	case 6: // type
+		script_pushint(st, nd->subtype);
+	default:
+		script_pushint(st, -1);
+		break;
+	}
+
+	return 0;
+}
+
 /*==========================================
  * Comandos customizados Cronus
  *------------------------------------------*/
@@ -16095,6 +16166,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(readparam,"i?"),
 	BUILDIN_DEF(getcharid,"i?"),
 	BUILDIN_DEF(getnpcid,"i"),
+	BUILDIN_DEF(getnpcinfo, "i?"), // [Kenpachi]
 	BUILDIN_DEF(getpartyname,"i"),
 	BUILDIN_DEF(getpartymember,"i?"),
 	BUILDIN_DEF(getpartyleader,"i?"),
@@ -16147,8 +16219,13 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(gettimetick,"i"),
 	BUILDIN_DEF(gettime,"i"),
 	BUILDIN_DEF(gettimestr,"si"),
+#if !PAGE_STORAGE
 	BUILDIN_DEF(openstorage,""),
 	BUILDIN_DEF(guildopenstorage,""),
+#else
+	BUILDIN_DEF(openstorage,"?"),
+	BUILDIN_DEF(guildopenstorage,"?"),
+#endif
 	BUILDIN_DEF(itemskill,"vi"),
 	BUILDIN_DEF(produce,"i"),
 	BUILDIN_DEF(cooking,"i"),

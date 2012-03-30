@@ -823,6 +823,17 @@ ACMD_FUNC(storage)
 		clif_displaymessage(sd->fd, "Você não pode abrir o armazém neste mapa.");
 		return -1;
 	}
+	
+#if PAGE_STORAGE
+	if( message && message[0] )
+	{// storage paging
+		sd->storage_page = atoi(message);
+	}
+	else
+	{
+		sd->storage_page = 0;
+	}
+#endif
 
 	if (storage_reqstorageopen(sd) == 1)
 	{	//Already open.
@@ -866,6 +877,17 @@ ACMD_FUNC(guildstorage)
 		clif_displaymessage(fd, msg_txt(251));
 		return -1;
 	}
+	
+#if PAGE_STORAGE
+	if( message && message[0] )
+	{// storage paging
+		sd->storage_page = atoi(message);
+	}
+	else
+	{
+		sd->storage_page = 0;
+	}
+#endif
 
 	storage_guild_storageopen(sd);
 	clif_displaymessage(fd, "Guild storage opened.");
