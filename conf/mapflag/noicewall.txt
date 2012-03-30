@@ -1,13 +1,9 @@
-//===== rAthena Script =======================================
-//= Map flags that disable icewall skill
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita o uso da habilidade Barreira de Gelo no mapa.
+//===== Por: =================================================
 //= rAthena Dev Team
-//=============================================================
-//= noicewall: Disables Icewall skill.
-//= To disable Icewall on a specific map add the mapname here.
-//= 1.6a Re-enabled icewalls for cities [Lupus]
-//= 1.7 Officially icewall is allowed on interoirs. [L0ne_w0lf]
-//= 1.8 fixed aru castles mapnames
+//===== Versão Atual: ========================================
+//= 1.8
 //============================================================
 
 //ayo_in01	mapflag	noicewall

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
-//= Map flags that disable use of fly wings
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Desabilita uso de Asa de Mosca.
+//= Para desabilitar o uso de Asa de Borboleta use noreturn
+//===== Por: =================================================
 //= rAthena Dev Team
-//= 1.6a [Lupus]
-//===== Notes: ===============================================
-//= For disabling Butterfly wings use noreturn
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
+//= 1.6a
+//============================================================
 
 // Cities ========================
 ayo_in01	mapflag	noteleport

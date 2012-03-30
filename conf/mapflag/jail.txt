@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
-//= Map Flags for Jails ( ATCommand @jail <player> )
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Mapflag para prisão.
+//===== Por: =================================================
 //= rAthena Dev Team
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
 //= 1.0
-//===== Compatible With: =====================================
-//=
-//===== Description: =========================================
+//===== Descrição: ===========================================
 //= pvp: Turns on PvP mode
 //= pvp_noparty: Can't attack player in same party
 //= nobranch: No Dead Branching allowed.
@@ -15,8 +13,6 @@
 //= nosave: No saving respawn point allowed. Use SavePoint to use the
 //=                players previous savepoint, or choose one manually.
 //= noteleport: No Teleporting allowed.  No f-wings or b-wings.
-//===== Additional Comments: =================================
-//= 
 //============================================================
 
 

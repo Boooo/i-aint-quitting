@@ -1,7 +1,9 @@
-//===== Description: =========================================
-//= pvp	off: Disables Player versus Player mode.
-//= To disable PvP mode on a specific map add the mapname here.
-//= v 1.1a
+//===== Cronus Script ========================================
+//= Desabilita modo PvP em um mapa.
+//===== Por: =================================================
+//= rAthena Dev Team
+//===== Versão Atual: ========================================
+//= 1.1
 //============================================================
 
 1@cata	mapflag	pvp	off

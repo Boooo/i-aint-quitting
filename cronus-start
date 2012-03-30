@@ -1,7 +1,7 @@
 #!/bin/sh
 # athena starting script by rowla
 # modified by shazeya@syafi.com (NL101541)
-# traduzido por GreenBox
+# traduzido por GreenBox e mkbu95
 
 PATH=./:$PATH
 
@@ -10,12 +10,10 @@ C_SRV=char-server_sql
 M_SRV=map-server_sql
 
 print_start() {
-echo "Iniciando o emulador Cronus..."
-echo "            (c) 2003 Athena Project"
-echo "              modified by shazeya@syafi.com"
-echo "              traduzido por GreenBox"
+echo "Iniciando Cronus-Emulator"
+echo "(c) 2003 Athena Project"
 echo ""
-echo "Verificando..."
+echo "Realizando verificação..."
 }
 
 check_files() {
@@ -23,18 +21,18 @@ check_files() {
     do
         if [ ! -f ./$i ]; then
             echo "O arquivo $i não existe."
-            echo "Erro, cheque sua compilação."
+            echo "Erro: verifique sua compilação."
             exit 1;
         fi
     done
 
-    echo "Verificação completa!"
+    echo "Verificação finalizada!"
     echo "Iniciando o emulador..."
 }
     
 
 case $1 in
-    'start')
+    'ligar')
         print_start
         check_files
 
@@ -44,14 +42,14 @@ case $1 in
 
         echo "Cronus iniciado com sucesso!"
     ;;
-    'stop')
+    'desligar')
         ps ax | grep -E "${L_SRV}|${C_SRV}|${M_SRV}" | awk '{print $1}' | xargs kill
     ;;
-    'restart')
-        $0 stop
-        $0 start
+    'reiniciar')
+        $0 desligar
+        $0 ligar
     ;;
     *)
-        echo "Usage: athena-start { start | stop | restart }"
+        echo "Uso: cronus-start { ligar | desligar | reiniciar }"
     ;;
 esac

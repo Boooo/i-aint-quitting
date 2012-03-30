@@ -1,14 +1,14 @@
-//===== rAthena Script =======================================
-//= GvG On Map Flags
-//===== By: ==================================================
+//===== Cronus Script ========================================
+//= Mapflags para GvG
+//===== Por: =================================================
 //= rAthena Dev Team
-//===== Current Version: =====================================
+//===== Versão Atual: ========================================
 //= 1.2
-//===== Description: =========================================
-//= gvg: Turns on GvG mode (same as PvP except Guilds are
-//=      automatically allied)
-//= gvg_castle: Describes castle maps for WoE.
-//===== Additional Comments: =================================
+//===== Descrição: ===========================================
+//= gvg: Liga modo GvG (mesmo que PvP exceto que os Clãs não
+//=      poderão atingir aliados)
+//= gvg_castle: Mapas de castelo para WoE.
+//===== Comentários Adicionais: ==============================
 //= 1.2 Updated with new meanings of gvg and gvg_castle
 //= 1.1 Added Novice Guild Castles
 //============================================================
