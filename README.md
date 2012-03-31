@@ -15,18 +15,18 @@ Special thanks to all rAthena and eAthena team for the development of the emulat
 
 
 Equipe
---------------
-* Administradores
+------
+### Administradores
 - Cainho		- Caio Mateus
 - GreenBox		- Jonathan
 - JAF			- João Angelo
 
-* Coordenadores
+### Coordenadores
 - Core			- Matheus
 - Otonii		- Leandro
 - Roberto		- Roberto
 
-* Desenvolvedores
+### Desenvolvedores
 - Elf0			- 
 - J Gois		- José Gois
 - J4ND3RS0N		- Janderson
