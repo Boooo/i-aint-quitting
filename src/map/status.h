@@ -21,6 +21,12 @@ struct status_change;
 #define MAX_REFINE 10
 #endif
 
+// Fórmula de ASPD utilizada.
+// Caso não esteja utilizando o Renewal, não há necessidade de alterar abaixo.
+// 2 = Renovação 2009
+// 3 = Renovação 2010
+#define ASPD_FORMULA 3
+
 enum refine_type {
 	REFINE_TYPE_ARMOR   = 0,
 	REFINE_TYPE_WEAPON1 = 1,
