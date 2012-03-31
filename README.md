@@ -27,8 +27,8 @@ Equipe
 - Roberto		- Roberto
 
 ### Desenvolvedores
+- Axl		- José Gois
 - Elf0			- 
-- J Gois		- José Gois
 - J4ND3RS0N		- Janderson
 - Joao Pedro	- João Pedro
 - LyDe			- Luiz Fernando
