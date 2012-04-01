@@ -17,9 +17,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define GS_MEMBER_UNMODIFIED 0x00
-#define GS_MEMBER_MODIFIED 0x01
-#define GS_MEMBER_NEW 0x02
+enum
+{
+	GS_MEMBER_UNMODIFIED = 0x00,
+	GS_MEMBER_MODIFIED	 = 0x01,
+	GS_MEMBER_NEW		 = 0x02,
+};
 
 #define GS_POSITION_UNMODIFIED 0x00
 #define GS_POSITION_MODIFIED 0x01
