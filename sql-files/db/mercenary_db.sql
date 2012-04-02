@@ -47,14 +47,3 @@ REPLACE INTO `mercenary_db` VALUES (2038,'VALKYRIE_B','Valkyrie Randgris',90,100
 REPLACE INTO `mercenary_db` VALUES (2058,'M_MIMIC','Mimic',51,6120,182,1,800,950,10,40,44,121,1,60,75,110,10,12,1,0,60,100,972,500,288);
 REPLACE INTO `mercenary_db` VALUES (2059,'M_DISGUISE','Disguise',55,7543,180,2,526,693,18,29,0,72,45,35,48,65,10,12,1,6,82,147,516,768,384);
 REPLACE INTO `mercenary_db` VALUES (2060,'M_ALICE','Alice',62,10000,221,1,700,850,5,5,64,64,42,85,100,130,10,12,1,7,60,200,502,1999,480);
-
-
-DROP TABLE IF EXISTS `mercenary_skill_db`;
-CREATE TABLE `mercenary_skill_db` (
-	`MercenaryID` mediumint(9) unsigned NOT NULL default '0',
-	`SkillID` mediumint(9) unsigned NOT NULL default '0',
-	`SkillLevel` tinyint(4) unsigned NOT NULL default '0',
-	PRIMARY KEY (`SkillID`)
-) ENGINE=MyISAM;
-
-#falta adicionar ainda

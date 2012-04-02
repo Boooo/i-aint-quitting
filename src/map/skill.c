@@ -15807,6 +15807,50 @@ static bool skill_parse_row_abradb(char* split[], int columns, int current)
 	return true;
 }
 
+static int abra_read_sqldb(void)
+{
+	const char* abra_db[] = { "abra_db" };
+	int i;
+	
+	for (i = 0; i < ARRAYLENGTH(abra_db); ++i)
+	{
+		uint32 lines = 0, count = 0;
+		
+		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", abra_db[i]))
+		{
+			Sql_ShowDebug(mmysql_handle);
+			continue;
+		}
+		
+		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
+		{
+			char *str[4];
+			char *dummy = "";
+			
+			int j;
+			++lines;
+			
+			for (j = 0; j < 4; ++j)
+			{
+				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+				if (str[j] == NULL)
+					str[j] = dummy;
+			}
+
+			if (!skill_parse_row_abradb(str, 4, count))
+				continue;
+
+			count++;
+		}
+		
+		Sql_FreeResult(mmysql_handle);
+		
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, abra_db[i]);
+		count = 0;
+	}
+	return 0;
+}
+
 static void skill_readdb(void)
 {
 	// init skill db structures
@@ -15834,7 +15878,16 @@ static void skill_readdb(void)
 	skill_init_unit_layout();
 	sv_readdb(db_path, "produce_db.txt"        , ',',   4,  4+2*MAX_PRODUCE_RESOURCE, MAX_SKILL_PRODUCE_DB, skill_parse_row_producedb);
 	sv_readdb(db_path, "create_arrow_db.txt"   , ',', 1+2,  1+2*MAX_ARROW_RESOURCE, MAX_SKILL_ARROW_DB, skill_parse_row_createarrowdb);
-	sv_readdb(db_path, "abra_db.txt"           , ',',   4,  4, MAX_SKILL_ABRA_DB, skill_parse_row_abradb);
+	
+	if (db_use_sqldbs)
+	{
+		abra_read_sqldb();
+	}
+	else
+	{
+		sv_readdb(db_path, "abra_db.txt"           , ',',   4,  4, MAX_SKILL_ABRA_DB, skill_parse_row_abradb);
+	}
+
 	//Warlock
 	sv_readdb(db_path, "spellbook_db.txt"      , ',',   3,  3, MAX_SKILL_SPELLBOOK_DB, skill_parse_row_spellbookdb);
 	//Guillotine Cross
