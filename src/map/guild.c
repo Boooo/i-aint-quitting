@@ -1984,50 +1984,6 @@ static int guild_castle_db_final(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
-static int castle_read_sqldb(void)
-{
-	const char* castle_db[] = { "castle_db" };
-	int i;
-	
-	for (i = 0; i < ARRAYLENGTH(castle_db); ++i)
-	{
-		uint32 lines = 0, count = 0;
-		
-		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", castle_db[i]))
-		{
-			Sql_ShowDebug(mmysql_handle);
-			continue;
-		}
-		
-		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
-		{
-			char *str[5];
-			char *dummy = "";
-			
-			int j;
-			++lines;
-			
-			for (j = 0; j < 5; ++j)
-			{
-				Sql_GetData(mmysql_handle, j, &str[j], NULL);
-				if (str[j] == NULL)
-					str[j] = dummy;
-			}
-
-			if (!guild_read_castledb(str, 5, count))
-				continue;
-
-			count++;
-		}
-		
-		Sql_FreeResult(mmysql_handle);
-		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, castle_db[i]);
-		count = 0;
-	}
-	return 0;
-}
-
 void do_init_guild(void)
 {
 	guild_db=idb_alloc(DB_OPT_RELEASE_DATA);
@@ -2038,7 +1994,7 @@ void do_init_guild(void)
 
 	if (db_use_sqldbs)
 	{
-		castle_read_sqldb();
+		sv_readsqldb ("castle_db", 5, &guild_read_castledb);
 	}
 	else
 	{

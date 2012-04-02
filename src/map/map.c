@@ -72,6 +72,8 @@ char mob_skill_db_db[32] = "mob_skill_db";
 char mob_skill_db2_db[32] = "mob_skill_db2";
 char mercenary_db_db[32] = "mercenary_db";
 char mercenary_skill_db_db[32] = "mercenary_skill_db";
+char abra_db_db[32] = "abra_db";
+char castle_db_db[32] = "castle_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3432,6 +3434,48 @@ int inter_config_read(char *cfgName)
 	return 0;
 }
 
+int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], int columns, int current))
+{
+	const char* db_name[] = { name };
+	int i;
+	
+	for (i = 0; i < ARRAYLENGTH(db_name); ++i)
+	{
+		uint32 lines = 0, count = 0;
+
+		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", db_name[i]))
+		{
+			Sql_ShowDebug(mmysql_handle);
+			continue;
+		}
+		
+		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
+		{
+			char *str[64];
+			char *dummy = "";
+			
+			int j;
+			++lines;
+			
+			for (j = 0; j < param_size; ++j)
+			{
+				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+				if (str[j] == NULL)
+					str[j] = dummy;
+			}
+
+			if (!parseproc(str, param_size, count))
+				continue;
+
+			count++;
+		}
+		
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
+		count = 0;
+	}
+	return 0;
+}
+
 /*=======================================
  *  MySQL Init
  *---------------------------------------*/
@@ -3748,8 +3792,8 @@ int do_init(int argc, char *argv[])
 	GC_enable_incremental();
 #endif
 
-	INTER_CONF_NAME="conf/inter_athena.conf";
-	LOG_CONF_NAME="conf/log_athena.conf";
+	INTER_CONF_NAME = "conf/inter_athena.conf";
+	LOG_CONF_NAME = "conf/log_athena.conf";
 	MAP_CONF_NAME = "conf/map_athena.conf";
 	BATTLE_CONF_FILENAME = "conf/battle_athena.conf";
 	ATCOMMAND_CONF_FILENAME = "conf/atcommand_athena.conf";

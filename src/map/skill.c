@@ -15807,50 +15807,6 @@ static bool skill_parse_row_abradb(char* split[], int columns, int current)
 	return true;
 }
 
-static int abra_read_sqldb(void)
-{
-	const char* abra_db[] = { "abra_db" };
-	int i;
-	
-	for (i = 0; i < ARRAYLENGTH(abra_db); ++i)
-	{
-		uint32 lines = 0, count = 0;
-		
-		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", abra_db[i]))
-		{
-			Sql_ShowDebug(mmysql_handle);
-			continue;
-		}
-		
-		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
-		{
-			char *str[4];
-			char *dummy = "";
-			
-			int j;
-			++lines;
-			
-			for (j = 0; j < 4; ++j)
-			{
-				Sql_GetData(mmysql_handle, j, &str[j], NULL);
-				if (str[j] == NULL)
-					str[j] = dummy;
-			}
-
-			if (!skill_parse_row_abradb(str, 4, count))
-				continue;
-
-			count++;
-		}
-		
-		Sql_FreeResult(mmysql_handle);
-		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, abra_db[i]);
-		count = 0;
-	}
-	return 0;
-}
-
 static void skill_readdb(void)
 {
 	// init skill db structures
@@ -15881,7 +15837,7 @@ static void skill_readdb(void)
 	
 	if (db_use_sqldbs)
 	{
-		abra_read_sqldb();
+		sv_readsqldb("abra_db", 4, &skill_parse_row_abradb);
 	}
 	else
 	{

@@ -1032,7 +1032,6 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////
 // StringBuf - dynamic string
 //

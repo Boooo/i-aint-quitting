@@ -460,47 +460,9 @@ static bool read_mercenarydb_sub(char** str, int columns, int current)
 	return true;
 }
 
-static int mercenary_read_sqldb(void)
+int mercenary_read_sqldb(void)
 {
-	const char* mercenary_db[] = { "mercenary_db" };
-	int i;
-	
-	for (i = 0; i < ARRAYLENGTH(mercenary_db); ++i)
-	{
-		uint32 lines = 0, count = 0;
-		
-		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mercenary_db[i]))
-		{
-			Sql_ShowDebug(mmysql_handle);
-			continue;
-		}
-		
-		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
-		{
-			char *str[26];
-			char *dummy = "";
-			
-			int j;
-			++lines;
-			
-			for (j = 0; j < 26; ++j)
-			{
-				Sql_GetData(mmysql_handle, j, &str[j], NULL);
-				if (str[j] == NULL)
-					str[j] = dummy;
-			}
-
-			if (!read_mercenarydb_sub(str, 26, count))
-				continue;
-
-			count++;
-		}
-		
-		Sql_FreeResult(mmysql_handle);
-		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mercenary_db[i]);
-		count = 0;
-	}
+	sv_readsqldb("mercenary_db", 26, &read_mercenarydb_sub);
 	return 0;
 }
 
@@ -546,51 +508,12 @@ static bool read_mercenary_skilldb_sub(char** str, int columns, int current)
 int read_mercenary_skilldb(void)
 {
 	sv_readdb(db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
-
 	return 0;
 }
 
-static int mercenary_read_sqlskilldb(void)
+int mercenary_read_sqlskilldb(void)
 {
-	const char* mercenary_skill_db[] = { "mercenary_skill_db" };
-	int i;
-	
-	for (i = 0; i < ARRAYLENGTH(mercenary_skill_db); ++i)
-	{
-		uint32 lines = 0, count = 0;
-		
-		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mercenary_skill_db[i]))
-		{
-			Sql_ShowDebug(mmysql_handle);
-			continue;
-		}
-		
-		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
-		{
-			char* str[3];
-			char* dummy = "";
-			
-			int j;
-			++lines;
-			
-			for (j = 0; j < 3; ++j)
-			{
-				Sql_GetData(mmysql_handle, j, &str[j], NULL);
-				if (str[j] == NULL)
-					str[j] = dummy;
-			}
-			
-			if (!read_mercenary_skilldb_sub(str, 3, count))
-				continue;
-			
-			count++;
-		}
-		
-		Sql_FreeResult(mmysql_handle);
-		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mercenary_skill_db[i]);
-		count = 0;
-	}
+	sv_readsqldb("mercenary_skill_db", 3, &read_mercenary_skilldb_sub);
 	return 0;
 }
 
