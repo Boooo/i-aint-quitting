@@ -15829,7 +15829,14 @@ static void skill_readdb(void)
  	sv_readdb(db_path, DBPATH"skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb); 
  	sv_readdb(db_path, DBPATH"skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
 
-	sv_readdb(db_path, "skill_nocast_db.txt"   , ',',   2,  2, MAX_SKILL_DB, skill_parse_row_nocastdb);
+	if (db_use_sqldbs)
+	{
+		sv_readsqldb(skill_nocast_db_db, NULL, 2, MAX_SKILL_DB, &skill_parse_row_nocastdb);
+	}
+	else
+	{
+		sv_readdb(db_path, "skill_nocast_db.txt"   , ',',   2,  2, MAX_SKILL_DB, skill_parse_row_nocastdb);
+	}
 
 	skill_init_unit_layout();
 	sv_readdb(db_path, "produce_db.txt"        , ',',   4,  4+2*MAX_PRODUCE_RESOURCE, MAX_SKILL_PRODUCE_DB, skill_parse_row_producedb);
