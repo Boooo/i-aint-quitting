@@ -10159,25 +10159,6 @@ int status_get_refine_chance(enum refine_type wlv, int refine)
  * size_fix.txt   - size adjustment table for weapons
  * refine_db.txt  - refining data table
  *------------------------------------------*/
-#if REMODE
-static bool status_readdb_job_re(char* fields[], int columns, int current) {
-	int idx, class_;
-	unsigned int i;
-
-	class_ = atoi(fields[0]);
-
-	if(!pcdb_checkid(class_)) {
-		ShowWarning("status_readdb_job_re: Invalid job class %d specified.\n", class_);
-		return false;
-	}
-	idx = pc_class2idx(class_);
-
-	for(i = 0; i < RE_JOB_DB_MAX; i++) {
-		re_job_db[idx][i] = atoi(fields[i+1]);
-	}
-	return true;
-}
-#endif
 static bool status_readdb_job1(char* fields[], int columns, int current)
 {// Job-specific values (weight, HP, SP, ASPD)
 	int idx, class_;
@@ -10320,9 +10301,6 @@ int status_readdb(void)
 	sv_readdb(db_path, "job_db1.txt",   ',', 10+MAX_WEAPON_TYPE, 10+MAX_WEAPON_TYPE, -1,                            &status_readdb_job1);
 	sv_readdb(db_path, "job_db2.txt",   ',', 1,                 1+MAX_LEVEL,       -1,                            &status_readdb_job2);
 	sv_readdb(db_path, "size_fix.txt",  ',', MAX_WEAPON_TYPE,   MAX_WEAPON_TYPE,    ARRAYLENGTH(atkmods),         &status_readdb_sizefix);
-#if REMODE
-	sv_readdb(db_path, DBPATH"job_db_extra.txt", ',', 1+RE_JOB_DB_MAX, 1+RE_JOB_DB_MAX, -1, &status_readdb_job_re);
-#endif
 	sv_readdb(db_path, DBPATH"refine_db.txt", ',', 4+MAX_REFINE, 4+MAX_REFINE, ARRAYLENGTH(refine_info), &status_readdb_refine);
 
 	return 0;
