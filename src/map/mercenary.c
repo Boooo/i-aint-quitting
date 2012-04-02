@@ -404,7 +404,7 @@ int mercenary_checkskill(struct mercenary_data *md, int skill_id)
 	return 0;
 }
 
-static bool read_mercenarydb_sub(char* str[], int columns, int current)
+static bool merc_parse_row_mercenarydb(char** str, int columns, int current)
 {
 	int ele;
 	struct s_mercenary_db *db;
@@ -460,6 +460,106 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current)
 	return true;
 }
 
+static bool read_mercenarydb_sub(char** str, int columns, int current)
+{
+	int ele;
+	struct s_mercenary_db *db;
+	struct status_data *status;
+
+	db = &mercenary_db[current];
+	db->class_ = atoi(str[0]);
+	strncpy(db->sprite, str[1], NAME_LENGTH);
+	strncpy(db->name, str[2], NAME_LENGTH);
+	db->lv = atoi(str[3]);
+
+	status = &db->status;
+	db->vd.class_ = db->class_;
+
+	status->max_hp = atoi(str[4]);
+	status->max_sp = atoi(str[5]);
+	status->rhw.range = atoi(str[6]);
+	status->rhw.atk = atoi(str[7]);
+	status->rhw.atk2 = status->rhw.atk + atoi(str[8]);
+	status->def = atoi(str[9]);
+	status->mdef = atoi(str[10]);
+	status->str = atoi(str[11]);
+	status->agi = atoi(str[12]);
+	status->vit = atoi(str[13]);
+	status->int_ = atoi(str[14]);
+	status->dex = atoi(str[15]);
+	status->luk = atoi(str[16]);
+	db->range2 = atoi(str[17]);
+	db->range3 = atoi(str[18]);
+	status->size = atoi(str[19]);
+	status->race = atoi(str[20]);
+
+	ele = atoi(str[21]);
+	status->def_ele = ele%10;
+	status->ele_lv = ele/20;
+	if( status->def_ele >= ELE_MAX )
+	{
+		ShowWarning("Mercenary %d has invalid element type %d (max element is %d)\n", db->class_, status->def_ele, ELE_MAX - 1);
+		status->def_ele = ELE_NEUTRAL;
+	}
+	if( status->ele_lv < 1 || status->ele_lv > 4 )
+	{
+		ShowWarning("Mercenary %d has invalid element level %d (max is 4)\n", db->class_, status->ele_lv);
+		status->ele_lv = 1;
+	}
+
+	status->aspd_rate = 1000;
+	status->speed = atoi(str[22]);
+	status->adelay = atoi(str[23]);
+	status->amotion = atoi(str[24]);
+	status->dmotion = atoi(str[25]);
+
+	return true;
+}
+
+static int mercenarydb_read_sql(void)
+{
+	const char* mercenary_db[] = { "mercenary_db" };
+	int i;
+	
+	for (i = 0; i < ARRAYLENGTH(mercenary_db); ++i)
+	{
+		uint32 lines = 0, count = 0;
+		
+		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mercenary_db[i]))
+		{
+			Sql_ShowDebug(mmysql_handle);
+			continue;
+		}
+		
+		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
+		{
+			char *str[26];
+			char *dummy = "";
+			
+			int j;
+			++lines;
+			
+			for (j = 0; j < 26; ++j)
+			{
+				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+				if (str[j] == NULL)
+					str[j] = dummy;
+			}
+
+			if (!read_mercenarydb_sub(str, 26, count))
+				continue;
+
+			count++;
+		}
+		
+		Sql_FreeResult(mmysql_handle);
+		
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mercenary_db[i]);
+		count = 0;
+	}
+	return 0;
+}
+
 int read_mercenarydb(void)
 {
 	memset(mercenary_db,0,sizeof(mercenary_db));
@@ -468,7 +568,7 @@ int read_mercenarydb(void)
 	return 0;
 }
 
-static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
+static bool read_mercenary_skilldb_sub(char** str, int columns, int current)
 {// <merc id>,<skill id>,<skill level>
 	struct s_mercenary_db *db;
 	int i, class_;
@@ -506,10 +606,62 @@ int read_mercenary_skilldb(void)
 	return 0;
 }
 
+static int mercenary_skilldb_read_sql(void)
+{
+	const char* mercenary_skill_db[] = { "mercenary_skill_db" };
+	int i;
+	
+	for (i = 0; i < ARRAYLENGTH(mercenary_skill_db); ++i)
+	{
+		uint32 lines = 0, count = 0;
+		
+		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mercenary_skill_db[i]))
+		{
+			Sql_ShowDebug(mmysql_handle);
+			continue;
+		}
+		
+		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
+		{
+			char* str[3];
+			char* dummy = "";
+			
+			int j;
+			++lines;
+			
+			for (j = 0; j < 3; ++j)
+			{
+				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+				if (str[j] == NULL)
+					str[j] = dummy;
+			}
+			
+			if (!read_mercenary_skilldb_sub(str, 3, count))
+				continue;
+			
+			count++;
+		}
+		
+		Sql_FreeResult(mmysql_handle);
+		
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mercenary_skill_db[i]);
+		count = 0;
+	}
+	return 0;
+}
+
 int do_init_mercenary(void)
 {
-	read_mercenarydb();
-	read_mercenary_skilldb();
+	if (db_use_sqldbs)
+	{
+		mercenarydb_read_sql();
+		mercenary_skilldb_read_sql();
+	}
+	else
+	{
+		read_mercenarydb();
+		read_mercenary_skilldb();
+	}	
 	
 	//add_timer_func_list(mercenary_contract, "mercenary_contract");
 	return 0;
