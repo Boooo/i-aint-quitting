@@ -404,62 +404,6 @@ int mercenary_checkskill(struct mercenary_data *md, int skill_id)
 	return 0;
 }
 
-static bool merc_parse_row_mercenarydb(char** str, int columns, int current)
-{
-	int ele;
-	struct s_mercenary_db *db;
-	struct status_data *status;
-
-	db = &mercenary_db[current];
-	db->class_ = atoi(str[0]);
-	strncpy(db->sprite, str[1], NAME_LENGTH);
-	strncpy(db->name, str[2], NAME_LENGTH);
-	db->lv = atoi(str[3]);
-
-	status = &db->status;
-	db->vd.class_ = db->class_;
-
-	status->max_hp = atoi(str[4]);
-	status->max_sp = atoi(str[5]);
-	status->rhw.range = atoi(str[6]);
-	status->rhw.atk = atoi(str[7]);
-	status->rhw.atk2 = status->rhw.atk + atoi(str[8]);
-	status->def = atoi(str[9]);
-	status->mdef = atoi(str[10]);
-	status->str = atoi(str[11]);
-	status->agi = atoi(str[12]);
-	status->vit = atoi(str[13]);
-	status->int_ = atoi(str[14]);
-	status->dex = atoi(str[15]);
-	status->luk = atoi(str[16]);
-	db->range2 = atoi(str[17]);
-	db->range3 = atoi(str[18]);
-	status->size = atoi(str[19]);
-	status->race = atoi(str[20]);
-
-	ele = atoi(str[21]);
-	status->def_ele = ele%10;
-	status->ele_lv = ele/20;
-	if( status->def_ele >= ELE_MAX )
-	{
-		ShowWarning("Mercenary %d has invalid element type %d (max element is %d)\n", db->class_, status->def_ele, ELE_MAX - 1);
-		status->def_ele = ELE_NEUTRAL;
-	}
-	if( status->ele_lv < 1 || status->ele_lv > 4 )
-	{
-		ShowWarning("Mercenary %d has invalid element level %d (max is 4)\n", db->class_, status->ele_lv);
-		status->ele_lv = 1;
-	}
-
-	status->aspd_rate = 1000;
-	status->speed = atoi(str[22]);
-	status->adelay = atoi(str[23]);
-	status->amotion = atoi(str[24]);
-	status->dmotion = atoi(str[25]);
-
-	return true;
-}
-
 static bool read_mercenarydb_sub(char** str, int columns, int current)
 {
 	int ele;
