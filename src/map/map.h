@@ -748,6 +748,7 @@ extern char spellbook_db_db[32];
 extern char magicmushroom_db_db[32];
 extern char skill_reproduce_db_db[32];
 extern char skill_improvise_db_db[32];
+extern char skill_nocast_db_db[32];
 
 void sv_readsqldb (char* name, char *name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current));
 

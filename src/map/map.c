@@ -78,6 +78,7 @@ char spellbook_db_db[32] = "spellbook_db";
 char magicmushroom_db_db[32] = "magicmushroom_db";
 char skill_reproduce_db_db[32] = "skill_reproduce_db";
 char skill_improvise_db_db[32] = "skill_improvise_db";
+char skill_nocast_db_db[32] = "skill_nocast_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3438,7 +3439,7 @@ int inter_config_read(char *cfgName)
 	return 0;
 }
 
-void sv_readsqldb (char* name, char *name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current))
+void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current))
 {
 	const char* db_name[] = { name, name2 };
 	int i;
