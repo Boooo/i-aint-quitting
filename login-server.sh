@@ -5,9 +5,9 @@ ulimit -Sc unlimited
 
 while [ 2 ] ; do
 if [ -f .stopserver2 ] ; then
-echo server marked down >> servlog.txt
+echo servidor parou de responder >> servlog.txt
 else
-echo restarting server at time at `date +"%m-%d-%H:%M-%S"`>> startlog.txt
+echo reiniciando servidor às `date +"%d-%m-%Y - %H:%M:%S"`>> startlog.txt
 ./login-server
 fi
 

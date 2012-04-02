@@ -79,8 +79,18 @@ struct Login_Config {
 	char account_engine[256];                       // name of the engine to use (defaults to auto, for the first available engine)
 };
 
-#define sex_num2str(num) ( (num ==  SEX_FEMALE  ) ? 'F' : (num ==  SEX_MALE  ) ? 'M' : 'S' )
-#define sex_str2num(str) ( (str == 'F' ) ?  SEX_FEMALE  : (str == 'M' ) ?  SEX_MALE  :  SEX_SERVER  )
+//#define sex_num2str(num) ( (num ==  SEX_FEMALE  ) ? 'F' : (num ==  SEX_MALE  ) ? 'M' : 'S' )
+//#define sex_str2num(str) ( (str == 'F' ) ?  SEX_FEMALE  : (str == 'M' ) ?  SEX_MALE  :  SEX_SERVER  )
+
+static inline char sex_num2str (int num)
+{
+	return ((num == SEX_FEMALE) ? 'F' : ((num == SEX_MALE) ? 'M' : 'S'));
+}
+
+static inline int sex_str2num (char str)
+{
+	return ((str == 'F') ? SEX_FEMALE : ((str == 'M') ? SEX_MALE : SEX_SERVER));
+}
 
 #define MAX_SERVERS 30
 extern struct mmo_char_server server[MAX_SERVERS];
