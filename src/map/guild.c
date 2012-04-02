@@ -1994,7 +1994,7 @@ void do_init_guild(void)
 
 	if (db_use_sqldbs)
 	{
-		sv_readsqldb ("castle_db", 5, &guild_read_castledb);
+		sv_readsqldb (castle_db_db, NULL, 5, -1, &guild_read_castledb);
 	}
 	else
 	{

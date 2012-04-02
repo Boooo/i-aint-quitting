@@ -462,7 +462,7 @@ static bool read_mercenarydb_sub(char** str, int columns, int current)
 
 int mercenary_read_sqldb(void)
 {
-	sv_readsqldb("mercenary_db", 26, &read_mercenarydb_sub);
+	sv_readsqldb(mercenary_db_db, NULL, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
 	return 0;
 }
 
@@ -513,7 +513,7 @@ int read_mercenary_skilldb(void)
 
 int mercenary_read_sqlskilldb(void)
 {
-	sv_readsqldb("mercenary_skill_db", 3, &read_mercenary_skilldb_sub);
+	sv_readsqldb(mercenary_skill_db_db, NULL, 3, -1, &read_mercenary_skilldb_sub);
 	return 0;
 }
 

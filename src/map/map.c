@@ -74,6 +74,10 @@ char mercenary_db_db[32] = "mercenary_db";
 char mercenary_skill_db_db[32] = "mercenary_skill_db";
 char abra_db_db[32] = "abra_db";
 char castle_db_db[32] = "castle_db";
+char spellbook_db_db[32] = "spellbook_db";
+char magicmushroom_db_db[32] = "magicmushroom_db";
+char skill_reproduce_db_db[32] = "skill_reproduce_db";
+char skill_improvise_db_db[32] = "skill_improvise_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3434,14 +3438,17 @@ int inter_config_read(char *cfgName)
 	return 0;
 }
 
-int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], int columns, int current))
+void sv_readsqldb (char* name, char *name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current))
 {
-	const char* db_name[] = { name };
+	const char* db_name[] = { name, name2 };
 	int i;
 	
 	for (i = 0; i < ARRAYLENGTH(db_name); ++i)
 	{
 		uint32 lines = 0, count = 0;
+
+		if (db_name[i] == NULL)
+			continue;
 
 		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", db_name[i]))
 		{
@@ -3451,15 +3458,22 @@ int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], 
 		
 		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
 		{
-			char *str[64];
+			char *str[32];
 			char *dummy = "";
 			
 			int j;
 			++lines;
+
+			if (count == max_allowed)
+			{
+				ShowError("sv_readsqldb: Reached the maximum allowed number of entries (%d) when parsing table \"%s\".\n", max_allowed, db_name[i]);
+				break;
+			}
 			
 			for (j = 0; j < param_size; ++j)
-			{
+			{		
 				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+
 				if (str[j] == NULL)
 					str[j] = dummy;
 			}
@@ -3473,7 +3487,6 @@ int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
 		count = 0;
 	}
-	return 0;
 }
 
 /*=======================================

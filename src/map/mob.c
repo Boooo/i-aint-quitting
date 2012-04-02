@@ -4334,53 +4334,7 @@ static void mob_readskilldb(void) {
  */
 static int mob_read_sqlskilldb(void)
 {
-	const char* mob_skill_db_name[] = { mob_skill_db_db, mob_skill_db2_db };
-	int fi;
-	
-	if( battle_config.mob_skill_rate == 0 )
-	{
-		ShowStatus("Mob skill use disabled. Not reading mob skills.\n");
-		return 0;
-	}
-
-
-	for( fi = 0; fi < ARRAYLENGTH(mob_skill_db_name); ++fi )
-	{
-		uint32 lines = 0, count = 0;
-		
-		// retrieve all rows from the mob skill database
-		if( SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mob_skill_db_name[fi]) )
-		{
-			Sql_ShowDebug(mmysql_handle);
-			continue;
-		}
-		
-		// process rows one by one
-		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) )
-		{
-			// wrap the result into a TXT-compatible format
-			char* str[19];
-			char* dummy = "";
-			int i;
-			++lines;
-			for( i = 0; i < 19; ++i )
-			{
-				Sql_GetData(mmysql_handle, i, &str[i], NULL);
-				if( str[i] == NULL ) str[i] = dummy; // get rid of NULL columns
-			}
-			
-			if (!mob_parse_row_mobskilldb(str, 19, count))
-				continue;
-				
-			count++;
-		}
-		
-		// free the query result
-		Sql_FreeResult(mmysql_handle);
-		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_skill_db_name[fi]);
-		count = 0;
-	}
+	sv_readsqldb (mob_skill_db_db, mob_skill_db2_db, 19, -1, &mob_parse_row_mobskilldb);
 	return 0;
 }
 
