@@ -70,6 +70,8 @@ char mob_db_db[32] = "mob_db";
 char mob_db2_db[32] = "mob_db2";
 char mob_skill_db_db[32] = "mob_skill_db";
 char mob_skill_db2_db[32] = "mob_skill_db2";
+char mercenary_db_db[32] = "mercenary_db";
+char mercenary_skill_db_db[32] = "mercenary_skill_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3376,6 +3378,9 @@ int inter_config_read(char *cfgName)
 		else
 		if(strcmpi(w1,"mob_db2_db")==0)
 			strcpy(mob_db2_db,w2);
+		else
+		if(strcmpi(w1,"mercenary_db_db")==0)
+			strcpy(mercenary_db_db,w2);
 		else
 		//Map Server SQL DB
 		if(strcmpi(w1,"map_server_ip")==0)
