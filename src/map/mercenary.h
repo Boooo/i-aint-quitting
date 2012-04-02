@@ -77,8 +77,8 @@ int mercenary_checkskill(struct mercenary_data *md, int skill_id);
  **/
 int read_mercenarydb(void);
 int read_mercenary_skilldb(void);
-static int mercenarydb_read_sql(void);
-static int mercenary_skilldb_read_sql(void);
+static int mercenary_read_sqldb(void);
+static int mercenary_read_sqlskilldb(void);
 
 int do_init_mercenary(void);
 

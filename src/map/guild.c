@@ -156,7 +156,7 @@ int guild_check_skill_require(struct guild *g,int id)
 	return 1;
 }
 
-static bool guild_read_castledb(char* str[], int columns, int current)
+static bool guild_read_castledb(char** str, int columns, int current)
 {// <castle id>,<map name>,<castle name>,<castle event>[,<reserved/unused switch flag>]
 	struct guild_castle *gc;
 	int mapindex = mapindex_name2id(str[1]);
@@ -1984,6 +1984,50 @@ static int guild_castle_db_final(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
+static int castle_read_sqldb(void)
+{
+	const char* castle_db[] = { "castle_db" };
+	int i;
+	
+	for (i = 0; i < ARRAYLENGTH(castle_db); ++i)
+	{
+		uint32 lines = 0, count = 0;
+		
+		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", castle_db[i]))
+		{
+			Sql_ShowDebug(mmysql_handle);
+			continue;
+		}
+		
+		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
+		{
+			char *str[5];
+			char *dummy = "";
+			
+			int j;
+			++lines;
+			
+			for (j = 0; j < 5; ++j)
+			{
+				Sql_GetData(mmysql_handle, j, &str[j], NULL);
+				if (str[j] == NULL)
+					str[j] = dummy;
+			}
+
+			if (!guild_read_castledb(str, 5, count))
+				continue;
+
+			count++;
+		}
+		
+		Sql_FreeResult(mmysql_handle);
+		
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, castle_db[i]);
+		count = 0;
+	}
+	return 0;
+}
+
 void do_init_guild(void)
 {
 	guild_db=idb_alloc(DB_OPT_RELEASE_DATA);
@@ -1992,8 +2036,15 @@ void do_init_guild(void)
 	guild_infoevent_db=idb_alloc(DB_OPT_BASE);
 	expcache_ers = ers_new(sizeof(struct guild_expcache)); 
 
-	sv_readdb(db_path, "castle_db.txt", ',', 4, 5, -1, &guild_read_castledb);
-
+	if (db_use_sqldbs)
+	{
+		castle_read_sqldb();
+	}
+	else
+	{
+		sv_readdb(db_path, "castle_db.txt", ',', 4, 5, -1, &guild_read_castledb);
+	}
+	
 	memset(guild_skill_tree,0,sizeof(guild_skill_tree));
 	sv_readdb(db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, &guild_read_guildskill_tree_db); //guild skill tree [Komurka]
 

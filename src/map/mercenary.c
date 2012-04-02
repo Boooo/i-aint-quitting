@@ -460,7 +460,7 @@ static bool read_mercenarydb_sub(char** str, int columns, int current)
 	return true;
 }
 
-static int mercenarydb_read_sql(void)
+static int mercenary_read_sqldb(void)
 {
 	const char* mercenary_db[] = { "mercenary_db" };
 	int i;
@@ -550,7 +550,7 @@ int read_mercenary_skilldb(void)
 	return 0;
 }
 
-static int mercenary_skilldb_read_sql(void)
+static int mercenary_read_sqlskilldb(void)
 {
 	const char* mercenary_skill_db[] = { "mercenary_skill_db" };
 	int i;
@@ -598,8 +598,8 @@ int do_init_mercenary(void)
 {
 	if (db_use_sqldbs)
 	{
-		mercenarydb_read_sql();
-		mercenary_skilldb_read_sql();
+		mercenary_read_sqldb();
+		mercenary_read_sqlskilldb();
 	}
 	else
 	{
