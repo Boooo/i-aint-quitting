@@ -744,8 +744,12 @@ extern char mercenary_db_db[32];
 extern char mercenary_skill_db_db[32];
 extern char abra_db_db[32];
 extern char castle_db_db[32];
+extern char spellbook_db_db[32];
+extern char magicmushroom_db_db[32];
+extern char skill_reproduce_db_db[32];
+extern char skill_improvise_db_db[32];
 
-int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], int columns, int current));
+void sv_readsqldb (char* name, char *name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current));
 
 void do_shutdown(void);
 

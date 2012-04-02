@@ -15837,20 +15837,24 @@ static void skill_readdb(void)
 	
 	if (db_use_sqldbs)
 	{
-		sv_readsqldb("abra_db", 4, &skill_parse_row_abradb);
+		sv_readsqldb(abra_db_db, NULL, 4, MAX_SKILL_ABRA_DB, &skill_parse_row_abradb);
+		//Warlock
+		sv_readsqldb(spellbook_db_db, NULL, 3, MAX_SKILL_SPELLBOOK_DB, &skill_parse_row_spellbookdb);
+		//Guillotine Cross
+		sv_readsqldb(magicmushroom_db_db, NULL, 1, MAX_SKILL_MAGICMUSHROOM_DB, &skill_parse_row_magicmushroomdb);
+		sv_readsqldb(skill_reproduce_db_db, NULL, 1, MAX_SKILL_DB, &skill_parse_row_reproducedb);
+		sv_readsqldb(skill_improvise_db_db, NULL, 2, MAX_SKILL_IMPROVISE_DB, &skill_parse_row_improvisedb);
 	}
 	else
 	{
 		sv_readdb(db_path, "abra_db.txt"           , ',',   4,  4, MAX_SKILL_ABRA_DB, skill_parse_row_abradb);
+		//Warlock
+		sv_readdb(db_path, "spellbook_db.txt"      , ',',   3,  3, MAX_SKILL_SPELLBOOK_DB, skill_parse_row_spellbookdb);
+		//Guillotine Cross
+		sv_readdb(db_path, "magicmushroom_db.txt"  , ',',   1,  1, MAX_SKILL_MAGICMUSHROOM_DB, skill_parse_row_magicmushroomdb);
+		sv_readdb(db_path, "skill_reproduce_db.txt", ',',   1,  1, MAX_SKILL_DB, skill_parse_row_reproducedb);
+		sv_readdb(db_path, "skill_improvise_db.txt"      , ',',   2,  2, MAX_SKILL_IMPROVISE_DB, skill_parse_row_improvisedb);
 	}
-
-	//Warlock
-	sv_readdb(db_path, "spellbook_db.txt"      , ',',   3,  3, MAX_SKILL_SPELLBOOK_DB, skill_parse_row_spellbookdb);
-	//Guillotine Cross
-	sv_readdb(db_path, "magicmushroom_db.txt"  , ',',   1,  1, MAX_SKILL_MAGICMUSHROOM_DB, skill_parse_row_magicmushroomdb);
-	sv_readdb(db_path, "skill_reproduce_db.txt", ',',   1,  1, MAX_SKILL_DB, skill_parse_row_reproducedb);
-	sv_readdb(db_path, "skill_improvise_db.txt"      , ',',   2,  2, MAX_SKILL_IMPROVISE_DB, skill_parse_row_improvisedb);
-
 }
 
 void skill_reload (void)
