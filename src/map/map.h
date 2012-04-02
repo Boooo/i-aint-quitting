@@ -740,6 +740,12 @@ extern char mob_db_db[32];
 extern char mob_db2_db[32];
 extern char mob_skill_db_db[32];
 extern char mob_skill_db2_db[32];
+extern char mercenary_db_db[32];
+extern char mercenary_skill_db_db[32];
+extern char abra_db_db[32];
+extern char castle_db_db[32];
+
+int sv_readsqldb (char* name, int param_size, bool (*parseproc)(char* fields[], int columns, int current));
 
 void do_shutdown(void);
 
