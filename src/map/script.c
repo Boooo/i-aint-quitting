@@ -5934,7 +5934,7 @@ BUILDIN_FUNC(grouprandomitem)
 	int group;
 
 	group = script_getnum(st,2);
-	script_pushint(st,-itemdb_searchrandomid(group));
+	script_pushint(st,itemdb_searchrandomid(group));
 	return 0;
 }
 
@@ -6364,18 +6364,29 @@ BUILDIN_FUNC(getcharid)
  *------------------------------------------*/
 BUILDIN_FUNC(getnpcid)
 {
-	int num;
-	
-	switch (num = script_getnum(st,2)) {
+	int num = script_getnum(st,2);
+	struct npc_data* nd = NULL;
+
+	if( script_hasdata(st,3) )
+	{// unique npc name
+		if( ( nd = npc_name2id(script_getstr(st,3)) ) == NULL )
+		{
+			ShowError("buildin_getnpcid: No such NPC '%s'.\n", script_getstr(st,3));
+			script_pushint(st,0);
+			return 1;
+		}
+	}
+
+	switch (num) {
 		case 0:
-			script_pushint(st,st->oid);
+			script_pushint(st,nd ? nd->bl.id : st->oid);
 			break;
 		default:
 			ShowError("buildin_getnpcid: invalid parameter (%d).\n", num);
 			script_pushint(st,0);
-			break;
+			return 1;
 	}
-	
+
 	return 0;
 }
 /*==========================================
@@ -16165,7 +16176,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(checkweight,"vi"),
 	BUILDIN_DEF(readparam,"i?"),
 	BUILDIN_DEF(getcharid,"i?"),
-	BUILDIN_DEF(getnpcid,"i"),
+	BUILDIN_DEF(getnpcid,"i?"),
 	BUILDIN_DEF(getnpcinfo, "i?"), // [Kenpachi]
 	BUILDIN_DEF(getpartyname,"i"),
 	BUILDIN_DEF(getpartymember,"i?"),

@@ -1272,9 +1272,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 				break;
 
 #if isOFF(REMODE)
+			case PA_SHIELDCHAIN:
 			case CR_SHIELDBOOMERANG:
 #endif
-			case PA_SHIELDCHAIN:
 			case LG_SHIELDPRESS:
 			case LG_EARTHDRIVE:
 				flag.weapon = 0;
