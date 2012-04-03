@@ -996,6 +996,7 @@ int read_homunculusdb(void)
 	const char *filename[]={"homunculus_db.txt","homunculus_db2.txt"};
 
 	memset(homunculus_db,0,sizeof(homunculus_db));
+
 	for(i = 0; i<ARRAYLENGTH(filename); i++)
 	{
 		char path[256];
@@ -1059,8 +1060,14 @@ static bool read_homunculus_skilldb_sub(char* split[], int columns, int current)
 int read_homunculus_skilldb(void)
 {
 	memset(hskill_tree,0,sizeof(hskill_tree));
-	sv_readdb(db_path, "homun_skill_tree.txt", ',', 13, 14, -1, &read_homunculus_skilldb_sub);
-
+	if (db_use_sqldbs)
+	{
+		sv_readsqldb(homun_skill_tree_db, NULL, 13, -1, &read_homunculus_skilldb_sub);
+	}
+	else
+	{
+		sv_readdb(db_path, "homun_skill_tree.txt", ',', 13, 14, -1, &read_homunculus_skilldb_sub);
+	}
 	return 0;
 }
 

@@ -751,6 +751,10 @@ extern char skill_improvise_db_db[32];
 extern char skill_nocast_db_db[32];
 extern char create_arrow_db_db[32];
 extern char skill_castnodex_db_db[32];
+extern char guild_skill_tree_db[32];
+extern char homun_skill_tree_db[32];
+extern char homunculus_db_db[32];
+extern char homunculus_db2_db[32];
 
 void sv_readsqldb (char* name, char *name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current));
 
