@@ -81,6 +81,10 @@ char skill_improvise_db_db[32] = "skill_improvise_db";
 char skill_nocast_db_db[32] = "skill_nocast_db";
 char create_arrow_db_db[32] = "create_arrow_db";
 char skill_castnodex_db_db[32] = "skill_castnodex_db";
+char guild_skill_tree_db[32] = "guild_skill_tree";
+char homun_skill_tree_db[32] = "homun_skill_tree";
+char homunculus_db_db[32] = "homunculus_db";
+char homunculus_db2_db[32] = "homunculus_db2";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
