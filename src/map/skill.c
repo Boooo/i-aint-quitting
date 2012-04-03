@@ -15825,9 +15825,18 @@ static void skill_readdb(void)
 	
 	sv_readdb(db_path, DBPATH"skill_db.txt"          , ',',  17, 17, MAX_SKILL_DB, skill_parse_row_skilldb); 
 	sv_readdb(db_path, DBPATH"skill_require_db.txt"  , ',',  32, 32, MAX_SKILL_DB, skill_parse_row_requiredb); 
- 	sv_readdb(db_path, DBPATH"skill_cast_db.txt"     , ',',   7,  8, MAX_SKILL_DB, skill_parse_row_castdb); 
- 	sv_readdb(db_path, DBPATH"skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb); 
- 	sv_readdb(db_path, DBPATH"skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
+ 	sv_readdb(db_path, DBPATH"skill_cast_db.txt"     , ',',   7,  8, MAX_SKILL_DB, skill_parse_row_castdb);
+	
+	if (db_use_sqldbs)
+	{
+		sv_readsqldb(skill_castnodex_db_db, NULL, 3, MAX_SKILL_DB, &skill_parse_row_castnodexdb);
+	}
+ 	else
+	{
+		sv_readdb(db_path, DBPATH"skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill_parse_row_castnodexdb); 
+ 	}
+
+	sv_readdb(db_path, DBPATH"skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill_parse_row_unitdb);
 
 	if (db_use_sqldbs)
 	{
@@ -15840,10 +15849,10 @@ static void skill_readdb(void)
 
 	skill_init_unit_layout();
 	sv_readdb(db_path, "produce_db.txt"        , ',',   4,  4+2*MAX_PRODUCE_RESOURCE, MAX_SKILL_PRODUCE_DB, skill_parse_row_producedb);
-	sv_readdb(db_path, "create_arrow_db.txt"   , ',', 1+2,  1+2*MAX_ARROW_RESOURCE, MAX_SKILL_ARROW_DB, skill_parse_row_createarrowdb);
 	
 	if (db_use_sqldbs)
 	{
+		sv_readsqldb(create_arrow_db_db, NULL, (1 + (2 * MAX_ARROW_RESOURCE)), MAX_SKILL_ARROW_DB, &skill_parse_row_createarrowdb);
 		sv_readsqldb(abra_db_db, NULL, 4, MAX_SKILL_ABRA_DB, &skill_parse_row_abradb);
 		//Warlock
 		sv_readsqldb(spellbook_db_db, NULL, 3, MAX_SKILL_SPELLBOOK_DB, &skill_parse_row_spellbookdb);
@@ -15854,6 +15863,7 @@ static void skill_readdb(void)
 	}
 	else
 	{
+		sv_readdb(db_path, "create_arrow_db.txt"   , ',', 1+2,  1+2*MAX_ARROW_RESOURCE, MAX_SKILL_ARROW_DB, skill_parse_row_createarrowdb);
 		sv_readdb(db_path, "abra_db.txt"           , ',',   4,  4, MAX_SKILL_ABRA_DB, skill_parse_row_abradb);
 		//Warlock
 		sv_readdb(db_path, "spellbook_db.txt"      , ',',   3,  3, MAX_SKILL_SPELLBOOK_DB, skill_parse_row_spellbookdb);

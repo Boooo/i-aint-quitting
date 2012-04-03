@@ -79,6 +79,8 @@ char magicmushroom_db_db[32] = "magicmushroom_db";
 char skill_reproduce_db_db[32] = "skill_reproduce_db";
 char skill_improvise_db_db[32] = "skill_improvise_db";
 char skill_nocast_db_db[32] = "skill_nocast_db";
+char create_arrow_db_db[32] = "create_arrow_db";
+char skill_castnodex_db_db[32] = "skill_castnodex_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3485,7 +3487,7 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 			count++;
 		}
 		
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
+		ShowSQL("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in table '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
 		count = 0;
 	}
 }
