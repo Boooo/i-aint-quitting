@@ -4413,7 +4413,15 @@ static void mob_load(void)
 	sv_readdb(db_path, "mob_avail.txt", ',', 2, 12, -1, &mob_readdb_mobavail);
 	mob_read_randommonster();
 	mob_readchatdb();
-	sv_readdb(db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, &mob_readdb_race2);
+
+	if (db_use_sqldbs)
+	{
+		sv_readsqldb(mob_race2_db_db, NULL, 10, -1, &mob_readdb_race2);
+	}
+	else
+	{
+		sv_readdb(db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, &mob_readdb_race2);
+	}
 }
 
 void mob_reload(void)
