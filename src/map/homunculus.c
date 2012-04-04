@@ -1011,7 +1011,14 @@ int read_homunculusdb(void)
 			}
 		}
 
-		sv_readdb(db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
+		if (db_use_sqldbs)
+		{
+			sv_readsqldb(homunculus_db_db, homunculus_db2_db, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
+		}
+		else
+		{
+			sv_readdb(db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
+		}
 	}
 
 	return 0;

@@ -4334,7 +4334,7 @@ static void mob_readskilldb(void) {
  */
 static int mob_read_sqlskilldb(void)
 {
-	sv_readsqldb (mob_skill_db_db, mob_skill_db2_db, 19, -1, &mob_parse_row_mobskilldb);
+	sv_readsqldb(mob_skill_db_db, mob_skill_db2_db, 19, -1, &mob_parse_row_mobskilldb);
 	return 0;
 }
 
