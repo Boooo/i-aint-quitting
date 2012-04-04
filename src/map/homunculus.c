@@ -997,28 +997,28 @@ int read_homunculusdb(void)
 
 	memset(homunculus_db,0,sizeof(homunculus_db));
 
-	for(i = 0; i<ARRAYLENGTH(filename); i++)
+	if (!db_use_sqldbs)
 	{
-		char path[256];
-
-		if( i > 0 )
+		for(i = 0; i<ARRAYLENGTH(filename); i++)
 		{
-			sprintf(path, "%s/%s", db_path, filename[i]);
+			char path[256];
 
-			if( !exists(path) )
+			if( i > 0 )
 			{
-				continue;
-			}
-		}
+				sprintf(path, "%s/%s", db_path, filename[i]);
 
-		if (db_use_sqldbs)
-		{
-			sv_readsqldb(homunculus_db_db, homunculus_db2_db, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
-		}
-		else
-		{
+				if( !exists(path) )
+				{
+					continue;
+				}
+			}
+
 			sv_readdb(db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
 		}
+	}
+	else
+	{
+		sv_readsqldb(homunculus_db_db, homunculus_db2_db, 50, MAX_HOMUNCULUS_CLASS, &read_homunculusdb_sub);
 	}
 
 	return 0;

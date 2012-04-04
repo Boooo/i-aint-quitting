@@ -3450,15 +3450,20 @@ int inter_config_read(char *cfgName)
 void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, bool (*sub_parse_row)(char* string[], int columns, int current))
 {
 	const char* db_name[] = { name, name2 };
-	int8 i = 0;
-	
+	int8 i;
+
 	for (i = 0; i < 2; ++i)
 	{
 		uint8 lines = 0;
 		uint16 count = 0;
 
 		if (db_name[i] == NULL)
-			continue;
+		{
+			if (i != 1)
+				continue;
+			else
+				break;
+		}
 
 		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", db_name[i]))
 		{
@@ -3472,7 +3477,10 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 		if (Sql_NumRows(mmysql_handle) <= 0)
 		{
 			ShowSQL("Table '"CL_WHITE"%s"CL_RESET"' was not read because it has 0 entries.\n", db_name[i]);
-			break;
+			if (i != 1)
+				continue;
+			else
+				break;
 		}
 		
 		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
