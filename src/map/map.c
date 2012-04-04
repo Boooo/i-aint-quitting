@@ -85,6 +85,7 @@ char guild_skill_tree_db[32] = "guild_skill_tree";
 char homun_skill_tree_db[32] = "homun_skill_tree";
 char homunculus_db_db[32] = "homunculus_db";
 char homunculus_db2_db[32] = "homunculus_db2";
+char mob_race2_db_db[32] = "mob_race2_db";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
