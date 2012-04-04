@@ -86,6 +86,7 @@ char homun_skill_tree_db[32] = "homun_skill_tree";
 char homunculus_db_db[32] = "homunculus_db";
 char homunculus_db2_db[32] = "homunculus_db2";
 char mob_race2_db_db[32] = "mob_race2_db";
+char job_db1_db[32] = "job_db1";
 
 // log database
 char log_db_ip[32] = "127.0.0.1";
@@ -3451,7 +3452,7 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 	const char* db_name[] = { name, name2 };
 	int8 i = 0;
 	
-	while (i < 2)
+	for (i = 0; i < 2; ++i)
 	{
 		uint8 lines = 0;
 		uint16 count = 0;
@@ -3507,7 +3508,6 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 			ShowSQL("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in table '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
 
 		count = 0;
-		++i;
 	}
 }
 

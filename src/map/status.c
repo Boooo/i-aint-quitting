@@ -10299,7 +10299,15 @@ int status_readdb(void)
 	// read databases
 	//
 
-	sv_readdb(db_path, "job_db1.txt",   ',', 10+MAX_WEAPON_TYPE, 10+MAX_WEAPON_TYPE, -1,                            &status_readdb_job1);
+	if (db_use_sqldbs)
+	{
+		sv_readsqldb(job_db1_db, NULL, (10 + MAX_WEAPON_TYPE), -1, &status_readdb_job1);
+	}
+	else
+	{
+		sv_readdb(db_path, "job_db1.txt",   ',', 10+MAX_WEAPON_TYPE, 10+MAX_WEAPON_TYPE, -1,                            &status_readdb_job1);
+	}
+
 	sv_readdb(db_path, "job_db2.txt",   ',', 1,                 1+MAX_LEVEL,       -1,                            &status_readdb_job2);
 	sv_readdb(db_path, "size_fix.txt",  ',', MAX_WEAPON_TYPE,   MAX_WEAPON_TYPE,    ARRAYLENGTH(atkmods),         &status_readdb_sizefix);
 	sv_readdb(db_path, DBPATH"refine_db.txt", ',', 4+MAX_REFINE, 4+MAX_REFINE, ARRAYLENGTH(refine_info), &status_readdb_refine);
