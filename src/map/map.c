@@ -3445,14 +3445,15 @@ int inter_config_read(char *cfgName)
 	return 0;
 }
 
-void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, bool (*parseproc)(char* fields[], int columns, int current))
+void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, bool (*sub_parse_row)(char* string[], int columns, int current))
 {
 	const char* db_name[] = { name, name2 };
-	int i;
+	int8 i = 0;
 	
-	for (i = 0; i < ARRAYLENGTH(db_name); ++i)
+	while (i < 2)
 	{
-		uint32 lines = 0, count = 0;
+		uint8 lines = 0;
+		uint16 count = 0;
 
 		if (db_name[i] == NULL)
 			continue;
@@ -3460,15 +3461,23 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", db_name[i]))
 		{
 			Sql_ShowDebug(mmysql_handle);
-			continue;
+			if (i != 1)
+				continue;
+			else
+				break;
+		}
+	
+		if (Sql_NumRows(mmysql_handle) <= 0)
+		{
+			ShowSQL("Table '"CL_WHITE"%s"CL_RESET"' was not read because it has 0 entries.\n", db_name[i]);
+			break;
 		}
 		
 		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
 		{
-			char *str[32];
-			char *dummy = "";
-			
-			int j;
+			char *str[64];
+			int8 j;
+
 			++lines;
 
 			if (count == max_allowed)
@@ -3477,22 +3486,27 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 				break;
 			}
 			
+			str[(param_size + 1)] = '\0';
+
 			for (j = 0; j < param_size; ++j)
-			{		
+			{
 				Sql_GetData(mmysql_handle, j, &str[j], NULL);
 
 				if (str[j] == NULL)
-					str[j] = dummy;
+					str[j] = "";
 			}
 
-			if (!parseproc(str, param_size, count))
+			if (!sub_parse_row(str, param_size, count))
 				continue;
 
 			count++;
 		}
 		
-		ShowSQL("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in table '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
+		if (count)
+			ShowSQL("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in table '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
+
 		count = 0;
+		++i;
 	}
 }
 
