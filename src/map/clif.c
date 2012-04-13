@@ -16023,7 +16023,7 @@ static int clif_parse(int fd)
 	return 0;
 }
 
-static void packetdb_addpacket(short cmd, int len, char *func, ...)
+static void packetdb_addpacket(short cmd, int len, ...)
 {
 	static struct {
 		void (*func)(int, struct map_session_data *);
@@ -16226,6 +16226,8 @@ static void packetdb_addpacket(short cmd, int len, char *func, ...)
 		{clif_parse_SearchStoreInfoListItemClick,"searchstoreinfolistitemclick"},
 		{NULL,NULL}
 	};
+	va_list va;
+	char *func = 0;
 
 	if (cmd > MAX_PACKET_DB)
 	{
@@ -16234,6 +16236,9 @@ static void packetdb_addpacket(short cmd, int len, char *func, ...)
 	}
 
 	packet_db[1][cmd].len = len;
+
+	va_start(va, func);
+	func = va_arg(va, char *);
 	
 	if (func != NULL)
 	{
@@ -16251,13 +16256,12 @@ static void packetdb_addpacket(short cmd, int len, char *func, ...)
 
 		if (found)
 		{
-			va_list va;
 			packet_db[1][cmd].func = clif_parse_func[i].func;
 
 			if (stricmp("wanttoconnection", func) == 0)
 				clif_config.connect_cmd = cmd;
 			
-			va_start(va, func);
+			
 			for (i = 0; i < MAX_PACKET_POS; i++)
 			{
 				unsigned short pos = va_arg(va, unsigned short);
@@ -16267,12 +16271,13 @@ static void packetdb_addpacket(short cmd, int len, char *func, ...)
 
 				packet_db[1][cmd].pos[i] = pos;
 			}
-			va_end(va);
 		}
 		else
 		{
 			ShowError("PacketDB: Função desconhecida: %s\n", func);
 		}
+
+		va_end(va);
 	}
 }
 
@@ -16499,7 +16504,7 @@ static int packetdb_readdb(void)
 	for( i = 0; i < ARRAYLENGTH(packet_len_table); ++i )
 		packet_len(i) = packet_len_table[i];
 
-#define addpacket(id, size, func, ...) packetdb_addpacket(id, size, func, __VA_ARGS__, 0xFFFF)
+#define addpacket(id, size, ...) packetdb_addpacket(id, size, __VA_ARGS__, 0xFFFF)
 #include "packetdb.h"
 #undef addpacket
 
