@@ -899,6 +899,7 @@ int mob_spawn (struct mob_data *md)
 	md->state.skillstate = MSS_IDLE;
 	md->next_walktime = tick+rnd()%5000+1000;
 	md->last_linktime = tick;
+	md->dmgtick = tick - 5000;
 	md->last_pcneartime = 0;
 
 	for (i = 0, c = tick-MOB_MAX_DELAY; i < MAX_MOBSKILL; i++)
@@ -1949,7 +1950,9 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 				md->state.skillstate = MSS_RUSH;
 		}
 		//Log damage
-		if (src) mob_log_damage(md, src, damage);
+		if (src)
+			mob_log_damage(md, src, damage);
+		md->dmgtick = gettick();
 	}
 
 	if (battle_config.show_mob_info&3)
@@ -2188,7 +2191,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if(base_exp || job_exp)
 			{
 				if( md->dmglog[i].flag != MDLF_PET || battle_config.pet_attack_exp_to_master ) {
-#if REMODE
+#ifdef RENEWAL_EXP
 				if(!md->db->mexp)
 					party_renewal_exp_mod(&base_exp,&job_exp,tmpsd[i]->status.base_level,md->level);
 #endif
@@ -2215,7 +2218,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct item_drop *ditem;
 		struct item_data* it = NULL;
 		int drop_rate;
-#if RE_DROP_MOD
+#ifdef RENEWAL_DROP
 		int drop_modifier = mvp_sd ? party_renewal_drop_mod(mvp_sd->status.base_level - md->level) :
 							second_sd ? party_renewal_drop_mod(second_sd->status.base_level - md->level) :
 							third_sd ? party_renewal_drop_mod(third_sd->status.base_level - md->level) : 100;
@@ -2261,7 +2264,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			// Increase drop rate if user has SC_ITEMBOOST
 			if (sd && sd->sc.data[SC_ITEMBOOST]) // now rig the drop rate to never be over 90% unless it is originally >90%.
 				drop_rate = max(drop_rate,cap_value((int)(0.5+drop_rate*(sd->sc.data[SC_ITEMBOOST]->val1)/100.),0,9000));
-#if RE_DROP_MOD
+#ifdef RENEWAL_DROP
 			if(drop_modifier != 100 && !md->db->mexp)
 				drop_rate = drop_rate * drop_modifier / 100;
 #endif
@@ -2508,7 +2511,8 @@ void mob_revive(struct mob_data *md, unsigned int hp)
 	md->tdmg = 0;
 	if (!md->bl.prev)
 		map_addblock(&md->bl);
-	clif_spawn(&md->bl);
+	if( map[md->bl.m].users )
+		clif_spawn(&md->bl);
 	skill_unit_move(&md->bl,tick,1);
 	mobskill_use(md, tick, MSC_SPAWN);
 	if (battle_config.show_mob_info&3)

@@ -3447,6 +3447,12 @@ int inter_config_read(char *cfgName)
 	return 0;
 }
 
+/// void		sv_readlsqdb
+// char*	name				->	nome destinado à primeira DB							;
+// char*	name2				->	nome destinado à segunda DB								;
+// int		param_size			->	número de parâmetros existentes em cada linha			;
+// int		max_allowed			->	máximo número de entradas permitidas					;
+// bool		(*sub_parse_row)	->	obtém parâmetros para a leitura das colunas específicas	;
 void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, bool (*sub_parse_row)(char* string[], int columns, int current))
 {
 	const char* db_name[] = { name, name2 };
@@ -3457,32 +3463,48 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 		uint8 lines = 0;
 		uint16 count = 0;
 
+		/* Caso o nome da db seja nulo, a condição é verdadeira. */
 		if (db_name[i] == NULL)
 		{
+			/* Se i for diferente de 1, isto é, não for a 2ª DB sendo lida,
+			   o loop retornará ao início, caso contrário irá ser interrompido,
+			   já que será, então, a 2ª DB e última a ser lida. */
 			if (i != 1)
 				continue;
 			else
 				break;
 		}
 
+		/* Se o retorno da query realizada obtiver erro, a condição é verdadeira.
+		   Neste caso, a query apenas é executada para verificar a existência da tabela. */
 		if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", db_name[i]))
 		{
+			/* Exibe mensagem de debug do SQL. */
 			Sql_ShowDebug(mmysql_handle);
+			
+			/* Igualmente a antes, caso seja a 2ª DB lida, irá sair do loop,
+			   caso contrário irá retornar ao início. */
 			if (i != 1)
 				continue;
 			else
 				break;
 		}
 	
+		/* Se não houver colunas na tabela específica, ou seja, caso só exista a tabela
+		   e não haja nenhum dado guardado nesta, não haverá a leitura desta DB. */
 		if (Sql_NumRows(mmysql_handle) <= 0)
 		{
+			/* Exibe a mensagem de que a DB não foi lida pois não há entradas. */
 			ShowSQL("Table '"CL_WHITE"%s"CL_RESET"' was not read because it has 0 entries.\n", db_name[i]);
+			
+			/* Volta ao início do loop caso seja a 1ª DB, e saí caso seja a 2ª. */
 			if (i != 1)
 				continue;
 			else
 				break;
 		}
 		
+		/* Enquanto houver sucesso na leitura das colunas, a iteração se mantém. */
 		while (SQL_SUCCESS == Sql_NextRow(mmysql_handle))
 		{
 			char *str[64];
@@ -3490,14 +3512,18 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 
 			++lines;
 
+			/* Caso a contagem de entradas for igual ao tamanho máximo de entradas
+			   permitidas, saí da iteração. */
 			if (count == max_allowed)
 			{
 				ShowError("sv_readsqldb: Reached the maximum allowed number of entries (%d) when parsing table \"%s\".\n", max_allowed, db_name[i]);
 				break;
 			}
 			
+			/* Limita o tamanho da variável str como o tamanho máximo de parâmetros. */
 			str[(param_size + 1)] = '\0';
 
+			/* Iteração que irá pegar o valor da coluna específica. */
 			for (j = 0; j < param_size; ++j)
 			{
 				Sql_GetData(mmysql_handle, j, &str[j], NULL);
@@ -3506,12 +3532,14 @@ void sv_readsqldb (char* name, char* name2, int param_size, int max_allowed, boo
 					str[j] = "";
 			}
 
+			/* Caso a leitura realizada específica de cada DB seja falsa, volta ao início da iteração. */
 			if (!sub_parse_row(str, param_size, count))
 				continue;
 
 			count++;
 		}
 		
+		/* Caso alguma tabela foi lida, exibe a mensagem. */
 		if (count)
 			ShowSQL("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in table '"CL_WHITE"%s"CL_RESET"'.\n", count, db_name[i]);
 
@@ -3933,7 +3961,7 @@ int do_init(int argc, char *argv[])
 	}
 
 	map_config_read(MAP_CONF_NAME);
-#if REMODE
+#ifdef RENEWAL
 	/**
 	 * to make pre-re conflict safe
 	 **/

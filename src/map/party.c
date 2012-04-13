@@ -908,7 +908,7 @@ int party_send_xy_clear(struct party_data *p)
 	}
 	return 0;
 }
-#if RE_DROP_MOD
+#ifdef RENEWAL_DROP
 /**
  * Renewal Drop Modifier
  **/
@@ -930,7 +930,7 @@ int party_renewal_drop_mod(int diff) {
 	return 50;
 }
 #endif
-#if REMODE
+#ifdef RENEWAL_EXP
 /**
  * Renewal Experience Earning Mode
  **/
@@ -965,7 +965,7 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 {
 	struct map_session_data* sd[MAX_PARTY];
 	unsigned int i, c;
-#if REMODE
+#ifdef RENEWAL_EXP
 	int src_lvl = status_get_lv(src);
 #endif
 	nullpo_ret(p);
@@ -995,10 +995,13 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 	}
 
 	for (i = 0; i < c; i++) {
-#if REMODE
-		party_renewal_exp_mod(&base_exp,&job_exp,sd[i]->status.base_level,src_lvl);
-#endif
+#ifdef RENEWAL_EXP
+		unsigned int b_exp = base_exp, j_exp = job_exp; 
+		party_renewal_exp_mod(&b_exp,&j_exp,sd[i]->status.base_level,src_lvl); 
+		pc_gainexp(sd[i], src, b_exp, j_exp, false);
+#else
 		pc_gainexp(sd[i], src, base_exp, job_exp, false);
+#endif
 		if (zeny) // zeny from mobs [Valaris]
 			pc_getzeny(sd[i],zeny);
 	}

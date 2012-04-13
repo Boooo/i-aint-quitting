@@ -457,6 +457,10 @@ void pc_inventory_rentals(struct map_session_data *sd)
 
 		if( sd->status.inventory[i].expire_time <= time(NULL) )
 		{
+			if( sd->status.inventory[i].nameid == ITEMID_REINS_OF_MOUNT && sd->sc.option&OPTION_MOUNTING )
+			{
+				pc_setoption(sd, sd->sc.option&~OPTION_MOUNTING);
+			}
 			clif_rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
 			pc_delitem(sd, i, sd->status.inventory[i].amount, 1, 0, LOG_TYPE_OTHER);
 		}
@@ -702,6 +706,10 @@ static int pc_isAllowedCardOn(struct map_session_data *sd,int s,int eqindex,int 
 	//Crafted/made/hatched items.
 	if (itemdb_isspecial(item->card[0]))
 		return 1;
+		
+	/* scan for enchant armor gems */ 
+	if( item->card[MAX_SLOTS - 1] && s < MAX_SLOTS - 1 ) 
+		s = MAX_SLOTS - 1;
 	
 	ARR_FIND( 0, s, i, item->card[i] && (data = itemdb_exists(item->card[i])) != NULL && data->flag.no_equip&flag );
 	return( i < s ) ? 0 : 1;
@@ -2046,7 +2054,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val)
 	case SP_DEF1:
 		if(sd->state.lr_flag != 2) {
 			bonus = status->def + val;
-	#if REMODE
+	#ifdef RENEWAL
 			status->def = cap_value(bonus, SHRT_MIN, SHRT_MAX);
 	#else
 			status->def = cap_value(bonus, CHAR_MIN, CHAR_MAX);
@@ -2062,7 +2070,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val)
 	case SP_MDEF1:
 		if(sd->state.lr_flag != 2) {
 			bonus = status->mdef + val;
-	#if REMODE
+	#ifdef RENEWAL
 			status->mdef = cap_value(bonus, SHRT_MIN, SHRT_MAX);
 	#else
 			status->mdef = cap_value(bonus, CHAR_MIN, CHAR_MAX);
@@ -4003,6 +4011,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 		(sd->sc.data[SC_GRAVITATION] && sd->sc.data[SC_GRAVITATION]->val3 == BCT_SELF) ||
 		sd->sc.data[SC_TRICKDEAD] ||
 		sd->sc.data[SC_HIDING] ||
+		sd->sc.data[SC__SHADOWFORM] ||
 		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOITEM)
 	))
 		return 0;
@@ -5495,7 +5504,7 @@ int pc_need_status_point(struct map_session_data* sd, int type, int val)
 		swap(low, high);
 
 	for ( ; low < high; low++ )
-#if REMODE //Renewal Stat Cost Formula
+#ifdef RENEWAL //Renewal Stat Cost Formula
 		sp += (low < 100) ? (2 + (low - 1) / 10) : (16 + 4 * ((low - 100) / 5));
 #else
 		sp += ( 1 + (low + 9) / 10 );
@@ -6128,7 +6137,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	/* e.g. not killed thru pc_damage */
 	if( pc_issit(sd) ) {
-		clif_status_load(&sd->bl,SI_SITTING,0);
+		clif_status_load(&sd->bl,SI_SIT,0);
 	}
 
 	pc_setdead(sd);

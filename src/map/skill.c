@@ -218,7 +218,7 @@ int	skill_get_unit_flag( int id )         { skill_get (skill_db[id].unit_flag, i
 int	skill_get_unit_layout_type( int id ,int lv ){ skill_get (skill_db[id].unit_layout_type[lv-1], id, lv); }
 int	skill_get_cooldown( int id ,int lv )     { skill_get (skill_db[id].cooldown[lv-1], id, lv); }
 
-#if RECASTING 
+#ifdef RENEWAL_CAST 
 int     skill_get_fixed_cast( int id ,int lv ){ skill_get (skill_db[id].fixed_cast[lv-1], id, lv); } 
 #endif
 
@@ -379,7 +379,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, int skill
 	default:
 		if (skill_lv >= battle_config.max_heal_lv)
 			return battle_config.max_heal;
-	#if REMODE
+	#ifdef RENEWAL
 		/**
 		 * Renewal Heal Formula (from Doddler)
 		 * TODO: whats that( 1+ %Modifier / 100 ) ? currently using 'x1' (100/100) until found out
@@ -843,7 +843,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 	/**
 	 * Storm Gust counter was dropped in renewal
 	 **/
-	#if REMODE
+	#ifdef RENEWAL
 		sc_start(bl,SC_FREEZE,65-(5*skilllv),skilllv,skill_get_time2(skillid,skilllv));
 	#else
 		 //Tharis pointed out that this is normal freeze chance with a base of 300%
@@ -1571,7 +1571,6 @@ int skill_onskillusage(struct map_session_data *sd, struct block_list *bl, int s
 		}
 		sd->autospell3[i].lock = false;
 		sd->state.autocast = 0;
-		skill_onskillusage(sd, bl, skill, tick);
 	}
 
 	if( sd && sd->autobonus3[0].rate )
@@ -2578,6 +2577,8 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				status_zap(bl, 0, damage*100/(100*(110-pc_checkskill(sd,WM_LESSON)*10)));
 				break;
 		}
+		if (sd)
+			skill_onskillusage(sd, bl, skillid, tick);
 	}
 
 	if (!(flag&2) &&
@@ -4287,8 +4288,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, int 
 			battle_consume_ammo(sd, skillid, skilllv);
 		}
 
-		// perform auto-cast routines and skill requirement consumption
-		skill_onskillusage(sd, bl, skillid, tick);
+		// perform skill requirement consumption
 		skill_consume_requirement(sd,skillid,skilllv,2);
 	}
 	
@@ -6463,7 +6463,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 	/**
 	 * Renewal dropped the 3/4 hp requirement
 	 **/
-	#if isOFF(REMODE)
+	#ifndef RENEWAL
 			|| tstatus-> hp > tstatus->max_hp*3/4
 	#endif
 				) {
@@ -8114,8 +8114,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			battle_consume_ammo(sd, skillid, skilllv);
 		}
 
-		// perform auto-cast routines and skill requirement consumption
-		skill_onskillusage(sd, bl, skillid, tick);
+		// perform skill requirement consumption
 		skill_consume_requirement(sd,skillid,skilllv,2);
 	}
 
@@ -9164,8 +9163,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, int skillid, int sk
 			battle_consume_ammo(sd, skillid, skilllv);
 		}
 
-		// perform auto-cast routines and skill requirement consumption
-		skill_onskillusage(sd, NULL, skillid, tick);
+		// perform skill requirement consumption
 		skill_consume_requirement(sd,skillid,skilllv,2);
 	}
 
@@ -9458,7 +9456,7 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 
 	switch( skillid ) {
 	case MG_SAFETYWALL:
-	#if REMODE
+	#ifdef RENEWAL
 		/**
 		 * According to data provided in RE, SW life is equal to 3 times caster's health
 		 **/
@@ -10139,7 +10137,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			{
 				int heal = skill_calc_heal(ss,bl,sg->skill_id,sg->skill_lv,true);
 				struct mob_data *md = BL_CAST(BL_MOB, bl);
-#if REMODE
+#ifdef RENEWAL
 				if( md && md->class_ == MOBID_EMPERIUM )
 					break;
 #endif
@@ -10214,7 +10212,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 		/**
 		 * The storm gust counter was dropped in renewal
 		 **/
-		#if isOFF(REMODE)
+		#ifndef RENEWAL
 				case WZ_STORMGUST: //SG counter does not reset per stormgust. IE: One hit from a SG and two hits from another will freeze you.
 					if (tsc) 
 						tsc->sg_counter++; //SG hit counter.
@@ -10337,7 +10335,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 		case UNT_APPLEIDUN: //Apple of Idun [Skotlex]
 		{
 			int heal;
-#if REMODE
+#ifdef RENEWAL
 			struct mob_data *md = BL_CAST(BL_MOB, bl);
 			if( md && md->class_ == MOBID_EMPERIUM )
 				break;
@@ -10501,26 +10499,25 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 		case UNT_EPICLESIS:
 			if( bl->type == BL_PC && !battle_check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON )
 			{
-				int hp, sp;
-				switch( sg->skill_lv )
-				{
-					case 1: case 2: hp = 3; sp = 2; break;
-					case 3: case 4: hp = 4; sp = 3; break;
-					case 5: default: hp = 5; sp = 4; break;
+				if( ++sg->val2 % 3 == 0 ) {
+					int hp, sp;
+					switch( sg->skill_lv )
+					{
+						case 1: case 2: hp = 3; sp = 2; break;
+						case 3: case 4: hp = 4; sp = 3; break;
+						case 5: default: hp = 5; sp = 4; break;
+					}
+					hp = tstatus->max_hp * hp / 100;
+					sp = tstatus->max_sp * sp / 100;
+					status_heal(bl, hp, sp, 0);
+					if( tstatus->hp < tstatus->max_hp )
+						clif_skill_nodamage(&src->bl, bl, AL_HEAL, hp, 1);
+					if( tstatus->sp < tstatus->max_sp )
+						clif_skill_nodamage(&src->bl, bl, MG_SRECOVERY, sp, 1);
+					sc_start(bl, type, 100, sg->skill_lv, (sg->interval * 3) + 100);
 				}
-				hp = tstatus->max_hp * hp / 100;
-				sp = tstatus->max_sp * sp / 100;
-				status_heal(bl, hp, sp, 0);
-				if( tstatus->hp < tstatus->max_hp )
-					clif_skill_nodamage(&src->bl, bl, AL_HEAL, hp, 1);
-				if( tstatus->sp < tstatus->max_sp )
-					clif_skill_nodamage(&src->bl, bl, MG_SRECOVERY, sp, 1);
-				sc_start(bl, type, 100, sg->skill_lv, sg->interval + 100);
-				sg->val2++;
 				// Reveal hidden players every 5 seconds.
-				if( sg->val2 >= 5 )
-				{
-					sg->val2 = 0;
+				if( sg->val2 % 5 == 0 ) {
 					// TODO: check if other hidden status can be removed.
 					status_change_end(bl,SC_HIDING,-1);
 					status_change_end(bl,SC_CLOAKING,-1);
@@ -12175,7 +12172,7 @@ int skill_castfix (struct block_list *bl, int skill_id, int skill_lv)
 int skill_castfix_sc (struct block_list *bl, int time, int skill_id, int skill_lv)
 {
 	struct status_change *sc = status_get_sc(bl);
-#if RECASTING
+#ifdef RENEWAL_CAST
 	int fixed = skill_get_fixed_cast(skill_id, skill_lv);
 	if( !fixed )
 	{
@@ -12197,7 +12194,7 @@ int skill_castfix_sc (struct block_list *bl, int time, int skill_id, int skill_l
 		}
 		if (sc->data[SC_POEMBRAGI])
 			time -= time * sc->data[SC_POEMBRAGI]->val2 / 100;
-#if RECASTING
+#ifdef RENEWAL_CAST
 		if( sc->data[SC__LAZINESS] )
 			fixed += fixed * sc->data[SC__LAZINESS]->val2 / 100;
 		/**
@@ -12207,7 +12204,7 @@ int skill_castfix_sc (struct block_list *bl, int time, int skill_id, int skill_l
 			fixed -= fixed * sc->data[SC_SECRAMENT]->val2 / 100;
 #endif
 	}
-#if RECASTING
+#ifdef RENEWAL_CAST
 	/**
 	 * WL_RADIUS decreases 10/15/20% fixed cast time from warlock skills
 	 **/
@@ -12747,9 +12744,9 @@ int skill_sit (struct map_session_data *sd, int type)
 	}
 	
 	if( type ) {
-		clif_status_load(&sd->bl,SI_SITTING,1);
+		clif_status_load(&sd->bl,SI_SIT,1);
 	} else {
-		clif_status_load(&sd->bl,SI_SITTING,1);
+		clif_status_load(&sd->bl,SI_SIT,0);
 	}
 
 	if (!flag) return 0;
@@ -15591,7 +15588,7 @@ static bool skill_parse_row_castdb(char* split[], int columns, int current)
 	skill_split_atoi(split[4],skill_db[i].upkeep_time);
 	skill_split_atoi(split[5],skill_db[i].upkeep_time2);
 	skill_split_atoi(split[6],skill_db[i].cooldown);
-#if RECASTING 
+#ifdef RENEWAL_CAST 
 	skill_split_atoi(split[7],skill_db[i].fixed_cast); 
 #endif 
 	return true;

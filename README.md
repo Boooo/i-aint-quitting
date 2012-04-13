@@ -36,3 +36,4 @@ Equipe
 - Pedro B.		- Pedro
 - Sicks			- Bruno
 - Takyia Genji	- Raphael
+- Yum			- Luann Peixe

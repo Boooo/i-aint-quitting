@@ -105,7 +105,7 @@ static uint8_t grf_substitution(uint8_t in)
 }
 
 
-static void grf_shuffle_enc(BIT64* src)
+/*static void grf_shuffle_enc(BIT64* src)
 {
 	BIT64 out;
 
@@ -119,7 +119,7 @@ static void grf_shuffle_enc(BIT64* src)
 	out.b[7] = grf_substitution(src->b[7]);
 
 	*src = out;
-}
+}*/
 
 
 static void grf_shuffle_dec(BIT64* src)

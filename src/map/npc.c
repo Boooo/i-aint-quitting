@@ -1964,7 +1964,8 @@ struct npc_data* npc_add_warp(short from_mapid, short from_x, short from_y, shor
 	status_set_viewdata(&nd->bl, nd->class_);
 	status_change_init(&nd->bl);
 	unit_dataset(&nd->bl);
-	clif_spawn(&nd->bl);
+	if( map[nd->bl.m].users )
+		clif_spawn(&nd->bl);
 	strdb_put(npcname_db, nd->exname, nd);
 
 	return nd;
@@ -2024,7 +2025,8 @@ static const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const 
 	status_set_viewdata(&nd->bl, nd->class_);
 	status_change_init(&nd->bl);
 	unit_dataset(&nd->bl);
-	clif_spawn(&nd->bl);
+	if( map[nd->bl.m].users )
+		clif_spawn(&nd->bl);
 	strdb_put(npcname_db, nd->exname, nd);
 
 	return strchr(start,'\n');// continue
@@ -2131,7 +2133,8 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 		status_change_init(&nd->bl);
 		unit_dataset(&nd->bl);
 		nd->ud.dir = dir;
-		clif_spawn(&nd->bl);
+		if( map[nd->bl.m].users )
+			clif_spawn(&nd->bl);
 	} else
 	{// 'floating' shop?
 		map_addiddb(&nd->bl);
@@ -2343,7 +2346,8 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 		if( class_ >= 0 )
 		{
 			status_set_viewdata(&nd->bl, nd->class_);
-			clif_spawn(&nd->bl);
+			if( map[nd->bl.m].users )
+				clif_spawn(&nd->bl);
 		}
 	}
 	else
@@ -2354,18 +2358,15 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 	strdb_put(npcname_db, nd->exname, nd);
 
 	//-----------------------------------------
-	// イベント用ラベルデータのエクスポート
+	// Loop through labels to export them as necessary
 	for (i = 0; i < nd->u.scr.label_list_num; i++) {
 		if (npc_event_export(nd, i)) {
 			ShowWarning("npc_parse_script : duplicate event %s::%s (%s)\n",
 			             nd->exname, nd->u.scr.label_list[i].name, filepath);
 		}
-	}
 
-	//-----------------------------------------
-	// ラベルデータからタイマーイベント取り込み
-	for (i = 0; i < nd->u.scr.label_list_num; i++)
 		npc_timerevent_export(nd, i);
+	}
 
 	nd->u.scr.timerid = INVALID_TIMER;
 
@@ -2493,7 +2494,8 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if( class_ >= 0 )
 		{
 			status_set_viewdata(&nd->bl, nd->class_);
-			clif_spawn(&nd->bl);
+			if( map[nd->bl.m].users )
+				clif_spawn(&nd->bl);
 		}
 	}
 	else
@@ -2506,20 +2508,16 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	if( type != SCRIPT )
 		return end;
 
-	//Handle labels
 	//-----------------------------------------
-	// イベント用ラベルデータのエクスポート
+	// Loop through labels to export them as necessary
 	for (i = 0; i < nd->u.scr.label_list_num; i++) {
 		if (npc_event_export(nd, i)) {
 			ShowWarning("npc_parse_duplicate : duplicate event %s::%s (%s)\n",
 			             nd->exname, nd->u.scr.label_list[i].name, filepath);
 		}
-	}
 
-	//-----------------------------------------
-	// ラベルデータからタイマーイベント取り込み
-	for (i = 0; i < nd->u.scr.label_list_num; i++)
 		npc_timerevent_export(nd, i);
+	}
 
 	nd->u.scr.timerid = INVALID_TIMER;
 
@@ -2576,7 +2574,8 @@ int npc_duplicate4instance(struct npc_data *snd, int m)
 		status_set_viewdata(&wnd->bl, wnd->class_);
 		status_change_init(&wnd->bl);
 		unit_dataset(&wnd->bl);
-		clif_spawn(&wnd->bl);
+		if( map[wnd->bl.m].users )
+			clif_spawn(&wnd->bl);
 		strdb_put(npcname_db, wnd->exname, wnd);
 	}
 	else
@@ -2693,7 +2692,8 @@ void npc_setdisplayname(struct npc_data* nd, const char* newname)
 	nullpo_retv(nd);
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
-	clif_charnameack(0, &nd->bl);
+	if( map[nd->bl.m].users )
+		clif_charnameack(0, &nd->bl);
 }
 
 /// Changes the display class of the npc.
@@ -2707,10 +2707,12 @@ void npc_setclass(struct npc_data* nd, short class_)
 	if( nd->class_ == class_ )
 		return;
 
-	clif_clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
+	if( map[nd->bl.m].users )
+		clif_clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
 	nd->class_ = class_;
 	status_set_viewdata(&nd->bl, class_);
-	clif_spawn(&nd->bl);// fade in
+	if( map[nd->bl.m].users )
+		clif_spawn(&nd->bl);// fade in
 }
 
 /// Parses a function.

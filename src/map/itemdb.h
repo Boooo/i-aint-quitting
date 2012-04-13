@@ -17,11 +17,6 @@
 
 #define MAX_SEARCH	5  //Designed for search functions, species max number of matches to display.
 
-/**
- * Arch Bishop
- **/
-#define ITEMID_ANCILLA 12333
-
 enum item_itemid
 {
 	ITEMID_EMPERIUM = 714,
@@ -32,6 +27,9 @@ enum item_itemid
 	ITEMID_STONE = 7049,
 	ITEMID_SKULL_ = 7420,
 	ITEMID_TOKEN_OF_SIEGFRIED = 7621,
+	ITEMID_TRAP_ALLOY = 7940,
+	ITEMID_ANCILLA = 12333,
+	ITEMID_REINS_OF_MOUNT = 12622,
 };
 
 #define itemid_isgemstone(id) ( (id) >= ITEMID_YELLOW_GEMSTONE && (id) <= ITEMID_BLUE_GEMSTONE )
@@ -73,7 +71,7 @@ struct item_data {
 	int elv;
 	int wlv;
 	int view_id;
-#if REMODE
+#ifdef RENEWAL
 	int matk;//[RRInd] -- used in RE for matk
 #endif
 
@@ -186,10 +184,6 @@ enum {
  * Warlock
  **/
 #define itemdb_is_spellbook(n) (n >= 6188 && n <= 6205)
-/**
- * Ranger
- **/
-#define ITEMID_TRAP_ALLOY 7940
 /**
  * Mechanic
  **/
