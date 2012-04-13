@@ -16264,7 +16264,7 @@ static void packetdb_addpacket(short cmd, int len, ...)
 			
 			for (i = 0; i < MAX_PACKET_POS; i++)
 			{
-				unsigned short pos = va_arg(va, unsigned short);
+				unsigned short pos = (unsigned short)va_arg(va, int);
 
 				if (pos == 0xFFFF)
 					break;
