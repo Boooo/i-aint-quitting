@@ -1,21 +1,28 @@
-//===== rAthena Script =======================================
-//= War of Emperium (Al De baran)
-//===== By: ==================================================
+//====================================================================
+//          _________                                                  
+//          \_   ___ \_______  ____   ____  __ __  ______             
+//          /    \  \/\_  __ \/    \ /    \|  |  \/  ___/              
+//          \     \____|  | \(  ( ) )   |  \  |  /\___ \               
+//           \______  /|__|   \____/|___|  /____//____  >              
+//                  \/                   \/           \/               
+//                                                               
+//====================== Cronus Script ===============================
+//= Guerra do Emperium (Al De baran)
+//===== Por: =========================================================
 //= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.1
-//===== Compatible With: =====================================
-//= rAthena SVN
-//===== Description: =========================================
-//= NPCs that relate to Al De Baran Guild Castle 3
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
-//============================================================
+//===== Versão Atual: ================================================
+//= 1.2
+//===== Compatível com: ==============================================
+//= Cronus SVN
+//===== Descrição: ===================================================
+//= NPCs relativos ao 3º Castelo de Al De baran
+//===== Comentários Adicionais: ======================================
+//= 1.2 Script traduzido do eA conforme os diálogos do bRO. [Axl]
+//====================================================================
 
-// Guild Flag (Town)
+// Bandeira do Castelo (Cidade)
 //============================================================
-aldebaran,134,97,4	script	Nuenberg#a3-1::Nuenberg	722,{
+aldebaran,134,97,4	script	Canopus#a3-1::Canopus	722,{
 	end;
 
 OnRecvCastleA03:
@@ -23,48 +30,47 @@ OnRecvCastleA03:
 	end;
 }
 
-// Guild Flag (Outside Castle)
+// Bandeira do Castelo (Fora do Castelo)
 //============================================================
-alde_gld,138,82,0	script	Nuenberg#a3-2::Nuenberg2	722,{
+alde_gld,138,82,0	script	Canopus#a3-2::Canopus2	722,{
 	set .@GID, GetCastleData("aldeg_cas03",1);
 	if (.@GID == 0) {
-		mes " [ Edict of the Divine Rune Midgard Kingdom ]";
+		mes " [[Decreto do Reino de Rune Midgard]]";
 		mes " ";
-		mes "1. Follow the ordinance of The Divine Rune Midgard Kingdom, ";
-		mes "We declare that";
-		mes "there is no formal master of this castle.";
+		mes "1. Conforme o Pacto do Reino de Rune Midgard";
+		mes "e o Feudo de Luina,";
+		mes "declaro que este Castelo não possui um Senhor.";
 		mes " ";
-		mes "2. To the one who can ";
-		mes "overcome all trials";
-		mes "and destroy the Emperium,";
-		mes "the king will endow the one with";
-		mes "ownership of this castle.";
+		mes "2. Ao Clã que for bravo o bastante";
+		mes "e, superarando os terríveis desafios,";
+		mes "quebrar o Emperium,";
+		mes "será dada a posse deste Castelo";
+		mes "apoiado pelo nosso Rei.";
 	}
 	else {
 		if (getcharid(2) == .@GID) {
-			mes "Brave ones...";
-			mes "Do you wish to return to your honorable place?";
+			mes "[ Voz Ecoante ]";
+			mes "Bravo guerreiro......";
+			mes "Deseja retornar ao seu lugar de glória?";
 			next;
-			if (select("Return to the guild castle.:Quit.") == 1) {
+			if (select("Sim.: Não.") == 1) {
 				if (getcharid(2) == GetCastleData("aldeg_cas03",1)) {
 					warp "aldeg_cas03",118,76;
-					//warp "aldeg_cas03",205,186;
 					end;
 				}
 			}
 			close;
 		}
-		mes "[ Edict of the Divine Rune Midgard Kingdom ]";
+		mes "[Decreto do Reino de Rune Midgard]";
 		mes " ";
-		mes "1. Following the ordinance of the";
-		mes "Divine Rune Midgard Kingdom,";
-		mes "we approve that this place is in";
-		mes "the private possession of ^ff0000" + GetGuildName(.@GID) + "^000000 Guild.";
+		mes "1. Conforme o Pacto do Reino de Rune Midgard";
+		mes "e o Feudo de Luina,";
+		mes "declaro que este castelo pertence ao Clã ^ff0000" + GetGuildName(.@GID) + "^000000 .";
 		mes " ";
-		mes "2. The guild Master of ^ff0000"+ GetGuildName(.@GID) + "^000000 Guild is";
+		mes "2. O Líder do Clã ^ff0000"+ GetGuildName(.@GID) + "^000000 se chama";
 		mes "^FF0000" + GetGuildMaster(.@GID) + "^000000";
-		mes "If there is anyone who objects to this,";
-		mes " prove your strength and honor with a steel blade in your hand.";
+		mes "Se alguém se opõe a este decreto";
+		mes "desembainhe sua espada para fazer valer sua vontade.";
 	}
 	close;
 
@@ -73,11 +79,11 @@ OnRecvCastleA03:
 	end;
 }
 
-alde_gld,146,82,0	duplicate(Nuenberg2)	Nuenberg#a3-3	722
+alde_gld,146,82,0	duplicate(Canopus2)	Canopus#a3-3	722
 
-// Guild Flag (Inside Castle)
+// Bandeira do Castelo (Dentro do Castelo)
 //============================================================
-aldeg_cas03,176,175,2	script	Nuenberg#a3-4::Nuenberg3	722,{
+aldeg_cas03,176,175,2	script	Canopus#a3-4::Canopus3	722,{
 	end;
 
 OnRecvCastleA03:
@@ -85,56 +91,58 @@ OnRecvCastleA03:
 	end;
 }
 
-aldeg_cas03,77,115,2	duplicate(Nuenberg3)	Nuenberg#a3-5	722
-aldeg_cas03,77,215,2	duplicate(Nuenberg3)	Nuenberg#a3-6	722
-aldeg_cas03,112,107,2	duplicate(Nuenberg3)	Nuenberg#a3-7	722
-aldeg_cas03,112,117,2	duplicate(Nuenberg3)	Nuenberg#a3-8	722
-aldeg_cas03,69,71,2	duplicate(Nuenberg3)	Nuenberg#a3-9	722
-aldeg_cas03,91,69,2	duplicate(Nuenberg3)	Nuenberg#a3-10	722
-aldeg_cas03,108,60,2	duplicate(Nuenberg3)	Nuenberg#a3-11	722
-aldeg_cas03,121,73,2	duplicate(Nuenberg3)	Nuenberg#a3-12	722
-aldeg_cas03,75,102,2	duplicate(Nuenberg3)	Nuenberg#a3-13	722
-aldeg_cas03,199,169,2	duplicate(Nuenberg3)	Nuenberg#a3-14	722
-aldeg_cas03,181,179,2	duplicate(Nuenberg3)	Nuenberg#a3-15	722
-aldeg_cas03,192,44,2	duplicate(Nuenberg3)	Nuenberg#a3-16	722
-aldeg_cas03,208,145,2	duplicate(Nuenberg3)	Nuenberg#a3-17	722
-aldeg_cas03,96,62,2	duplicate(Nuenberg3)	Nuenberg#a3-18	722
+aldeg_cas03,77,115,2	duplicate(Canopus3)	Canopus#a3-5	722
+aldeg_cas03,77,215,2	duplicate(Canopus3)	Canopus#a3-6	722
+aldeg_cas03,112,107,2	duplicate(Canopus3)	Canopus#a3-7	722
+aldeg_cas03,112,117,2	duplicate(Canopus3)	Canopus#a3-8	722
+aldeg_cas03,69,71,2	duplicate(Canopus3)	Canopus#a3-9	722
+aldeg_cas03,91,69,2	duplicate(Canopus3)	Canopus#a3-10	722
+aldeg_cas03,108,60,2	duplicate(Canopus3)	Canopus#a3-11	722
+aldeg_cas03,121,73,2	duplicate(Canopus3)	Canopus#a3-12	722
+aldeg_cas03,121,73,2	duplicate(Canopus3)	Canopus#a3-13	722
+aldeg_cas03,75,102,2	duplicate(Canopus3)	Canopus#a3-14	722
+aldeg_cas03,199,169,2	duplicate(Canopus3)	Canopus#a3-15	722
+aldeg_cas03,181,179,2	duplicate(Canopus3)	Canopus#a3-16	722
+aldeg_cas03,192,44,2	duplicate(Canopus3)	Canopus#a3-17	722
+aldeg_cas03,208,145,2	duplicate(Canopus3)	Canopus#a3-18	722
+aldeg_cas03,207,75,2	duplicate(Canopus3)	Canopus#a3-19	722
+aldeg_cas03,96,62,2	duplicate(Canopus3)	Canopus#a3-20	722
 
-// AGIT Manager
+// Gerenciador Automático
 //============================================================
 aldeg_cas03,206,32,0	duplicate(Gld_Agit_Manager)	Agit#aldeg_cas03	-1
 
-// Steward
+// Administrador do Castelo
 //============================================================
 aldeg_cas03,110,118,0	duplicate(Gld_Mngr_Template)	Nahzarf#aldeg_cas03	55
 
-// Guardians
+// Guardiões
 //============================================================
 aldeg_cas03,110,118,0	duplicate(Gld_Guard_Template)	Guardian#aldeg_cas03	-1
 
-// Kafra Staff
+// Serviço Kafra
 //============================================================
-aldeg_cas03,118,76,0	duplicate(Gld_Kafra_Template)	Kafra Staff#aldeg_cas03	117
+aldeg_cas03,118,76,0	duplicate(Gld_Kafra_Template)	Kafra#aldeg_cas03	117
 
-// Master's Room Exit
+// Saída da Sala do Mestre
 //============================================================
 aldeg_cas03,229,267,0	script	#switch_A03	111,{
 	mes " ";
-	mes "There's a small lever. Will you pull it? ";
+	mes "Há uma pequena alavanca, você deseja acioná-la?";
 	next;
-	if(select("Pull.:Do not.") == 2) close;
+	if(select("Acionar.:Não acionar.") == 2) close;
 	warp "aldeg_cas03",110,119;
 	end;
 }
 
-// Guild Treasure Protection
+// Proteção de Tesouro da Guild
 //============================================================
 aldeg_cas03,225,269,0	duplicate(Gld_Trea_Protect)	ban_warp#aldeg_cas03	-1,8,8
 
-// Guild Treasure Spawns
+// Spawns do Tesouro da Guild
 //============================================================
 aldeg_cas03,225,269,0	duplicate(Gld_Trea_Spawn)	Treasure#aldeg_cas03	-1
 
-// Guild Dungeon Switch
+// Mudanças de Cavernas da Guild
 //============================================================
 aldeg_cas03,200,177,0	duplicate(Gld_Dun_Template)	#aldeg_cas03	111
