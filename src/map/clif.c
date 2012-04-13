@@ -16237,8 +16237,8 @@ static void packetdb_addpacket(short cmd, int len, ...)
 
 	packet_db[1][cmd].len = len;
 
-	va_start(va, func);
-	func = va_arg(va, char *);
+	va_start(va, len);
+	func = (char *)va_arg(va, char *);
 	
 	if (func != NULL)
 	{
