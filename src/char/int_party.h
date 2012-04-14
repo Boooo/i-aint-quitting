@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #ifndef _INT_PARTY_SQL_H_
 #define _INT_PARTY_SQL_H_
