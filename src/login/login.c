@@ -1780,11 +1780,6 @@ int do_init(int argc, char** argv)
 		}
 	}
 
-	if( login_config.console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
-
 	// server port open & binding
 	login_fd = make_listen_bind(login_config.login_ip, login_config.login_port);
 	

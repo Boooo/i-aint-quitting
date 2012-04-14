@@ -4598,11 +4598,6 @@ int do_init(int argc, char **argv)
 	// ???
 	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
 	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
-
-	if( console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 	
 	//Cleaning the tables for NULL entrys @ startup [Sirius]
 	//Chardb clean
