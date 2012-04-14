@@ -1,13 +1,13 @@
 //===== rAthena Script =======================================
-//= War of Emperium SE - Auto-Start
+//= Guerra do Emperium 2.0 - Inicialização automática
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
+//===== Compatível com: =====================================
 //= rAthena SVN; RO Episode 11.3
-//===== Description: =========================================
-//= Auto Start for War of Emperium
+//===== Descrição: =========================================
+//= Auto Start for War of Emperium/Inicialização automática da Guerra do Emperium 2.0
 //= To know how to set up WoE times, go to doc\woe_time_explanation.txt
 //=============================================
 //= gettime(3): Gets hour (24 hour time)
@@ -15,20 +15,21 @@
 //= 3=Wednesday, 4=Thursday, etc.
 //===== Additional Comments: =================================
 //= 1.0 Copy/Paste of the original setter.
+//= 1.1 Tradução para Português pt-br [Raizen]
 //============================================================
 
-// WoE Start/Stop times
+// Configuração de Inicialização/Finalização da GdE
 //============================================================
 -	script	Agit2_Event	-1,{
 	end;
 
-OnClock1800:	//start time for Tues(2), Thurs(4)
-OnClock2000:	//end time for Tues(2), Thurs(4)
-OnClock2100:	//start time for Sat(6)
-OnClock2300:	//end time for Sat(6)
+OnClock1800:	//Hora de inicilização, para Terça-feira(2), Quinta-Feira(4)
+OnClock2000:	//Hora de finalização, para Terça-feira(2), Quinta-Feira(4)
+OnClock2100:	//Hora de inicilização para Sábado(6)
+OnClock2300:	//Hora de finalização para Sábado(6)
 
 OnAgitInit2:
-	// starting time checks
+	// Checagem de horário de inicialização
 	if((gettime(4)==2) && (gettime(3)>=18 && gettime(3)<21) ||
 	   (gettime(4)==4) && (gettime(3)>=18 && gettime(3)<21) ||
 	   (gettime(4)==6) && (gettime(3)>=22 && gettime(3)<23)) {
@@ -38,7 +39,7 @@ OnAgitInit2:
 		end;
 	}
 
-	// end time checks
+	// Checagem de horário de finalização
 	if ((gettime(4)==2) && (gettime(3)==21) ||
 	    (gettime(4)==4) && (gettime(3)==21) ||
 	    (gettime(4)==6) && (gettime(3)==23)) { 
