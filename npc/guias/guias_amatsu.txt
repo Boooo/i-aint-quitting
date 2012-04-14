@@ -11,84 +11,86 @@
 //= Guide for the city of Amatsu
 //===== Additional Comments: ================================= 
 //= 1.0 First version, Renewal guide.
+//= 1.1 Traduzido [J4ND3RS0N]
 //============================================================ 
 
 amatsu,202,91,3	script	Amatsu Guide#amatsu	758,{
 	mes "[Amachang]";
-	mes "Welcome to ^8B4513Amatsu^000000,";
-	mes "the town of kind towners";
-	mes "and beautiful cherry blossoms.";
+	mes "Bem-vindo a Amatsu,";
+	mes "a cidade da população amável";
+	mes "e lindas flores de cereja.";
 	next;
 	mes "[Amachang]";
-	mes "I'm Amachang,";
-	mes "the 13th Miss Amatsu.";
-	mes "I will guide you about town";
-	mes "as Miss Amatsu.";
-	mes "Please tell me";
-	mes "if you want to know something.";
+	mes "Eu sou Amachang,";
+	mes "a 13ª Miss Amatsu.";
+	mes "Eu vou guiá-lo pela cidade";
+	mes "como Miss Amatsu.";
+	mes "Por favor, me fale";
+	mes "se quiser saber de alguma coisa.";
+	next;
 	while (1) {
 		next;
-		switch(select("[ Kafra Employee ]:[ Bar ]:[ Weapon Dealer ]:[ Tool Dealer ]:[ Amatsu Palace ]:[ Chef Assistant ]:[ Ninja Guild Building ]:[ Sea Captain ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Empregada Kafra ]:[ Bar ]:[ Negociante de Armas ]:[ Negociante de Ferramenta ]:[ Amatsu Palace ]:[ Chef Assistant ]:[ Ninja Guild Edifício ]:[ Capitão do Mar ]:Remova marcas de Mini-Mapa:Cancelar")) {
 		case 1:
 			mes "[Amachang]";
-			mes "The ^0000FFKafra Employee^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "The ^0000FFEmpregada Kafra^000000 is";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,102,149,0,0x0A82FF;
 			break;
 		case 2:
 			mes "[Amachang]";
 			mes "The ^006400Bar^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,215,116,1,0xAAFF00;
 			break;
 		case 3:
 			mes "[Amachang]";
-			mes "The ^008080Weapon Dealer^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "The ^008080Negociante de Armas^000000 is";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,129,117,2,0x008080;
 			break;
 		case 4:
 			mes "[Amachang]";
-			mes "The ^FF1493Tool Dealer^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "The ^FF1493Negociante de Ferramenta^000000 is";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,97,117,3,0xFF1493;
 			break;
 		case 5:
 			mes "[Amachang]";
 			mes "The ^8B4513Amatsu Palace^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,87,235,4,0x8B4513;
 			break;
 		case 6:
 			mes "[Amachang]";
 			mes "The ^8A2BE2Chef Assistant^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,206,150,5,0x8A2BE2;
 			break;
 		case 7:
 			mes "[Amachang]";
-			mes "The ^4B0082Ninja Guild Building^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "The ^4B0082Ninja Guild Edifício^000000 is";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,148,137,6,0x4B0082;
 			break;
 		case 8:
 			mes "[Amachang]";
-			mes "The ^00BFFFSea Captain^000000 is";
-			mes "marked on your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "The ^00BFFFCapitão do Mar^000000 is";
+			mes "marcado em seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 1,195,79,7,0x00BFFF;
 			break;
 		case 9:
 			mes "[Amachang]";
-			mes "I'll remove all marks from your mini-map.";
-			mes "Is there anything else I can do for you?";
+			mes "Eu vou remover todas as marcas do seu mini-mapa.";
+			mes "Existe alguma coisa que eu posso fazer por você?";
 			viewpoint 2,1,1,0,0xFFFFFF;
 			viewpoint 2,1,1,1,0xFFFFFF;
 			viewpoint 2,1,1,2,0xFFFFFF;
@@ -100,7 +102,7 @@ amatsu,202,91,3	script	Amatsu Guide#amatsu	758,{
 			break;
 		case 10:
 			mes "[Amachang]";
-			mes "Enjoy your trip~!!";
+			mes "Aproveite seu ~ viagem!";
 			close;
 		}
 	}
