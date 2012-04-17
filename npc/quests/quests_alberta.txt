@@ -11,6 +11,7 @@
 //===== Comentários Adicionais: ==============================
 //= 1.0 Conversão do Aegis [Minos/Squall]
 //= 1.1 Revisado e otimizado [mkbu95]
+//= 1.2 Pequenas correções [Yum]
 //============================================================
 //============================================================ 
 
@@ -2529,7 +2530,7 @@ tur_dun04,113,178,4	script	Pedra de Tartaruga#td4	111,{
 	close;
 }
 
-tur_dun03,105,76,4	script	Chefe dos Cavaleiros#tur1	110,5,5,{
+tur_dun03,105,76,4	script	Cavaleiro Chefe#tur1	110,5,5,{
 	mes "[Expedito]";
 	mes "O que foi?!";
 	mes "Onde estão meus homens?";

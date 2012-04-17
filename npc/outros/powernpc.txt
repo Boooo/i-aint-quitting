@@ -18,6 +18,7 @@
 //= Arena Power
 //===== Comentários Adicionais: ======================================
 //= 1.1b Traduzido e Optimizado [J4ND3RS0N]
+//= 1.2 Corrigido erros de sintax [Yum]
 //====================================================================
 
 gonryun,180,118,4	script	Homem de Ferro#gnp	85,{
@@ -218,7 +219,7 @@ gon_test,42,89,4	script	Invocador#gnp	774,{
 	mes "Que comecem as batalhas!";
 	close2;
 	set in_battle,2;
-	if (getnpctimer(0) < 180000) monster "gon_test",56,86,.gnpMobsName$[(@gnpGroup-1)*6 + @gnpMob - 1],.gnpMobsId[(@gnpGroup-1)*6 + @gnpMob - 1],1,"Summoner#gnp::OnGnpMobDead";
+	if (getnpctimer(0) < 180000) monster "gon_test",56,86,.gnpMobsName$[(@gnpGroup-1)*6 + @gnpMob - 1],.gnpMobsId[(@gnpGroup-1)*6 + @gnpMob - 1],1,"Invocador#gnp::OnGnpMobDead";
 //  do init timer on mob select ?
 //	setnpctimer 0;
 	end;
