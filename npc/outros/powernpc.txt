@@ -192,7 +192,6 @@ gon_test,50,14,4	script	Administrator#gnp	780,{
 	startnpctimer "Invocador#gnp";
 	end;
 }
-}
 
 gon_test,42,89,4	script	Invocador#gnp	774,{
 	mes "[SongYeunWoo]";
