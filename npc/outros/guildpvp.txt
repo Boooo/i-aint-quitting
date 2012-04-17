@@ -218,7 +218,7 @@ pvp_y_room,77,85,4	script	Guia da Batalha de Clãs	105,{
 						case 2:
 							mes "[Guild Battle Guide]";
 							mes "Espero que a gente se encontre de novo.";
-							close
+							close;
 					}
 			}
 		case 5:

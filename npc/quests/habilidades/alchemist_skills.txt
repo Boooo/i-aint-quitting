@@ -1738,7 +1738,7 @@ lhz_in01,225,122,5	script	Skrajjad	754,{
 		mes "lhe ensinar Alquimia. Devo dizer";
 		mes "que admiro sua atitude,";
 		if (Sex) {
-			mes "young lad. Now, don't worry...";
+			mes "young lad. Now, don't worry...";}
 		else
 			mes "young lass. Now, don't worry...";
 		}
