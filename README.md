@@ -17,23 +17,19 @@ Special thanks to all rAthena and eAthena team for the development of the emulat
 Equipe
 ------
 ### Administradores
-- Cainho		- Caio Mateus
 - GreenBox		- Jonathan
 - JAF			- João Angelo
 
 ### Coordenadores
-- Core			- Matheus
+- Dreaming			- Matheus
 - Otonii		- Leandro
 - Roberto		- Roberto
 
 ### Desenvolvedores
-- Axl		- José Gois
+- Axl		- José Goís
 - Elf0			- 
 - J4ND3RS0N		- Janderson
 - Joao Pedro	- João Pedro
 - LyDe			- Luiz Fernando
-- mkbu95		- Matheus
-- Pedro B.		- Pedro
-- Sicks			- Bruno
 - Takyia Genji	- Raphael
 - Yum			- Luann Peixe
