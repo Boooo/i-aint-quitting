@@ -16,6 +16,7 @@
 //= 2.1a Deleted some unused Variables in Bio Ethics quest. [Samuray22]
 //= 2.2 Replaced effect numerics with constants. [L0ne_W0lf]
 //= 2.3 Conversão do Aegis, Tradução e Revisão. [FreaK]
+//= 2.4 Corrigido erros de sintax. [Yum]
 //============================================================
 
 yuno_in04,33,108,4	script	Pisruik	883,{
@@ -559,7 +560,7 @@ yuno_in04,33,108,4	script	Pisruik	883,{
 							mes "os resultados de minha pesquisa.";
 							next;
 							if (select("Estou muito ocupado.:Certo, eu vou lhe ajudar.") == 1) {
-									set ALCHE_SK,5
+									set ALCHE_SK,5;
 									mes "[Pisruik]";
 									mes "Então vou ter que ir buscá-las";
 									mes "sozinho. Certo, certo,";
@@ -627,7 +628,7 @@ yuno_in04,33,108,4	script	Pisruik	883,{
 					mes "Tá, que seja.";
 					mes "Vai embora logo para que";
 					mes "eu possa me concentrar.";
-					break;
+					close;
 			}
 					mes "[Pisruik]";
 					mes "Hã? O que fez você ";
@@ -1126,7 +1127,7 @@ yuno_in04,22,107,5	script	Irache	740,{
 	mes "Está derretendo o";
 	mes "tubo de ensaio! Eu a fiz";
 	mes "poderosa demais! Diacho!";
-	end;
+	close;
 }
 
 yuno_in04,27,107,4	script	Degas	748,{
@@ -1144,7 +1145,7 @@ yuno_in04,27,107,4	script	Degas	748,{
 	mes "dois fazem tanto barulho que não dá ";
 	mes "para me concentrar em minha pesquisa!";
 	mes "Ah, se eu pudesse trabalhar em meu^FFFFFF   ^000000 próprio laboratório secreto... ";
-	end;
+	close;
 }
 
 yuno_in04,33,106,4	script	Pilha de Livros	111,{
@@ -1153,7 +1154,7 @@ yuno_in04,33,106,4	script	Pilha de Livros	111,{
 	mes "Embora pareça desorganizada,";
 	mes "parece que os pesquisadores não têm";
 	mes "problema algum para encontrar^FFFFFF      ^3355FF	 o que estão procurando nela.";
-	end;
+	close;
 }
 
 // Início da Quest - Bioética
@@ -1737,11 +1738,7 @@ lhz_in01,225,122,5	script	Skrajjad	754,{
 		mes "de pedir a Kellasus para";
 		mes "lhe ensinar Alquimia. Devo dizer";
 		mes "que admiro sua atitude,";
-		if (Sex) {
-			mes "young lad. Now, don't worry...";}
-		else
-			mes "young lass. Now, don't worry...";
-		}
+		mes "Jovem" + (Sex?"rapaz.":"moça.") + " Agora, não se preocupe...";
 		mes "[Skrajjad]";
 		mes "Entendo como você ";
 		mes "deve se sentir por Kellasus";
@@ -1823,7 +1820,7 @@ lhz_in01,225,122,5	script	Skrajjad	754,{
 	mes "para ser competente em Alquimia.";
 	mes "Mas é bastante recompensador para quem nunca pára de perguntar";
 	mes "como e porquê nosso mundo funciona.";
-	end;
+	close;
 }
 
 lhz_in01,204,138,5	script	Keshibien	750,{
@@ -1844,6 +1841,7 @@ lhz_in01,204,138,5	script	Keshibien	750,{
 		mes "também é um ótimo professor.";
 		close;
 	}
+	if (BaseJob == Job_Alchemist && bioeth == 5) {
 		mes "[Keshibien]";
 		mes "Ah! Você deve ser aquela";
 		mes "de quem Skrajjad me";
@@ -1963,8 +1961,7 @@ lhz_in02,278,273,3	script	Broncher	709,{
 		mes "[Broncher] ";
 		if (Sex == 1) {
 			mes "Caramba! V-você é o";
-		}
-		else {
+		} else {
 			mes "Caramba! V-você é a";
 		}
 		mes "Alquimista que o Skrajjad";
@@ -2019,7 +2016,7 @@ lhz_in02,278,273,3	script	Broncher	709,{
 	mes "Minha Fórmula da";
 	mes "Alegria! Não consigo pensar";
 	mes "em nada melhor...";
-	end;
+	close;
 }
 
 lhz_in03,106,34,3	script	Koring	706,{
