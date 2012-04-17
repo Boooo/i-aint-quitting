@@ -1,1773 +1,1827 @@
-// Regex para conversão: (Visual Studio)
-//
-// Packets funcionais: ^{0x[0-9a-fA-F]+},{[0-9]+},{[^,]+}{[0-9,]+}
-// Replace: addpacket(\1,\2,"\3"\4);
-//
-// Dummy packets: ^{0x[0-9a-fA-F]+},{[0-9]+}
-// Replace: addpacket(\1,\2,NULL);
-//
-
-// Syntax:
-// addpacket(id, tamanho, "funcao", posicoes);
-
-#ifndef addpacket
-#define addpacket(a,b,c,...)
-#endif
-
-addpacket(0x0064,55,NULL);
-addpacket(0x0065,17,NULL);
-addpacket(0x0066,6,NULL);
-addpacket(0x0067,37,NULL);
-addpacket(0x0068,46,NULL);
-addpacket(0x0069,-1,NULL);
-addpacket(0x006a,23,NULL);
-addpacket(0x006b,-1,NULL);
-addpacket(0x006c,3,NULL);
-addpacket(0x006d,108,NULL);
-addpacket(0x006e,3,NULL);
-addpacket(0x006f,2,NULL);
-addpacket(0x0070,6,NULL);
-addpacket(0x0071,28,NULL);
-addpacket(0x0072,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x0073,11,NULL);
-addpacket(0x0074,3,NULL);
-addpacket(0x0075,-1,NULL);
-addpacket(0x0076,9,NULL);
-addpacket(0x0077,5,NULL);
-addpacket(0x0078,54,NULL);
-addpacket(0x0079,53,NULL);
-addpacket(0x007a,58,NULL);
-addpacket(0x007b,60,NULL);
-addpacket(0x007c,41,NULL);
-addpacket(0x007d,2,"loadendack",0);
-addpacket(0x007e,6,"ticksend",2);
-addpacket(0x007f,6,NULL);
-addpacket(0x0080,7,NULL);
-addpacket(0x0081,3,NULL);
-addpacket(0x0082,2,NULL);
-addpacket(0x0083,2,NULL);
-addpacket(0x0084,2,NULL);
-addpacket(0x0085,5,"walktoxy",2);
-addpacket(0x0086,16,NULL);
-addpacket(0x0087,12,NULL);
-addpacket(0x0088,10,NULL);
-addpacket(0x0089,7,"actionrequest",2,6);
-addpacket(0x008a,29,NULL);
-addpacket(0x008b,2,NULL);
-addpacket(0x008c,-1,"globalmessage",2,4);
-addpacket(0x008d,-1,NULL);
-addpacket(0x008e,-1,NULL);
-addpacket(0x008f,0,NULL);
-addpacket(0x0090,7,"npcclicked",2);
-addpacket(0x0091,22,NULL);
-addpacket(0x0092,28,NULL);
-addpacket(0x0093,2,NULL);
-addpacket(0x0094,6,"getcharnamerequest",2);
-addpacket(0x0095,30,NULL);
-addpacket(0x0096,-1,"wis",2,4,28);
-addpacket(0x0097,-1,NULL);
-addpacket(0x0098,3,NULL);
-addpacket(0x0099,-1,"broadcast",2,4);
-addpacket(0x009a,-1,NULL);
-addpacket(0x009b,5,"changedir",2,4);
-addpacket(0x009c,9,NULL);
-addpacket(0x009d,17,NULL);
-addpacket(0x009e,17,NULL);
-addpacket(0x009f,6,"takeitem",2);
-addpacket(0x00a0,23,NULL);
-addpacket(0x00a1,6,NULL);
-addpacket(0x00a2,6,"dropitem",2,4);
-addpacket(0x00a3,-1,NULL);
-addpacket(0x00a4,-1,NULL);
-addpacket(0x00a5,-1,NULL);
-addpacket(0x00a6,-1,NULL);
-addpacket(0x00a7,8,"useitem",2,4);
-addpacket(0x00a8,7,NULL);
-addpacket(0x00a9,6,"equipitem",2,4);
-addpacket(0x00aa,7,NULL);
-addpacket(0x00ab,4,"unequipitem",2);
-addpacket(0x00ac,7,NULL);
-//addpacket(0x00ad,0,NULL);
-addpacket(0x00ae,-1,NULL);
-addpacket(0x00af,6,NULL);
-addpacket(0x00b0,8,NULL);
-addpacket(0x00b1,8,NULL);
-addpacket(0x00b2,3,"restart",2);
-addpacket(0x00b3,3,NULL);
-addpacket(0x00b4,-1,NULL);
-addpacket(0x00b5,6,NULL);
-addpacket(0x00b6,6,NULL);
-addpacket(0x00b7,-1,NULL);
-addpacket(0x00b8,7,"npcselectmenu",2,6);
-addpacket(0x00b9,6,"npcnextclicked",2);
-addpacket(0x00ba,2,NULL);
-addpacket(0x00bb,5,"statusup",2,4);
-addpacket(0x00bc,6,NULL);
-addpacket(0x00bd,44,NULL);
-addpacket(0x00be,5,NULL);
-addpacket(0x00bf,3,"emotion",2);
-addpacket(0x00c0,7,NULL);
-addpacket(0x00c1,2,"howmanyconnections",0);
-addpacket(0x00c2,6,NULL);
-addpacket(0x00c3,8,NULL);
-addpacket(0x00c4,6,NULL);
-addpacket(0x00c5,7,"npcbuysellselected",2,6);
-addpacket(0x00c6,-1,NULL);
-addpacket(0x00c7,-1,NULL);
-addpacket(0x00c8,-1,"npcbuylistsend",2,4);
-addpacket(0x00c9,-1,"npcselllistsend",2,4);
-addpacket(0x00ca,3,NULL);
-addpacket(0x00cb,3,NULL);
-addpacket(0x00cc,6,"gmkick",2);
-addpacket(0x00cd,3,NULL);
-addpacket(0x00ce,2,"killall",0);
-addpacket(0x00cf,27,"wisexin",2,26);
-addpacket(0x00d0,3,"wisall",2);
-addpacket(0x00d1,4,NULL);
-addpacket(0x00d2,4,NULL);
-addpacket(0x00d3,2,"wisexlist",0);
-addpacket(0x00d4,-1,NULL);
-addpacket(0x00d5,-1,"createchatroom",2,4,6,7,15);
-addpacket(0x00d6,3,NULL);
-addpacket(0x00d7,-1,NULL);
-addpacket(0x00d8,6,NULL);
-addpacket(0x00d9,14,"chataddmember",2,6);
-addpacket(0x00da,3,NULL);
-addpacket(0x00db,-1,NULL);
-addpacket(0x00dc,28,NULL);
-addpacket(0x00dd,29,NULL);
-addpacket(0x00de,-1,"chatroomstatuschange",2,4,6,7,15);
-addpacket(0x00df,-1,NULL);
-addpacket(0x00e0,30,"changechatowner",2,6);
-addpacket(0x00e1,30,NULL);
-addpacket(0x00e2,26,"kickfromchat",2);
-addpacket(0x00e3,2,"chatleave",0);
-addpacket(0x00e4,6,"traderequest",2);
-addpacket(0x00e5,26,NULL);
-addpacket(0x00e6,3,"tradeack",2);
-addpacket(0x00e7,3,NULL);
-addpacket(0x00e8,8,"tradeadditem",2,4);
-addpacket(0x00e9,19,NULL);
-addpacket(0x00ea,5,NULL);
-addpacket(0x00eb,2,"tradeok",0);
-addpacket(0x00ec,3,NULL);
-addpacket(0x00ed,2,"tradecancel",0);
-addpacket(0x00ee,2,NULL);
-addpacket(0x00ef,2,"tradecommit",0);
-addpacket(0x00f0,3,NULL);
-addpacket(0x00f1,2,NULL);
-addpacket(0x00f2,6,NULL);
-addpacket(0x00f3,8,"movetokafra",2,4);
-addpacket(0x00f4,21,NULL);
-addpacket(0x00f5,8,"movefromkafra",2,4);
-addpacket(0x00f6,8,NULL);
-addpacket(0x00f7,2,"closekafra",0);
-addpacket(0x00f8,2,NULL);
-addpacket(0x00f9,26,"createparty",2);
-addpacket(0x00fa,3,NULL);
-addpacket(0x00fb,-1,NULL);
-addpacket(0x00fc,6,"partyinvite",2);
-addpacket(0x00fd,27,NULL);
-addpacket(0x00fe,30,NULL);
-addpacket(0x00ff,10,"replypartyinvite",2,6);
-addpacket(0x0100,2,"leaveparty",0);
-addpacket(0x0101,6,NULL);
-addpacket(0x0102,6,"partychangeoption",2,4);
-addpacket(0x0103,30,"removepartymember",2,6);
-addpacket(0x0104,79,NULL);
-addpacket(0x0105,31,NULL);
-addpacket(0x0106,10,NULL);
-addpacket(0x0107,10,NULL);
-addpacket(0x0108,-1,"partymessage",2,4);
-addpacket(0x0109,-1,NULL);
-addpacket(0x010a,4,NULL);
-addpacket(0x010b,6,NULL);
-addpacket(0x010c,6,NULL);
-addpacket(0x010d,2,NULL);
-addpacket(0x010e,11,NULL);
-addpacket(0x010f,-1,NULL);
-addpacket(0x0110,10,NULL);
-addpacket(0x0111,39,NULL);
-addpacket(0x0112,4,"skillup",2);
-addpacket(0x0113,10,"useskilltoid",2,4,6);
-addpacket(0x0114,31,NULL);
-addpacket(0x0115,35,NULL);
-addpacket(0x0116,10,"useskilltopos",2,4,6,8);
-addpacket(0x0117,18,NULL);
-addpacket(0x0118,2,"stopattack",0);
-addpacket(0x0119,13,NULL);
-addpacket(0x011a,15,NULL);
-addpacket(0x011b,20,"useskillmap",2,4);
-addpacket(0x011c,68,NULL);
-addpacket(0x011d,2,"requestmemo",0);
-addpacket(0x011e,3,NULL);
-addpacket(0x011f,16,NULL);
-addpacket(0x0120,6,NULL);
-addpacket(0x0121,14,NULL);
-addpacket(0x0122,-1,NULL);
-addpacket(0x0123,-1,NULL);
-addpacket(0x0124,21,NULL);
-addpacket(0x0125,8,NULL);
-addpacket(0x0126,8,"putitemtocart",2,4);
-addpacket(0x0127,8,"getitemfromcart",2,4);
-addpacket(0x0128,8,"movefromkafratocart",2,4);
-addpacket(0x0129,8,"movetokafrafromcart",2,4);
-addpacket(0x012a,2,"removeoption",0);
-addpacket(0x012b,2,NULL);
-addpacket(0x012c,3,NULL);
-addpacket(0x012d,4,NULL);
-addpacket(0x012e,2,"closevending",0);
-addpacket(0x012f,-1,NULL);
-addpacket(0x0130,6,"vendinglistreq",2);
-addpacket(0x0131,86,NULL);
-addpacket(0x0132,6,NULL);
-addpacket(0x0133,-1,NULL);
-addpacket(0x0134,-1,"purchasereq",2,4,8);
-addpacket(0x0135,7,NULL);
-addpacket(0x0136,-1,NULL);
-addpacket(0x0137,6,NULL);
-addpacket(0x0138,3,NULL);
-addpacket(0x0139,16,NULL);
-addpacket(0x013a,4,NULL);
-addpacket(0x013b,4,NULL);
-addpacket(0x013c,4,NULL);
-addpacket(0x013d,6,NULL);
-addpacket(0x013e,24,NULL);
-addpacket(0x013f,26,"itemmonster",2);
-addpacket(0x0140,22,"mapmove",2,18,20);
-addpacket(0x0141,14,NULL);
-addpacket(0x0142,6,NULL);
-addpacket(0x0143,10,"npcamountinput",2,6);
-addpacket(0x0144,23,NULL);
-addpacket(0x0145,19,NULL);
-addpacket(0x0146,6,"npccloseclicked",2);
-addpacket(0x0147,39,NULL);
-addpacket(0x0148,8,NULL);
-addpacket(0x0149,9,"gmreqnochat",2,6,7);
-addpacket(0x014a,6,NULL);
-addpacket(0x014b,27,NULL);
-addpacket(0x014c,-1,NULL);
-addpacket(0x014d,2,"guildcheckmaster",0);
-addpacket(0x014e,6,NULL);
-addpacket(0x014f,6,"guildrequestinfo",2);
-addpacket(0x0150,110,NULL);
-addpacket(0x0151,6,"guildrequestemblem",2);
-addpacket(0x0152,-1,NULL);
-addpacket(0x0153,-1,"guildchangeemblem",2,4);
-addpacket(0x0154,-1,NULL);
-addpacket(0x0155,-1,"guildchangememberposition",2);
-addpacket(0x0156,-1,NULL);
-addpacket(0x0157,6,NULL);
-addpacket(0x0158,-1,NULL);
-addpacket(0x0159,54,"guildleave",2,6,10,14);
-addpacket(0x015a,66,NULL);
-addpacket(0x015b,54,"guildexpulsion",2,6,10,14);
-addpacket(0x015c,90,NULL);
-addpacket(0x015d,42,"guildbreak",2);
-addpacket(0x015e,6,NULL);
-addpacket(0x015f,42,NULL);
-addpacket(0x0160,-1,NULL);
-addpacket(0x0161,-1,"guildchangepositioninfo",2);
-addpacket(0x0162,-1,NULL);
-addpacket(0x0163,-1,NULL);
-addpacket(0x0164,-1,NULL);
-addpacket(0x0165,30,"createguild",6);
-addpacket(0x0166,-1,NULL);
-addpacket(0x0167,3,NULL);
-addpacket(0x0168,14,"guildinvite",2);
-addpacket(0x0169,3,NULL);
-addpacket(0x016a,30,NULL);
-addpacket(0x016b,10,"guildreplyinvite",2,6);
-addpacket(0x016c,43,NULL);
-addpacket(0x016d,14,NULL);
-addpacket(0x016e,186,"guildchangenotice",2,6,66);
-addpacket(0x016f,182,NULL);
-addpacket(0x0170,14,"guildrequestalliance",2);
-addpacket(0x0171,30,NULL);
-addpacket(0x0172,10,"guildreplyalliance",2,6);
-addpacket(0x0173,3,NULL);
-addpacket(0x0174,-1,NULL);
-addpacket(0x0175,6,NULL);
-addpacket(0x0176,106,NULL);
-addpacket(0x0177,-1,NULL);
-addpacket(0x0178,4,"itemidentify",2);
-addpacket(0x0179,5,NULL);
-addpacket(0x017a,4,"usecard",2);
-addpacket(0x017b,-1,NULL);
-addpacket(0x017c,6,"insertcard",2,4);
-addpacket(0x017d,7,NULL);
-addpacket(0x017e,-1,"guildmessage",2,4);
-addpacket(0x017f,-1,NULL);
-addpacket(0x0180,6,"guildopposition",2);
-addpacket(0x0181,3,NULL);
-addpacket(0x0182,106,NULL);
-addpacket(0x0183,10,"guilddelalliance",2,6);
-addpacket(0x0184,10,NULL);
-addpacket(0x0185,34,NULL);
-//addpacket(0x0186,0,NULL);
-addpacket(0x0187,6,NULL);
-addpacket(0x0188,8,NULL);
-addpacket(0x0189,4,NULL);
-addpacket(0x018a,4,"quitgame",0);
-addpacket(0x018b,4,NULL);
-addpacket(0x018c,29,NULL);
-addpacket(0x018d,-1,NULL);
-addpacket(0x018e,10,"producemix",2,4,6,8);
-addpacket(0x018f,6,NULL);
-addpacket(0x0190,90,"useskilltoposinfo",2,4,6,8,10);
-addpacket(0x0191,86,NULL);
-addpacket(0x0192,24,NULL);
-addpacket(0x0193,6,"solvecharname",2);
-addpacket(0x0194,30,NULL);
-addpacket(0x0195,102,NULL);
-addpacket(0x0196,9,NULL);
-addpacket(0x0197,4,"resetchar",2);
-addpacket(0x0198,8,"changemaptype",2,4,6);
-addpacket(0x0199,4,NULL);
-addpacket(0x019a,14,NULL);
-addpacket(0x019b,10,NULL);
-addpacket(0x019c,-1,"localbroadcast",2,4);
-addpacket(0x019d,6,"gmhide",0);
-addpacket(0x019e,2,NULL);
-addpacket(0x019f,6,"catchpet",2);
-addpacket(0x01a0,3,NULL);
-addpacket(0x01a1,3,"petmenu",2);
-addpacket(0x01a2,35,NULL);
-addpacket(0x01a3,5,NULL);
-addpacket(0x01a4,11,NULL);
-addpacket(0x01a5,26,"changepetname",2);
-addpacket(0x01a6,-1,NULL);
-addpacket(0x01a7,4,"selectegg",2);
-addpacket(0x01a8,4,NULL);
-addpacket(0x01a9,6,"sendemotion",2);
-addpacket(0x01aa,10,NULL);
-addpacket(0x01ab,12,NULL);
-addpacket(0x01ac,6,NULL);
-addpacket(0x01ad,-1,NULL);
-addpacket(0x01ae,4,"selectarrow",2);
-addpacket(0x01af,4,"changecart",2);
-addpacket(0x01b0,11,NULL);
-addpacket(0x01b1,7,NULL);
-addpacket(0x01b2,-1,"openvending",2,4,84,85);
-addpacket(0x01b3,67,NULL);
-addpacket(0x01b4,12,NULL);
-addpacket(0x01b5,18,NULL);
-addpacket(0x01b6,114,NULL);
-addpacket(0x01b7,6,NULL);
-addpacket(0x01b8,3,NULL);
-addpacket(0x01b9,6,NULL);
-addpacket(0x01ba,26,"remove",2);
-addpacket(0x01bb,26,"shift",2);
-addpacket(0x01bc,26,"recall",2);
-addpacket(0x01bd,26,"summon",2);
-addpacket(0x01be,2,NULL);
-addpacket(0x01bf,3,NULL);
-addpacket(0x01c0,2,NULL);
-addpacket(0x01c1,14,NULL);
-addpacket(0x01c2,10,NULL);
-addpacket(0x01c3,-1,NULL);
-addpacket(0x01c4,22,NULL);
-addpacket(0x01c5,22,NULL);
-addpacket(0x01c6,4,NULL);
-addpacket(0x01c7,2,NULL);
-addpacket(0x01c8,13,NULL);
-addpacket(0x01c9,97,NULL);
-//addpacket(0x01ca,0,NULL);
-addpacket(0x01cb,9,NULL);
-addpacket(0x01cc,9,NULL);
-addpacket(0x01cd,30,NULL);
-addpacket(0x01ce,6,"autospell",2);
-addpacket(0x01cf,28,NULL);
-addpacket(0x01d0,8,NULL);
-addpacket(0x01d1,14,NULL);
-addpacket(0x01d2,10,NULL);
-addpacket(0x01d3,35,NULL);
-addpacket(0x01d4,6,NULL);
-addpacket(0x01d5,-1,"npcstringinput",2,4,8);
-addpacket(0x01d6,4,NULL);
-addpacket(0x01d7,11,NULL);
-addpacket(0x01d8,54,NULL);
-addpacket(0x01d9,53,NULL);
-addpacket(0x01da,60,NULL);
-addpacket(0x01db,2,NULL);
-addpacket(0x01dc,-1,NULL);
-addpacket(0x01dd,47,NULL);
-addpacket(0x01de,33,NULL);
-addpacket(0x01df,6,"gmreqaccname",2);
-addpacket(0x01e0,30,NULL);
-addpacket(0x01e1,8,NULL);
-addpacket(0x01e2,34,NULL);
-addpacket(0x01e3,14,NULL);
-addpacket(0x01e4,2,NULL);
-addpacket(0x01e5,6,NULL);
-addpacket(0x01e6,26,NULL);
-addpacket(0x01e7,2,"sndoridori",0);
-addpacket(0x01e8,28,"createparty2",2);
-addpacket(0x01e9,81,NULL);
-addpacket(0x01ea,6,NULL);
-addpacket(0x01eb,10,NULL);
-addpacket(0x01ec,26,NULL);
-addpacket(0x01ed,2,"snexplosionspirits",0);
-addpacket(0x01ee,-1,NULL);
-addpacket(0x01ef,-1,NULL);
-addpacket(0x01f0,-1,NULL);
-addpacket(0x01f1,-1,NULL);
-addpacket(0x01f2,20,NULL);
-addpacket(0x01f3,10,NULL);
-addpacket(0x01f4,32,NULL);
-addpacket(0x01f5,9,NULL);
-addpacket(0x01f6,34,NULL);
-addpacket(0x01f7,14,"adoptreply",0);
-addpacket(0x01f8,2,NULL);
-addpacket(0x01f9,6,"adoptrequest",0);
-addpacket(0x01fa,48,NULL);
-addpacket(0x01fb,56,NULL);
-addpacket(0x01fc,-1,NULL);
-addpacket(0x01fd,4,"repairitem",2);
-addpacket(0x01fe,5,NULL);
-addpacket(0x01ff,10,NULL);
-addpacket(0x0200,26,NULL);
-addpacket(0x0201,-1,NULL);
-addpacket(0x0202,26,"friendslistadd",2);
-addpacket(0x0203,10,"friendslistremove",2,6);
-addpacket(0x0204,18,NULL);
-addpacket(0x0205,26,NULL);
-addpacket(0x0206,11,NULL);
-addpacket(0x0207,34,NULL);
-addpacket(0x0208,11,"friendslistreply",2,6,10);
-addpacket(0x0209,36,NULL);
-addpacket(0x020a,10,NULL);
-//addpacket(0x020b,0,NULL);
-//addpacket(0x020c,0,NULL);
-addpacket(0x020d,-1,NULL);
-
-#if PACKETVER >= 20040705
-addpacket(0x0072,22,"wanttoconnection",5,9,13,17,21);
-addpacket(0x0085,8,"walktoxy",5);
-addpacket(0x00a7,13,"useitem",5,9);
-addpacket(0x0113,15,"useskilltoid",4,9,11);
-addpacket(0x0116,15,"useskilltopos",4,9,11,13);
-addpacket(0x0190,95,"useskilltoposinfo",4,9,11,13,15);
-addpacket(0x0208,14,"friendslistreply",2,6,10);
-addpacket(0x020e,24,NULL);
-#endif
-
-#if PACKETVER >= 20040713
-addpacket(0x0072,39,"wanttoconnection",12,22,30,34,38);
-addpacket(0x0085,9,"walktoxy",6);
-addpacket(0x009b,13,"changedir",5,12);
-addpacket(0x009f,10,"takeitem",6);
-addpacket(0x00a7,17,"useitem",6,13);
-addpacket(0x0113,19,"useskilltoid",7,9,15);
-addpacket(0x0116,19,"useskilltopos",7,9,15,17);
-addpacket(0x0190,99,"useskilltoposinfo",7,9,15,17,19);
-#endif
-
-#if PACKETVER >= 20040726
-addpacket(0x0072,14,"dropitem",5,12);
-addpacket(0x007e,33,"wanttoconnection",12,18,24,28,32);
-addpacket(0x0085,20,"useskilltoid",7,12,16);
-addpacket(0x0089,15,"getcharnamerequest",11);
-addpacket(0x008c,23,"useskilltopos",3,6,17,21);
-addpacket(0x0094,10,"takeitem",6);
-addpacket(0x009b,6,"walktoxy",3);
-addpacket(0x009f,13,"changedir",5,12);
-addpacket(0x00a2,103,"useskilltoposinfo",3,6,17,21,23);
-addpacket(0x00a7,12,"solvecharname",8);
-addpacket(0x00f3,-1,"globalmessage",2,4);
-addpacket(0x00f5,17,"useitem",6,12);
-addpacket(0x00f7,10,"ticksend",6);
-addpacket(0x0113,16,"movetokafra",5,12);
-addpacket(0x0116,2,"closekafra",0);
-addpacket(0x0190,26,"movefromkafra",10,22);
-addpacket(0x0193,9,"actionrequest",3,8);
-#endif
-
-#if PACKETVER >= 20040809
-addpacket(0x0072,17,"dropitem",8,15);
-addpacket(0x007e,37,"wanttoconnection",9,21,28,32,36);
-addpacket(0x0085,26,"useskilltoid",11,18,22);
-addpacket(0x0089,12,"getcharnamerequest",8);
-addpacket(0x008c,40,"useskilltopos",5,15,29,38);
-addpacket(0x0094,13,"takeitem",9);
-addpacket(0x009b,15,"walktoxy",12);
-addpacket(0x009f,12,"changedir",7,11);
-addpacket(0x00a2,120,"useskilltoposinfo",5,15,29,38,40);
-addpacket(0x00a7,11,"solvecharname",7);
-addpacket(0x00f5,24,"useitem",9,20);
-addpacket(0x00f7,13,"ticksend",9);
-addpacket(0x0113,23,"movetokafra",5,19);
-addpacket(0x0190,26,"movefromkafra",11,22);
-addpacket(0x0193,18,"actionrequest",7,17);
-#endif
-
-#if PACKETVER >= 20040816
-addpacket(0x0212,26,"rc",2);
-addpacket(0x0213,26,"check",2);
-addpacket(0x0214,42,NULL);
-#endif
-
-#if PACKETVER >= 20040817
-addpacket(0x020f,10,"pvpinfo",2,6);
-addpacket(0x0210,22,NULL);
-#endif
-
-#if PACKETVER >= 20040906
-addpacket(0x0072,20,"useitem",9,20);
-addpacket(0x007e,19,"movetokafra",3,15);
-addpacket(0x0085,23,"actionrequest",9,22);
-addpacket(0x0089,9,"walktoxy",6);
-addpacket(0x008c,105,"useskilltoposinfo",10,14,18,23,25);
-addpacket(0x0094,17,"dropitem",6,15);
-addpacket(0x009b,14,"getcharnamerequest",10);
-addpacket(0x009f,-1,"globalmessage",2,4);
-addpacket(0x00a2,14,"solvecharname",10);
-addpacket(0x00a7,25,"useskilltopos",10,14,18,23);
-addpacket(0x00f3,10,"changedir",4,9);
-addpacket(0x00f5,34,"wanttoconnection",7,15,25,29,33);
-addpacket(0x00f7,2,"closekafra",0);
-addpacket(0x0113,11,"takeitem",7);
-addpacket(0x0116,11,"ticksend",7);
-addpacket(0x0190,22,"useskilltoid",9,15,18);
-addpacket(0x0193,17,"movefromkafra",3,13);
-#endif
-
-#if PACKETVER >= 20040920
-addpacket(0x0072,18,"useitem",10,14);
-addpacket(0x007e,25,"movetokafra",6,21);
-addpacket(0x0085,9,"actionrequest",3,8);
-addpacket(0x0089,14,"walktoxy",11);
-addpacket(0x008c,109,"useskilltoposinfo",16,20,23,27,29);
-addpacket(0x0094,19,"dropitem",12,17);
-addpacket(0x009b,10,"getcharnamerequest",6);
-addpacket(0x00a2,10,"solvecharname",6);
-addpacket(0x00a7,29,"useskilltopos",6,20,23,27);
-addpacket(0x00f3,18,"changedir",8,17);
-addpacket(0x00f5,32,"wanttoconnection",10,17,23,27,31);
-addpacket(0x0113,14,"takeitem",10);
-addpacket(0x0116,14,"ticksend",10);
-addpacket(0x0190,14,"useskilltoid",4,7,10);
-addpacket(0x0193,12,"movefromkafra",4,8);
-#endif
-
-#if PACKETVER >= 20041005
-addpacket(0x0072,17,"useitem",6,13);
-addpacket(0x007e,16,"movetokafra",5,12);
-addpacket(0x0089,6,"walktoxy",3);
-addpacket(0x008c,103,"useskilltoposinfo",2,6,17,21,23);
-addpacket(0x0094,14,"dropitem",5,12);
-addpacket(0x009b,15,"getcharnamerequest",11);
-addpacket(0x00a2,12,"solvecharname",8);
-addpacket(0x00a7,23,"useskilltopos",3,6,17,21);
-addpacket(0x00f3,13,"changedir",5,12);
-addpacket(0x00f5,33,"wanttoconnection",12,18,24,28,32);
-addpacket(0x0113,10,"takeitem",6);
-addpacket(0x0116,10,"ticksend",6);
-addpacket(0x0190,20,"useskilltoid",7,12,16);
-addpacket(0x0193,26,"movefromkafra",10,22);
-#endif
-
-#if PACKETVER >= 20041025
-addpacket(0x0072,13,"useitem",5,9);
-addpacket(0x007e,13,"movetokafra",6,9);
-addpacket(0x0085,15,"actionrequest",4,14);
-addpacket(0x008c,108,"useskilltoposinfo",6,9,23,26,28);
-addpacket(0x0094,12,"dropitem",6,10);
-addpacket(0x009b,10,"getcharnamerequest",6);
-addpacket(0x00a2,16,"solvecharname",12);
-addpacket(0x00a7,28,"useskilltopos",6,9,23,26);
-addpacket(0x00f3,15,"changedir",6,14);
-addpacket(0x00f5,29,"wanttoconnection",5,14,20,24,28);
-addpacket(0x0113,9,"takeitem",5);
-addpacket(0x0116,9,"ticksend",5);
-addpacket(0x0190,26,"useskilltoid",4,10,22);
-addpacket(0x0193,22,"movefromkafra",12,18);
-#endif
-
-#if PACKETVER >= 20041101
-addpacket(0x0084,-1,NULL);
-addpacket(0x0215,6,NULL);
-#endif
-
-#if PACKETVER >= 20041108
-addpacket(0x0084,2,NULL);
-addpacket(0x0216,6,NULL);
-addpacket(0x0217,2,"blacksmith",0);
-addpacket(0x0218,2,"alchemist",0);
-addpacket(0x0219,282,NULL);
-addpacket(0x021a,282,NULL);
-addpacket(0x021b,10,NULL);
-addpacket(0x021c,10,NULL);
-#endif
-
-#if PACKETVER >= 20041115
-addpacket(0x021d,6,"lesseffect",2);
-#endif
-
-#if PACKETVER >= 20041129
-addpacket(0x0072,22,"useskilltoid",8,12,18);
-addpacket(0x007e,30,"useskilltopos",4,9,22,28);
-addpacket(0x0085,-1,"globalmessage",2,4);
-addpacket(0x0089,7,"ticksend",3);
-addpacket(0x008c,13,"getcharnamerequest",9);
-addpacket(0x0094,14,"movetokafra",4,10);
-addpacket(0x009b,2,"closekafra",0);
-addpacket(0x009f,18,"actionrequest",6,17);
-addpacket(0x00a2,7,"takeitem",3);
-addpacket(0x00a7,7,"walktoxy",4);
-addpacket(0x00f3,8,"changedir",3,7);
-addpacket(0x00f5,29,"wanttoconnection",3,10,20,24,28);
-addpacket(0x00f7,14,"solvecharname",10);
-addpacket(0x0113,110,"useskilltoposinfo",4,9,22,28,30);
-addpacket(0x0116,12,"dropitem",4,10);
-addpacket(0x0190,15,"useitem",3,11);
-addpacket(0x0193,21,"movefromkafra",4,17);
-addpacket(0x0221,-1,NULL);
-addpacket(0x0222,6,"weaponrefine",2);
-addpacket(0x0223,8,NULL);
-#endif
-
-#if PACKETVER >= 20041213
-//skipped, many packets being set to -1
-addpacket(0x0066,3,NULL);
-addpacket(0x0070,3,NULL);
-addpacket(0x01ca,3,NULL);
-addpacket(0x021e,6,NULL);
-addpacket(0x021f,66,NULL);
-addpacket(0x0220,10,NULL);
-#endif
-
-#if PACKETVER >= 20050110
-addpacket(0x0072,26,"useskilltoid",8,16,22);
-addpacket(0x007e,114,"useskilltoposinfo",10,18,22,32,34);
-addpacket(0x0085,23,"changedir",12,22);
-addpacket(0x0089,9,"ticksend",5);
-addpacket(0x008c,8,"getcharnamerequest",4);
-addpacket(0x0094,20,"movetokafra",10,16);
-addpacket(0x009b,32,"wanttoconnection",3,12,23,27,31);
-addpacket(0x009f,17,"useitem",5,13);
-addpacket(0x00a2,11,"solvecharname",7);
-addpacket(0x00a7,13,"walktoxy",10);
-addpacket(0x00f3,-1,"globalmessage",2,4);
-addpacket(0x00f5,9,"takeitem",5);
-addpacket(0x00f7,21,"movefromkafra",11,17);
-addpacket(0x0113,34,"useskilltopos",10,18,22,32);
-addpacket(0x0116,20,"dropitem",15,18);
-addpacket(0x0190,20,"actionrequest",9,19);
-addpacket(0x0193,2,"closekafra",0);
-#endif
-
-#if PACKETVER >= 20050328
-addpacket(0x0224,10,NULL);
-addpacket(0x0225,2,"taekwon",0);
-addpacket(0x0226,282,NULL);
-#endif
-
-#if PACKETVER >= 20050404
-addpacket(0x0227,18,NULL);
-addpacket(0x0228,18,NULL);
-#endif
-
-#if PACKETVER >= 20050411
-addpacket(0x0229,15,NULL);
-addpacket(0x022a,58,NULL);
-addpacket(0x022b,57,NULL);
-addpacket(0x022c,64,NULL);
-#endif
-
-#if PACKETVER >= 20050425
-addpacket(0x022d,5,"hommenu",4);
-addpacket(0x0232,9,"hommoveto",6);
-addpacket(0x0233,11,"homattack",0);
-addpacket(0x0234,6,"hommovetomaster",0);
-#endif
-
-#if PACKETVER >= 20050509
-addpacket(0x0072,25,"useskilltoid",6,10,21);
-addpacket(0x007e,102,"useskilltoposinfo",5,9,12,20,22);
-addpacket(0x0085,11,"changedir",7,10);
-addpacket(0x0089,8,"ticksend",4);
-addpacket(0x008c,11,"getcharnamerequest",7);
-addpacket(0x0094,14,"movetokafra",7,10);
-addpacket(0x009b,26,"wanttoconnection",4,9,17,21,25);
-addpacket(0x009f,14,"useitem",4,10);
-addpacket(0x00a2,15,"solvecharname",11);
-addpacket(0x00a7,8,"walktoxy",5);
-addpacket(0x00f5,8,"takeitem",4);
-addpacket(0x00f7,22,"movefromkafra",14,18);
-addpacket(0x0113,22,"useskilltopos",5,9,12,20);
-addpacket(0x0116,10,"dropitem",5,8);
-addpacket(0x0190,19,"actionrequest",5,18);
-#endif
-
-#if PACKETVER >= 20050523
-addpacket(0x022e,69,NULL);
-addpacket(0x0230,12,NULL);
-#endif
-
-#if PACKETVER >= 20050530
-addpacket(0x022e,71,NULL);
-addpacket(0x0235,-1,NULL);
-addpacket(0x0236,10,NULL);
-addpacket(0x0237,2,"rankingpk",0);
-addpacket(0x0238,282,NULL);
-#endif
-
-#if PACKETVER >= 20050531
-addpacket(0x0216,2,NULL);
-addpacket(0x0239,11,NULL);
-#endif
-
-#if PACKETVER >= 20050608
-addpacket(0x0216,6,NULL);
-addpacket(0x0217,2,"blacksmith",0);
-addpacket(0x022f,5,NULL);
-addpacket(0x0231,26,"changehomunculusname",0);
-addpacket(0x023a,4,NULL);
-addpacket(0x023b,24,"storagepassword",2,4,20);
-addpacket(0x023c,6,NULL);
-#endif
-
-#if PACKETVER >= 20050622
-addpacket(0x022e,71,NULL);
-#endif
-
-#if PACKETVER >= 20050628
-addpacket(0x0072,34,"useskilltoid",6,17,30);
-addpacket(0x007e,113,"useskilltoposinfo",12,15,18,31,33);
-addpacket(0x0085,17,"changedir",8,16);
-addpacket(0x0089,13,"ticksend",9);
-addpacket(0x008c,8,"getcharnamerequest",4);
-addpacket(0x0094,31,"movetokafra",16,27);
-addpacket(0x009b,32,"wanttoconnection",9,15,23,27,31);
-addpacket(0x009f,19,"useitem",9,15);
-addpacket(0x00a2,9,"solvecharname",5);
-addpacket(0x00a7,11,"walktoxy",8);
-addpacket(0x00f5,13,"takeitem",9);
-addpacket(0x00f7,18,"movefromkafra",11,14);
-addpacket(0x0113,33,"useskilltopos",12,15,18,31);
-addpacket(0x0116,12,"dropitem",3,10);
-addpacket(0x0190,24,"actionrequest",11,23);
-addpacket(0x0216,0,NULL);
-addpacket(0x023d,-1,NULL);
-addpacket(0x023e,4,NULL);
-#endif
-
-#if PACKETVER >= 20050718
-addpacket(0x0072,19,"useskilltoid",5,11,15);
-addpacket(0x007e,110,"useskilltoposinfo",9,15,23,28,30);
-addpacket(0x0085,11,"changedir",6,10);
-addpacket(0x0089,7,"ticksend",3);
-addpacket(0x008c,11,"getcharnamerequest",7);
-addpacket(0x0094,21,"movetokafra",12,17);
-addpacket(0x009b,31,"wanttoconnection",3,13,22,26,30);
-addpacket(0x009f,12,"useitem",3,8);
-addpacket(0x00a2,18,"solvecharname",14);
-addpacket(0x00a7,15,"walktoxy",12);
-addpacket(0x00f5,7,"takeitem",3);
-addpacket(0x00f7,13,"movefromkafra",5,9);
-addpacket(0x0113,30,"useskilltopos",9,15,23,28);
-addpacket(0x0116,12,"dropitem",6,10);
-addpacket(0x0190,21,"actionrequest",5,20);
-addpacket(0x0216,6,NULL);
-addpacket(0x023f,2,"mailrefresh",0);
-addpacket(0x0240,8,NULL);
-addpacket(0x0241,6,"mailread",2);
-addpacket(0x0242,-1,NULL);
-addpacket(0x0243,6,"maildelete",2);
-addpacket(0x0244,6,"mailgetattach",2);
-addpacket(0x0245,7,NULL);
-addpacket(0x0246,4,"mailwinopen",2);
-addpacket(0x0247,8,"mailsetattach",2,4);
-addpacket(0x0248,68,NULL);
-addpacket(0x0249,3,NULL);
-addpacket(0x024a,70,NULL);
-addpacket(0x024b,4,"auctioncancelreg",2);
-addpacket(0x024c,8,"auctionsetitem",2,4);
-addpacket(0x024d,14,NULL);
-addpacket(0x024e,6,"auctioncancel",2);
-addpacket(0x024f,10,"auctionbid",2,6);
-addpacket(0x0250,3,NULL);
-addpacket(0x0251,2,NULL);
-addpacket(0x0252,-1,NULL);
-#endif
-
-#if PACKETVER >= 20050719
-addpacket(0x0072,34,"useskilltoid",6,17,30);
-addpacket(0x007e,113,"useskilltoposinfo",12,15,18,31,33);
-addpacket(0x0085,17,"changedir",8,16);
-addpacket(0x0089,13,"ticksend",9);
-addpacket(0x008c,8,"getcharnamerequest",4);
-addpacket(0x0094,31,"movetokafra",16,27);
-addpacket(0x009b,32,"wanttoconnection",9,15,23,27,31);
-addpacket(0x009f,19,"useitem",9,15);
-addpacket(0x00a2,9,"solvecharname",5);
-addpacket(0x00a7,11,"walktoxy",8);
-addpacket(0x00f5,13,"takeitem",9);
-addpacket(0x00f7,18,"movefromkafra",11,14);
-addpacket(0x0113,33,"useskilltopos",12,15,18,31);
-addpacket(0x0116,12,"dropitem",3,10);
-addpacket(0x0190,24,"actionrequest",11,23);
-#endif
-
-#if PACKETVER >= 20050801
-addpacket(0x0245,3,NULL);
-addpacket(0x0251,4,NULL);
-#endif
-
-#if PACKETVER >= 20050808
-addpacket(0x024d,12,"auctionregister",2,6,10);
-addpacket(0x024e,4,NULL);
-#endif
-
-#if PACKETVER >= 20050817
-addpacket(0x0253,3,NULL);
-addpacket(0x0254,3,"feelsaveok",0);
-#endif
-
-#if PACKETVER >= 20050829
-addpacket(0x0240,-1,NULL);
-addpacket(0x0248,-1,"mailsend",2,4,28,68);
-addpacket(0x0255,5,NULL);
-addpacket(0x0256,0,NULL);
-addpacket(0x0257,8,NULL);
-#endif
-
-#if PACKETVER >= 20050912
-addpacket(0x0256,5,NULL);
-addpacket(0x0258,2,NULL);
-addpacket(0x0259,3,NULL);
-#endif
-
-#if PACKETVER >= 20051010
-addpacket(0x020e,32,NULL);
-addpacket(0x025a,-1,NULL);
-addpacket(0x025b,6,"cooking",0);
-#endif
-
-#if PACKETVER >= 20051013
-addpacket(0x007a,6,NULL);
-addpacket(0x0251,32,NULL);
-addpacket(0x025c,4,"auctionbuysell",2);
-#endif
-
-#if PACKETVER >= 20051017
-addpacket(0x007a,58,NULL);
-addpacket(0x025d,6,"auctionclose",2);
-addpacket(0x025e,4,NULL);
-#endif
-
-#if PACKETVER >= 20051024
-addpacket(0x025f,6,NULL);
-addpacket(0x0260,6,NULL);
-#endif
-
-#if PACKETVER >= 20051107
-addpacket(0x0251,34,"auctionsearch",2,4,8,32);
-#endif
-
-#if PACKETVER >= 20060109
-addpacket(0x0261,11,NULL);
-addpacket(0x0262,11,NULL);
-addpacket(0x0263,11,NULL);
-addpacket(0x0264,20,NULL);
-addpacket(0x0265,20,NULL);
-addpacket(0x0266,30,NULL);
-addpacket(0x0267,4,NULL);
-addpacket(0x0268,4,NULL);
-addpacket(0x0269,4,NULL);
-addpacket(0x026a,4,NULL);
-addpacket(0x026b,4,NULL);
-addpacket(0x026c,4,NULL);
-addpacket(0x026d,4,NULL);
-addpacket(0x026f,2,NULL);
-addpacket(0x0270,2,NULL);
-addpacket(0x0271,38,NULL);
-addpacket(0x0272,44,NULL);
-#endif
-
-#if PACKETVER >= 20060126
-addpacket(0x0271,40,NULL);
-#endif
-
-#if PACKETVER >= 20060306
-addpacket(0x0273,6,NULL);
-addpacket(0x0274,8,NULL);
-#endif
-
-#if PACKETVER >= 20060313
-addpacket(0x0273,30,"mailreturn",2,6);
-#endif
-
-#if PACKETVER >= 20060327
-addpacket(0x0072,26,"useskilltoid",11,18,22);
-addpacket(0x007e,120,"useskilltoposinfo",5,15,29,38,40);
-addpacket(0x0085,12,"changedir",7,11);
-//0x0089,13,ticksend,9
-addpacket(0x008c,12,"getcharnamerequest",8);
-addpacket(0x0094,23,"movetokafra",5,19);
-addpacket(0x009b,37,"wanttoconnection",9,21,28,32,36);
-addpacket(0x009f,24,"useitem",9,20);
-addpacket(0x00a2,11,"solvecharname",7);
-addpacket(0x00a7,15,"walktoxy",12);
-addpacket(0x00f5,13,"takeitem",9);
-addpacket(0x00f7,26,"movefromkafra",11,22);
-addpacket(0x0113,40,"useskilltopos",5,15,29,38);
-addpacket(0x0116,17,"dropitem",8,15);
-addpacket(0x0190,18,"actionrequest",7,17);
-#endif
-
-#if PACKETVER >= 20061023
-addpacket(0x006d,110,NULL);
-#endif
-
-#if PACKETVER >= 20060424
-addpacket(0x023e,8,NULL);
-addpacket(0x0277,84,NULL);
-addpacket(0x0278,2,NULL);
-addpacket(0x0279,2,NULL);
-addpacket(0x027a,-1,NULL);
-addpacket(0x027b,14,NULL);
-addpacket(0x027c,60,NULL);
-addpacket(0x027d,62,NULL);
-addpacket(0x027e,-1,NULL);
-addpacket(0x027f,8,NULL);
-addpacket(0x0280,12,NULL);
-addpacket(0x0281,4,NULL);
-addpacket(0x0282,284,NULL);
-addpacket(0x0283,6,NULL);
-addpacket(0x0284,14,NULL);
-addpacket(0x0285,6,NULL);
-addpacket(0x0286,4,NULL);
-addpacket(0x0287,-1,NULL);
-addpacket(0x0288,6,"cashshopbuy",2,4);
-addpacket(0x0289,8,NULL);
-addpacket(0x028a,18,NULL);
-addpacket(0x028b,-1,NULL);
-addpacket(0x028c,46,NULL);
-addpacket(0x028d,34,NULL);
-addpacket(0x028e,4,NULL);
-addpacket(0x028f,6,NULL);
-addpacket(0x0290,4,NULL);
-addpacket(0x0291,4,NULL);
-addpacket(0x0292,2,"autorevive",0);
-addpacket(0x0293,70,NULL);
-addpacket(0x0294,10,NULL);
-addpacket(0x0295,-1,NULL);
-addpacket(0x0296,-1,NULL);
-addpacket(0x0297,-1,NULL);
-addpacket(0x0298,8,NULL);
-addpacket(0x0299,6,NULL);
-addpacket(0x029a,27,NULL);
-addpacket(0x029c,66,NULL);
-addpacket(0x029d,-1,NULL);
-addpacket(0x029e,11,NULL);
-addpacket(0x029f,3,"mermenu",0);
-addpacket(0x02a0,0,NULL);
-addpacket(0x02a1,0,NULL);
-addpacket(0x02a2,8,NULL);
-#endif
-
-#if PACKETVER >= 20070108
-addpacket(0x0072,30,"useskilltoid",10,14,26);
-addpacket(0x007e,120,"useskilltoposinfo",10,19,23,38,40);
-addpacket(0x0085,14,"changedir",10,13);
-addpacket(0x0089,11,"ticksend",7);
-addpacket(0x008c,17,"getcharnamerequest",13);
-addpacket(0x0094,17,"movetokafra",4,13);
-addpacket(0x009b,35,"wanttoconnection",7,21,26,30,34);
-addpacket(0x009f,21,"useitem",7,17);
-addpacket(0x00a2,10,"solvecharname",6);
-addpacket(0x00a7,8,"walktoxy",5);
-addpacket(0x00f5,11,"takeitem",7);
-addpacket(0x00f7,15,"movefromkafra",3,11);
-addpacket(0x0113,40,"useskilltopos",10,19,23,38);
-addpacket(0x0116,19,"dropitem",11,17);
-addpacket(0x0190,10,"actionrequest",4,9);
-#endif
-
-#if PACKETVER >= 20070122
-addpacket(0x02a3,18,NULL);
-addpacket(0x02a4,2,NULL);
-#endif
-
-#if PACKETVER >= 20070129
-addpacket(0x029b,72,NULL);
-addpacket(0x02a3,0,NULL);
-addpacket(0x02a4,0,NULL);
-addpacket(0x02a5,8,NULL);
-#endif
-
-#if PACKETVER >= 70205
-addpacket(0x02aa,4,NULL);
-addpacket(0x02ab,36,NULL);
-addpacket(0x02ac,6,NULL);
-#endif
-
-#if PACKETVER >= 20070212
-addpacket(0x0072,25,"useskilltoid",6,10,21);
-addpacket(0x007e,102,"useskilltoposinfo",5,9,12,20,22);
-addpacket(0x0085,11,"changedir",7,10);
-addpacket(0x0089,8,"ticksend",4);
-addpacket(0x008c,11,"getcharnamerequest",7);
-addpacket(0x0094,14,"movetokafra",7,10);
-addpacket(0x009b,26,"wanttoconnection",4,9,17,21,25);
-addpacket(0x009f,14,"useitem",4,10);
-addpacket(0x00a2,15,"solvecharname",11);
-//0x00a7,8,walktoxy,5
-addpacket(0x00f5,8,"takeitem",4);
-addpacket(0x00f7,22,"movefromkafra",14,18);
-addpacket(0x0113,22,"useskilltopos",5,9,12,20);
-addpacket(0x0116,10,"dropitem",5,8);
-addpacket(0x0190,19,"actionrequest",5,18);
-#endif
-
-#if PACKETVER >= 20070507
-addpacket(0x01fd,15,"repairitem",2);
-#endif
-
-#if PACKETVER >= 20070227
-addpacket(0x0288,10,"cashshopbuy",2,4,6);
-addpacket(0x0289,12,NULL);
-addpacket(0x02a6,22,NULL);
-addpacket(0x02a7,22,NULL);
-addpacket(0x02a8,162,NULL);
-addpacket(0x02a9,58,NULL);
-addpacket(0x02ad,8,NULL);
-addpacket(0x02b0,85,NULL);
-addpacket(0x02b1,-1,NULL);
-addpacket(0x02b2,-1,NULL);
-addpacket(0x02b3,107,NULL);
-addpacket(0x02b4,6,NULL);
-addpacket(0x02b5,-1,NULL);
-addpacket(0x02b6,7,"queststate",2,6);
-addpacket(0x02b7,7,NULL);
-addpacket(0x02b8,22,NULL);
-addpacket(0x02b9,191,NULL);
-addpacket(0x02ba,11,"hotkey",2,4,5,9);
-addpacket(0x02bb,8,NULL);
-addpacket(0x02bc,6,NULL);
-addpacket(0x02bf,10,NULL);
-addpacket(0x02c0,2,NULL);
-addpacket(0x02c1,-1,NULL);
-addpacket(0x02c2,-1,NULL);
-addpacket(0x02c4,26,"partyinvite2",2);
-addpacket(0x02c5,30,NULL);
-addpacket(0x02c6,30,NULL);
-addpacket(0x02c7,7,"replypartyinvite2",2,6);
-addpacket(0x02c8,3,NULL);
-addpacket(0x02c9,3,NULL);
-addpacket(0x02ca,3,NULL);
-addpacket(0x02cb,20,NULL);
-addpacket(0x02cc,4,NULL);
-addpacket(0x02cd,26,NULL);
-addpacket(0x02ce,10,NULL);
-addpacket(0x02cf,6,NULL);
-addpacket(0x02d0,-1,NULL);
-addpacket(0x02d1,-1,NULL);
-addpacket(0x02d2,-1,NULL);
-addpacket(0x02d3,4,NULL);
-addpacket(0x02d4,29,NULL);
-addpacket(0x02d5,2,NULL);
-addpacket(0x02d6,6,"viewplayerequip",2);
-addpacket(0x02d7,-1,NULL);
-addpacket(0x02d8,10,"equiptickbox",6);
-addpacket(0x02d9,10,NULL);
-addpacket(0x02da,3,NULL);
-addpacket(0x02db,-1,"battlechat",2,4);
-addpacket(0x02dc,-1,NULL);
-addpacket(0x02dd,32,NULL);
-addpacket(0x02de,6,NULL);
-addpacket(0x02df,36,NULL);
-addpacket(0x02e0,34,NULL);
-#endif
-
-#if PACKETVER >= 20071023
-addpacket(0x02cb,65,NULL);
-addpacket(0x02cd,71,NULL);
-#endif
-
-#if PACKETVER >= 20071106
-addpacket(0x0078,55,NULL);
-addpacket(0x007c,42,NULL);
-addpacket(0x022c,65,NULL);
-addpacket(0x029b,80,NULL);
-#endif
-
-#if PACKETVER >= 20071113
-addpacket(0x02e1,33,NULL);
-#endif
-
-#if PACKETVER >= 20071120
-//0x01df,10 <- ???
-addpacket(0x02e2,14,NULL);
-addpacket(0x02e3,25,NULL);
-addpacket(0x02e4,8,NULL);
-addpacket(0x02e5,8,NULL);
-addpacket(0x02e6,6,NULL);
-#endif
-
-#if PACKETVER >= 20071127
-addpacket(0x02e7,-1,NULL);
-#endif
-
-#if PACKETVER >= 20080102
-addpacket(0x01df,6,"gmreqaccname",2);
-addpacket(0x02e8,-1,NULL);
-addpacket(0x02e9,-1,NULL);
-addpacket(0x02ea,-1,NULL);
-addpacket(0x02eb,13,NULL);
-addpacket(0x02ec,67,NULL);
-addpacket(0x02ed,59,NULL);
-addpacket(0x02ee,60,NULL);
-addpacket(0x02ef,8,NULL);
-#endif
-
-#if PACKETVER >= 20080318
-addpacket(0x02bf,0,NULL);
-addpacket(0x02c0,0,NULL);
-addpacket(0x02f0,10,NULL);
-addpacket(0x02f1,2,"progressbar",0);
-addpacket(0x02f2,2,NULL);
-#endif
-
-#if PACKETVER >= 20080325
-addpacket(0x02f3,-1,NULL);
-addpacket(0x02f4,-1,NULL);
-addpacket(0x02f5,-1,NULL);
-addpacket(0x02f6,-1,NULL);
-addpacket(0x02f7,-1,NULL);
-addpacket(0x02f8,-1,NULL);
-addpacket(0x02f9,-1,NULL);
-addpacket(0x02fa,-1,NULL);
-addpacket(0x02fb,-1,NULL);
-addpacket(0x02fc,-1,NULL);
-addpacket(0x02fd,-1,NULL);
-addpacket(0x02fe,-1,NULL);
-addpacket(0x02ff,-1,NULL);
-addpacket(0x0300,-1,NULL);
-#endif
-
-#if PACKETVER >= 20080401
-addpacket(0x0301,-1,NULL);
-addpacket(0x0302,-1,NULL);
-addpacket(0x0303,-1,NULL);
-addpacket(0x0304,-1,NULL);
-addpacket(0x0305,-1,NULL);
-addpacket(0x0306,-1,NULL);
-addpacket(0x0307,-1,NULL);
-addpacket(0x0308,-1,NULL);
-addpacket(0x0309,-1,NULL);
-addpacket(0x030a,-1,NULL);
-addpacket(0x030b,-1,NULL);
-addpacket(0x030c,-1,NULL);
-addpacket(0x030d,-1,NULL);
-addpacket(0x030e,-1,NULL);
-addpacket(0x030f,-1,NULL);
-addpacket(0x0310,-1,NULL);
-addpacket(0x0311,-1,NULL);
-addpacket(0x0312,-1,NULL);
-addpacket(0x0313,-1,NULL);
-addpacket(0x0314,-1,NULL);
-addpacket(0x0315,-1,NULL);
-addpacket(0x0316,-1,NULL);
-addpacket(0x0317,-1,NULL);
-addpacket(0x0318,-1,NULL);
-addpacket(0x0319,-1,NULL);
-addpacket(0x031a,-1,NULL);
-addpacket(0x031b,-1,NULL);
-addpacket(0x031c,-1,NULL);
-addpacket(0x031d,-1,NULL);
-addpacket(0x031e,-1,NULL);
-addpacket(0x031f,-1,NULL);
-addpacket(0x0320,-1,NULL);
-addpacket(0x0321,-1,NULL);
-addpacket(0x0322,-1,NULL);
-addpacket(0x0323,-1,NULL);
-addpacket(0x0324,-1,NULL);
-addpacket(0x0325,-1,NULL);
-addpacket(0x0326,-1,NULL);
-addpacket(0x0327,-1,NULL);
-addpacket(0x0328,-1,NULL);
-addpacket(0x0329,-1,NULL);
-addpacket(0x032a,-1,NULL);
-addpacket(0x032b,-1,NULL);
-addpacket(0x032c,-1,NULL);
-addpacket(0x032d,-1,NULL);
-addpacket(0x032e,-1,NULL);
-addpacket(0x032f,-1,NULL);
-addpacket(0x0330,-1,NULL);
-addpacket(0x0331,-1,NULL);
-addpacket(0x0332,-1,NULL);
-addpacket(0x0333,-1,NULL);
-addpacket(0x0334,-1,NULL);
-addpacket(0x0335,-1,NULL);
-addpacket(0x0336,-1,NULL);
-addpacket(0x0337,-1,NULL);
-addpacket(0x0338,-1,NULL);
-addpacket(0x0339,-1,NULL);
-addpacket(0x033a,-1,NULL);
-addpacket(0x033b,-1,NULL);
-addpacket(0x033c,-1,NULL);
-addpacket(0x033d,-1,NULL);
-addpacket(0x033e,-1,NULL);
-addpacket(0x033f,-1,NULL);
-addpacket(0x0340,-1,NULL);
-addpacket(0x0341,-1,NULL);
-addpacket(0x0342,-1,NULL);
-addpacket(0x0343,-1,NULL);
-addpacket(0x0344,-1,NULL);
-addpacket(0x0345,-1,NULL);
-addpacket(0x0346,-1,NULL);
-addpacket(0x0347,-1,NULL);
-addpacket(0x0348,-1,NULL);
-addpacket(0x0349,-1,NULL);
-addpacket(0x034a,-1,NULL);
-addpacket(0x034b,-1,NULL);
-addpacket(0x034c,-1,NULL);
-addpacket(0x034d,-1,NULL);
-addpacket(0x034e,-1,NULL);
-addpacket(0x034f,-1,NULL);
-addpacket(0x0350,-1,NULL);
-addpacket(0x0351,-1,NULL);
-addpacket(0x0352,-1,NULL);
-addpacket(0x0353,-1,NULL);
-addpacket(0x0354,-1,NULL);
-addpacket(0x0355,-1,NULL);
-addpacket(0x0356,-1,NULL);
-addpacket(0x0357,-1,NULL);
-addpacket(0x0358,-1,NULL);
-addpacket(0x0359,-1,NULL);
-addpacket(0x035a,-1,NULL);
-#endif
-
-#if PACKETVER >= 20080527
-addpacket(0x035b,-1,NULL);
-addpacket(0x035c,2,NULL);
-addpacket(0x035d,-1,NULL);
-addpacket(0x035e,2,NULL);
-addpacket(0x035f,-1,NULL);
-addpacket(0x0389,-1,NULL);
-#endif
-
-#if PACKETVER >= 20080820
-addpacket(0x040c,-1,NULL);
-addpacket(0x040d,-1,NULL);
-addpacket(0x040e,-1,NULL);
-addpacket(0x040f,-1,NULL);
-addpacket(0x0410,-1,NULL);
-addpacket(0x0411,-1,NULL);
-addpacket(0x0412,-1,NULL);
-addpacket(0x0413,-1,NULL);
-addpacket(0x0414,-1,NULL);
-addpacket(0x0415,-1,NULL);
-addpacket(0x0416,-1,NULL);
-addpacket(0x0417,-1,NULL);
-addpacket(0x0418,-1,NULL);
-addpacket(0x0419,-1,NULL);
-addpacket(0x041a,-1,NULL);
-addpacket(0x041b,-1,NULL);
-addpacket(0x041c,-1,NULL);
-addpacket(0x041d,-1,NULL);
-addpacket(0x041e,-1,NULL);
-addpacket(0x041f,-1,NULL);
-addpacket(0x0420,-1,NULL);
-addpacket(0x0421,-1,NULL);
-addpacket(0x0422,-1,NULL);
-addpacket(0x0423,-1,NULL);
-addpacket(0x0424,-1,NULL);
-addpacket(0x0425,-1,NULL);
-addpacket(0x0426,-1,NULL);
-addpacket(0x0427,-1,NULL);
-addpacket(0x0428,-1,NULL);
-addpacket(0x0429,-1,NULL);
-addpacket(0x042a,-1,NULL);
-addpacket(0x042b,-1,NULL);
-addpacket(0x042c,-1,NULL);
-addpacket(0x042d,-1,NULL);
-addpacket(0x042e,-1,NULL);
-addpacket(0x042f,-1,NULL);
-addpacket(0x0430,-1,NULL);
-addpacket(0x0431,-1,NULL);
-addpacket(0x0432,-1,NULL);
-addpacket(0x0433,-1,NULL);
-addpacket(0x0434,-1,NULL);
-addpacket(0x0435,-1,NULL);
-#endif
-
-#if PACKETVER >= 20080910
-addpacket(0x0436,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x0437,7,"actionrequest",2,6);
-addpacket(0x0438,10,"useskilltoid",2,4,6);
-addpacket(0x0439,8,"useitem",2,4);
-#endif
-
-#if PACKETVER >= 20081113
-addpacket(0x043d,8,NULL);
-addpacket(0x043e,-1,NULL);
-addpacket(0x043f,8,NULL);
-#endif
-
-#if PACKETVER >= 20081126
-addpacket(0x01a2,37,NULL);
-addpacket(0x0440,10,NULL);
-addpacket(0x0441,4,NULL);
-#endif
-
-#if PACKETVER >= 20081210
-addpacket(0x0442,-1,NULL);
-addpacket(0x0443,8,NULL);
-#endif
-
-#if PACKETVER >= 20090114
-addpacket(0x043f,25,NULL);
-addpacket(0x0444,-1,NULL);
-addpacket(0x0445,10,NULL);
-#endif
-
-#if PACKETVER >= 20090218
-addpacket(0x0446,14,NULL);
-#endif
-
-#if PACKETVER >= 20090225
-addpacket(0x0448,-1,NULL);
-#endif
-
-#if PACKETVER >= 20090330
-addpacket(0x0449,4,NULL);
-#endif
-
-#if PACKETVER >= 20090408
-addpacket(0x02a6,-1,NULL);
-addpacket(0x02a7,-1,NULL);
-addpacket(0x044a,6,NULL);
-#endif
-
-//Renewal Clients
-#if PACKETVER >= 20080827
-addpacket(0x0072,22,"useskilltoid",9,15,18);
-addpacket(0x007c,44,NULL);
-addpacket(0x007e,105,"useskilltoposinfo",10,14,18,23,25);
-addpacket(0x0085,10,"changedir",4,9);
-addpacket(0x0089,11,"ticksend",7);
-addpacket(0x008c,14,"getcharnamerequest",10);
-addpacket(0x0094,19,"movetokafra",3,15);
-addpacket(0x009b,34,"wanttoconnection",7,15,25,29,33);
-addpacket(0x009f,20,"useitem",7,20);
-addpacket(0x00a2,14,"solvecharname",10);
-addpacket(0x00a7,9,"walktoxy",6);
-addpacket(0x00f5,11,"takeitem",7);
-addpacket(0x00f7,17,"movefromkafra",3,13);
-addpacket(0x0113,25,"useskilltopos",10,14,18,23);
-addpacket(0x0116,17,"dropitem",6,15);
-addpacket(0x0190,23,"actionrequest",9,22);
-addpacket(0x02e2,20,NULL);
-addpacket(0x02e3,22,NULL);
-addpacket(0x02e4,11,NULL);
-addpacket(0x02e5,9,NULL);
-#endif
-
-#if PACKETVER >= 20080910
-addpacket(0x0436,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x0437,7,"actionrequest",2,6);
-addpacket(0x0438,10,"useskilltoid",2,4,6);
-addpacket(0x0439,8,"useitem",2,4);
-#endif
-
-#if PACKETVER >= 20081112
-addpacket(0x043d,8,NULL);
-//addpacket(0x043e,-1,NULL);
-addpacket(0x043f,8,NULL);
-#endif
-
-#if PACKETVER >= 20081217
-addpacket(0x01a2,37,NULL);
-//addpacket(0x0440,10,NULL);
-//addpacket(0x0441,4,NULL);
-//addpacket(0x0442,8,NULL);
-//addpacket(0x0443,8,NULL);
-#endif
-
-#if PACKETVER >= 20081217
-addpacket(0x006d,114,NULL);
-#endif
-
-#if PACKETVER >= 20090121
-addpacket(0x043f,25,NULL);
-//addpacket(0x0444,-1,NULL);
-//addpacket(0x0445,10,NULL);
-#endif
-
-#if PACKETVER >= 20090218
-//addpacket(0x0446,14,NULL);
-#endif
-
-#if PACKETVER >= 20090226
-//addpacket(0x0448,-1,NULL);
-#endif
-
-#if PACKETVER >= 20090401
-//addpacket(0x0449,4,NULL);
-#endif
-
-#if PACKETVER >= 20090514
-//addpacket(0x044b,2,NULL);
-#endif
-
-#if PACKETVER >= 20090520
-//addpacket(0x07d0,6,NULL);
-//addpacket(0x07d1,2,NULL);
-//addpacket(0x07d2,-1,NULL);
-//addpacket(0x07d3,4,NULL);
-//addpacket(0x07d4,4,NULL);
-//addpacket(0x07d5,4,NULL);
-//addpacket(0x07d6,4,NULL);
-//addpacket(0x0447,2,NULL);
-#endif
-
-#if PACKETVER >= 20090603
-addpacket(0x07d7,8,"partychangeoption",2,6);
-addpacket(0x07d8,8,NULL);
-addpacket(0x07d9,254,NULL);
-addpacket(0x07da,6,"partychangeleader",2);
-#endif
-
-#if PACKETVER >= 20090610
-//addpacket(0x07db,8,NULL);
-#endif
-
-#if PACKETVER >= 20090617
-addpacket(0x07d9,268,NULL);
-//addpacket(0x07dc,6,NULL);
-//addpacket(0x07dd,54,NULL);
-//addpacket(0x07de,30,NULL);
-//addpacket(0x07df,54,NULL);
-#endif
-
-#if PACKETVER >= 20090701
-//addpacket(0x0275,37,NULL);
-//addpacket(0x0276,-1,NULL);
-#endif
-
-#if PACKETVER >= 20090708
-//addpacket(0x07e0,58,NULL);
-#endif
-
-#if PACKETVER >= 20090715
-//addpacket(0x07e1,15,NULL);
-#endif
-
-#if PACKETVER >= 20090805
-//addpacket(0x07e2,8,NULL);
-#endif
-
-#if PACKETVER >= 20090818
-//addpacket(0x07e3,6,NULL);
-//addpacket(0x07e4,-1,NULL);
-//addpacket(0x07e6,8,NULL);
-#endif
-
-#if PACKETVER >= 20090825
-//addpacket(0x07e6,28,NULL);
-addpacket(0x07e7,5,NULL);
-#endif
-
-#if PACKETVER >= 20090922
-addpacket(0x07e5,8,NULL);
-//addpacket(0x07e6,8,NULL);
-addpacket(0x07e7,32,NULL);
-addpacket(0x07e8,-1,NULL);
-addpacket(0x07e9,5,NULL);
-#endif
-
-#if PACKETVER >= 20090929
-//addpacket(0x07ea,2,NULL);
-//addpacket(0x07eb,0,NULL);
-//addpacket(0x07ec,6,NULL);
-//addpacket(0x07ed,8,NULL);
-//addpacket(0x07ee,6,NULL);
-//addpacket(0x07ef,8,NULL);
-//addpacket(0x07f0,4,NULL);
-//addpacket(0x07f2,4,NULL);
-//addpacket(0x07f3,3,NULL);
-#endif
-
-#if PACKETVER >= 20091006
-//addpacket(0x07ec,8,NULL);
-//addpacket(0x07ed,10,NULL);
-//addpacket(0x07f0,8,NULL);
-//addpacket(0x07f1,15,NULL);
-//addpacket(0x07f2,6,NULL);
-//addpacket(0x07f3,4,NULL);
-//addpacket(0x07f4,3,NULL);
-#endif
-
-#if PACKETVER >= 20091027
-addpacket(0x07f5,6,"gmreqaccname",2);
-addpacket(0x07f6,14,NULL);
-#endif
-
-#if PACKETVER >= 20091103
-addpacket(0x07f7,-1,NULL);
-addpacket(0x07f8,-1,NULL);
-addpacket(0x07f9,-1,NULL);
-#endif
-
-#if PACKETVER >= 20091117
-addpacket(0x07fa,8,NULL);
-#endif
-
-#if PACKETVER >= 20091124
-addpacket(0x07fb,25,NULL);
-#endif
-
-#if PACKETVER >= 20091201
-//addpacket(0x07fc,10,NULL);
-//addpacket(0x07fd,-1,NULL);
-//addpacket(0x07fe,26,NULL);
-//addpacket(0x07ff,-1,NULL);
-#endif
-
-#if PACKETVER >= 20091215
-//addpacket(0x0800,-1,NULL);
-//addpacket(0x0801,-1,NULL);
-#endif
-
-#if PACKETVER >= 20091222
-addpacket(0x0802,18,"bookingregreq",2,4,6); // Booking System)
-addpacket(0x0803,4,NULL);
-addpacket(0x0804,8,NULL); // Booking System
-addpacket(0x0805,-1,NULL);
-addpacket(0x0806,4,"bookingdelreq",2); // Booking System
-//addpacket(0x0807,2,NULL);
-addpacket(0x0808,4,NULL); // Booking System
-//addpacket(0x0809,14,NULL);
-//addpacket(0x080A,50,NULL);
-//addpacket(0x080B,18,NULL);
-//addpacket(0x080C,6,NULL);
-#endif
-
-#if PACKETVER >= 20091229
-addpacket(0x0804,14,"bookingsearchreq",2,4,6,8,12); // Booking System
-addpacket(0x0806,2,"bookingdelreq",0); // Booking System
-addpacket(0x0807,4,NULL);
-addpacket(0x0808,14,"bookingupdatereq",2); // Booking System
-addpacket(0x0809,50,NULL);
-addpacket(0x080A,18,NULL);
-addpacket(0x080B,6,NULL); // Booking System
-#endif
-
-#if PACKETVER >= 20100105
-addpacket(0x0801,-1,"purchasereq2",2,4,8,12);
-#endif
-
-#if PACKETVER >= 20100126
-//addpacket(0x080C,2,NULL);
-//addpacket(0x080D,3,NULL);
-addpacket(0x080E,14,NULL);
-#endif
-
-#if PACKETVER >= 20100209
-//addpacket(0x07F0,6,NULL);
-#endif
-
-#if PACKETVER >= 20100223
-addpacket(0x080F,20,NULL);
-#endif
-
-#if PACKETVER >= 20100303
-addpacket(0x0810,3,NULL);
-addpacket(0x0811,-1,"reqopenbuyingstore",2,4,8,9,89);
-//addpacket(0x0812,86,NULL);
-//addpacket(0x0813,6,NULL);
-//addpacket(0x0814,6,NULL);
-//addpacket(0x0815,-1,NULL);
-//addpacket(0x0817,-1,NULL);
-//addpacket(0x0818,6,NULL);
-//addpacket(0x0819,4,NULL);
-#endif
-
-#if PACKETVER >= 20100309
-addpacket(0x0813,-1,NULL);
-//addpacket(0x0814,2,NULL);
-//addpacket(0x0815,6,NULL);
-addpacket(0x0816,6,NULL);
-addpacket(0x0818,-1,NULL);
-//addpacket(0x0819,10,NULL);
-//addpacket(0x081A,4,NULL);
-//addpacket(0x081B,4,NULL);
-//addpacket(0x081C,6,NULL);
-//addpacket(0x081D,22,NULL);
-//addpacket(0x081E,8,NULL);
-#endif
-
-#if PACKETVER >= 20100323
-//addpacket(0x081F,-1,NULL);
-#endif
-
-#if PACKETVER >= 20100406
-//addpacket(0x081A,6,NULL);
-#endif
-
-#if PACKETVER >= 20100413
-//addpacket(0x081A,10,NULL);
-//addpacket(0x0820,11,NULL);
-//addpacket(0x0821,2,NULL);
-//addpacket(0x0822,9,NULL);
-//addpacket(0x0823,-1,NULL);
-#endif
-
-#if PACKETVER >= 20100414
-//addpacket(0x081B,8,NULL);
-#endif
-
-#if PACKETVER >= 20100420
-addpacket(0x0812,8,NULL);
-addpacket(0x0814,86,NULL);
-addpacket(0x0815,2,"reqclosebuyingstore",0);
-addpacket(0x0817,6,"reqclickbuyingstore",2);
-addpacket(0x0819,-1,"reqtradebuyingstore",2,4,8,12);
-addpacket(0x081a,4,NULL);
-addpacket(0x081b,10,NULL);
-addpacket(0x081c,10,NULL);
-addpacket(0x0824,6,NULL);
-#endif
-
-#if PACKETVER >= 20100601
-//addpacket(0x0825,-1,NULL);
-//addpacket(0x0826,4,NULL);
-addpacket(0x0835,-1,"searchstoreinfo",2,4,5,9,13,14,15);
-addpacket(0x0836,-1,NULL);
-addpacket(0x0837,3,NULL);
-//addpacket(0x0838,3,NULL);
-#endif
-
-#if PACKETVER >= 20100608
-addpacket(0x0838,2,"searchstoreinfonextpage",0);
-addpacket(0x083A,4,NULL); // Search Stalls Feature
-addpacket(0x083B,2,"closesearchstoreinfo",0);
-addpacket(0x083C,12,"searchstoreinfolistitemclick",2,6,10);
-addpacket(0x083D,6,NULL);
-#endif
-
-#if PACKETVER >= 20100615
-addpacket(0x083E,26,NULL);
-#endif
-
-#if PACKETVER >= 20100622
-addpacket(0x083F,22,NULL);
-#endif
-
-#if PACKETVER >= 20100629
-addpacket(0x00AA,9,NULL);
-addpacket(0x07F1,18,NULL);
-addpacket(0x07F2,8,NULL);
-addpacket(0x07F3,6,NULL);
-#endif
-
-#if PACKETVER >= 20100701
-addpacket(0x083A,5,NULL); // Search Stalls Feature
-#endif
-
-#if PACKETVER >= 20100713
-addpacket(0x0827,6,NULL);
-addpacket(0x0828,14,NULL);
-addpacket(0x0829,6,NULL);
-addpacket(0x082A,10,NULL);
-addpacket(0x082B,6,NULL);
-addpacket(0x082C,14,NULL);
-addpacket(0x0840,-1,NULL);
-addpacket(0x0841,19,NULL);
-#endif
-
-#if PACKETVER >= 20100714
-addpacket(0x841,4,NULL);
-#endif
-
-#if PACKETVER >= 20100803
-addpacket(0x0839,66,NULL);
-addpacket(0x0842,6,"recall2",2);
-addpacket(0x0843,6,"remove2",2);
-#endif
-
-#if PACKETVER >= 20101124
-addpacket(0x0288,-1,"cashshopbuy",4,8);
-addpacket(0x0436,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x035f,5,"walktoxy",2);
-addpacket(0x0360,6,"ticksend",2);
-addpacket(0x0361,5,"changedir",2,4);
-addpacket(0x0362,6,"takeitem",2);
-addpacket(0x0363,6,"dropitem",2,4);
-addpacket(0x0364,8,"movetokafra",2,4);
-addpacket(0x0365,8,"movefromkafra",2,4);
-addpacket(0x0366,10,"useskilltopos",2,4,6,8);
-addpacket(0x0367,90,"useskilltoposinfo",2,4,6,8,10);
-addpacket(0x0368,6,"getcharnamerequest",2);
-addpacket(0x0369,6,"solvecharname",2);
-addpacket(0x0856,-1,NULL);
-addpacket(0x0857,-1,NULL);
-addpacket(0x0858,-1,NULL);
-addpacket(0x0859,-1,NULL);
-
-addpacket(0x022d,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x0437,5,"walktoxy",2);
-addpacket(0x035f,6,"ticksend",2);
-addpacket(0x0893,5,"changedir",2,4);
-addpacket(0x07e4,6,"takeitem",2);
-addpacket(0x0362,6,"dropitem",2,4);
-addpacket(0x07ec,8,"movetokafra",2,4);
-addpacket(0x0364,8,"movefromkafra",2,4);
-addpacket(0x0202,10,"useskilltopos",2,4,6,8);
-addpacket(0x0366,90,"useskilltoposinfo",2,4,6,8,10);
-addpacket(0x08ad,6,"getcharnamerequest",2);
-addpacket(0x0368,6,"solvecharname",2);
-addpacket(0x0369,7,"actionrequest",2,6);
-addpacket(0x083c,10,"useskilltoid",2,4,6);
-
-// Desconhecido
-addpacket(0x08C7,-1,NULL);
-addpacket(0x08C8,34,NULL);
-addpacket(0x08C9,2,NULL);
-addpacket(0x08CA,-1,NULL);
-addpacket(0x08CB,-1,NULL);
-addpacket(0x08CC,109,NULL);
-addpacket(0x08CD,2,NULL);
-addpacket(0x08CE,10,NULL);
-addpacket(0x08CF,9,NULL);
-addpacket(0x08D0,7,NULL);
-addpacket(0x08D1,10,NULL);
-addpacket(0x08D2,10,NULL);
-addpacket(0x08D3,14,NULL);
-addpacket(0x08D4,-1,NULL);
-#endif
-
-
-#if PACKETVER >= 20111102
-addpacket(0x083c,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x088a,6,"getcharnamerequest",2);
-addpacket(0x0817,6,"ticksend",2);
-addpacket(0x0366,5,"changedir",2,4);
-addpacket(0x0364,5,"walktoxy",2);
-addpacket(0x08aa,7,"actionrequest",2,6);
-addpacket(0x02c4,10,"useskilltoid",2,4,6);
-addpacket(0x0369,10,"useskilltopos",2,4,6,8);
-addpacket(0x08ad,90,"useskilltoposinfo",2,4,6,8,10);
-addpacket(0x0885,6,"dropitem",2,4);
-addpacket(0x0815,6,"takeitem",2);
-#endif
-
-#if PACKETVER >= 20111122
-addpacket(0x0835,19,"wanttoconnection",2,6,10,14,18);
-addpacket(0x0898,6,"getcharnamerequest",2);
-addpacket(0x0899,6,"ticksend",2);
-addpacket(0x0896,5,"changedir",2,4);
-addpacket(0x0892,5,"walktoxy",2);
-addpacket(0x022d,7,"actionrequest",2,6);
-addpacket(0x08a1,10,"useskilltoid",2,4,6);
-addpacket(0x08ad,10,"useskilltopos",2,4,6,8);
-addpacket(0x0363,90,"useskilltoposinfo",2,4,6,8,10);
-addpacket(0x0436,6,"dropitem",2,4);
-addpacket(0x0893,6,"takeitem",2);
+//  Client<->Map Packet Database
+// 
+//  Structure of Database:
+//  PacketType,PacketLength[,Name,FieldIndex1:FieldIndex2:FieldIndex3:...]
+// 
+//  01. PacketType       ID of the packet.
+//  02. PacketLength     Length of the packet. If 0, packet is disabled in current packet version. If -1, packet has variable size.
+//  03. Name             Name of the packet parser function (optional, for incoming packets only).
+//  04. FieldIndex       Specifies the offset of a packet field in bytes from the begin of the packet (only specified when Name is given).
+//                       Can be 0, when the layout is not known.
+//  ...
+// 
+//  NOTE: Up to MAX_PACKET_POS (typically 20) field indexes may be used.
+// 
+//  The packet database allows you to add support for new clients,
+//  because packets change every release.
+// 
+//  Note: Every packet version needs a wanttoconnection specification, since
+//  that is the packet used to identify a client's version.
+//  If multiple versions have the same connection packet, the higher version
+//  will be used (unless the lower one is specified as the default)
+// 
+//  Incoming packets have their parser function and layout specified, which enables
+//  them for the current and all higher versions, unless explicitely disabled.
+// 
+//  Outgoing packets must be specified in order to enable them for the current
+//  and all higher versions, unless explicitely disabled. Packets that are not
+//  enabled for a packet version are silently discarded when sent as multicast.
+// 
+//  Every packet version inherits packet definitions from the previous (lower)
+//  packet version.
+// 
+//  Main packet version of the DB to use (default = max available version)
+//  Client detection is faster when all clients use this version.
+//  Version 23 is the latest Sakexe (above versions are for Renewal clients)
+// packet_db_ver: 25
+// packet_db_ver: default
+// packet_db_ver: 23
+// packet_ver: 5
+addpacket(0x64, 55, NULL); 
+addpacket(0x65, 17, NULL); 
+addpacket(0x66, 6, NULL); 
+addpacket(0x67, 37, NULL); 
+addpacket(0x68, 46, NULL); 
+addpacket(0x69, -1, NULL); 
+addpacket(0x6a, 23, NULL); 
+addpacket(0x6b, -1, NULL); 
+addpacket(0x6c, 3, NULL); 
+addpacket(0x6d, 108, NULL); 
+addpacket(0x6e, 3, NULL); 
+addpacket(0x6f, 2, NULL); 
+addpacket(0x70, 6, NULL); 
+addpacket(0x71, 28, NULL); 
+addpacket(0x72, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x73, 11, NULL); 
+addpacket(0x74, 3, NULL); 
+addpacket(0x75, -1, NULL); 
+addpacket(0x76, 9, NULL); 
+addpacket(0x77, 5, NULL); 
+addpacket(0x78, 54, NULL); 
+addpacket(0x79, 53, NULL); 
+addpacket(0x7a, 58, NULL); 
+addpacket(0x7b, 60, NULL); 
+addpacket(0x7c, 41, NULL); 
+addpacket(0x7d, 2, "loadendack", 0); 
+addpacket(0x7e, 6, "ticksend", 2); 
+addpacket(0x7f, 6, NULL); 
+addpacket(0x80, 7, NULL); 
+addpacket(0x81, 3, NULL); 
+addpacket(0x82, 2, NULL); 
+addpacket(0x83, 2, NULL); 
+addpacket(0x84, 2, NULL); 
+addpacket(0x85, 5, "walktoxy", 2); 
+addpacket(0x86, 16, NULL); 
+addpacket(0x87, 12, NULL); 
+addpacket(0x88, 10, NULL); 
+addpacket(0x89, 7, "actionrequest", 2, 6); 
+addpacket(0x8a, 29, NULL); 
+addpacket(0x8b, 2, NULL); 
+addpacket(0x8c, -1, "globalmessage", 2, 4); 
+addpacket(0x8d, -1, NULL); 
+addpacket(0x8e, -1, NULL); 
+// addpacket(0x8f, -1, NULL); 
+addpacket(0x90, 7, "npcclicked", 2); 
+addpacket(0x91, 22, NULL); 
+addpacket(0x92, 28, NULL); 
+addpacket(0x93, 2, NULL); 
+addpacket(0x94, 6, "getcharnamerequest", 2); 
+addpacket(0x95, 30, NULL); 
+addpacket(0x96, -1, "wis", 2, 4, 28); 
+addpacket(0x97, -1, NULL); 
+addpacket(0x98, 3, NULL); 
+addpacket(0x99, -1, "broadcast", 2, 4); 
+addpacket(0x9a, -1, NULL); 
+addpacket(0x9b, 5, "changedir", 2, 4); 
+addpacket(0x9c, 9, NULL); 
+addpacket(0x9d, 17, NULL); 
+addpacket(0x9e, 17, NULL); 
+addpacket(0x9f, 6, "takeitem", 2); 
+addpacket(0xa0, 23, NULL); 
+addpacket(0xa1, 6, NULL); 
+addpacket(0xa2, 6, "dropitem", 2, 4); 
+addpacket(0xa3, -1, NULL); 
+addpacket(0xa4, -1, NULL); 
+addpacket(0xa5, -1, NULL); 
+addpacket(0xa6, -1, NULL); 
+addpacket(0xa7, 8, "useitem", 2, 4); 
+addpacket(0xa8, 7, NULL); 
+addpacket(0xa9, 6, "equipitem", 2, 4); 
+addpacket(0xaa, 7, NULL); 
+addpacket(0xab, 4, "unequipitem", 2); 
+addpacket(0xac, 7, NULL); 
+// addpacket(0xad, -1, NULL); 
+addpacket(0xae, -1, NULL); 
+addpacket(0xaf, 6, NULL); 
+addpacket(0xb0, 8, NULL); 
+addpacket(0xb1, 8, NULL); 
+addpacket(0xb2, 3, "restart", 2); 
+addpacket(0xb3, 3, NULL); 
+addpacket(0xb4, -1, NULL); 
+addpacket(0xb5, 6, NULL); 
+addpacket(0xb6, 6, NULL); 
+addpacket(0xb7, -1, NULL); 
+addpacket(0xb8, 7, "npcselectmenu", 2, 6); 
+addpacket(0xb9, 6, "npcnextclicked", 2); 
+addpacket(0xba, 2, NULL); 
+addpacket(0xbb, 5, "statusup", 2, 4); 
+addpacket(0xbc, 6, NULL); 
+addpacket(0xbd, 44, NULL); 
+addpacket(0xbe, 5, NULL); 
+addpacket(0xbf, 3, "emotion", 2); 
+addpacket(0xc0, 7, NULL); 
+addpacket(0xc1, 2, "howmanyconnections", 0); 
+addpacket(0xc2, 6, NULL); 
+addpacket(0xc3, 8, NULL); 
+addpacket(0xc4, 6, NULL); 
+addpacket(0xc5, 7, "npcbuysellselected", 2, 6); 
+addpacket(0xc6, -1, NULL); 
+addpacket(0xc7, -1, NULL); 
+addpacket(0xc8, -1, "npcbuylistsend", 2, 4); 
+addpacket(0xc9, -1, "npcselllistsend", 2, 4); 
+addpacket(0xca, 3, NULL); 
+addpacket(0xcb, 3, NULL); 
+addpacket(0xcc, 6, "gmkick", 2); 
+addpacket(0xcd, 3, NULL); 
+addpacket(0xce, 2, "killall", 0); 
+addpacket(0xcf, 27, "wisexin", 2, 26); 
+addpacket(0xd0, 3, "wisall", 2); 
+addpacket(0xd1, 4, NULL); 
+addpacket(0xd2, 4, NULL); 
+addpacket(0xd3, 2, "wisexlist", 0); 
+addpacket(0xd4, -1, NULL); 
+addpacket(0xd5, -1, "createchatroom", 2, 4, 6, 7, 15); 
+addpacket(0xd6, 3, NULL); 
+addpacket(0xd7, -1, NULL); 
+addpacket(0xd8, 6, NULL); 
+addpacket(0xd9, 14, "chataddmember", 2, 6); 
+addpacket(0xda, 3, NULL); 
+addpacket(0xdb, -1, NULL); 
+addpacket(0xdc, 28, NULL); 
+addpacket(0xdd, 29, NULL); 
+addpacket(0xde, -1, "chatroomstatuschange", 2, 4, 6, 7, 15); 
+addpacket(0xdf, -1, NULL); 
+addpacket(0xe0, 30, "changechatowner", 2, 6); 
+addpacket(0xe1, 30, NULL); 
+addpacket(0xe2, 26, "kickfromchat", 2); 
+addpacket(0xe3, 2, "chatleave", 0); 
+addpacket(0xe4, 6, "traderequest", 2); 
+addpacket(0xe5, 26, NULL); 
+addpacket(0xe6, 3, "tradeack", 2); 
+addpacket(0xe7, 3, NULL); 
+addpacket(0xe8, 8, "tradeadditem", 2, 4); 
+addpacket(0xe9, 19, NULL); 
+addpacket(0xea, 5, NULL); 
+addpacket(0xeb, 2, "tradeok", 0); 
+addpacket(0xec, 3, NULL); 
+addpacket(0xed, 2, "tradecancel", 0); 
+addpacket(0xee, 2, NULL); 
+addpacket(0xef, 2, "tradecommit", 0); 
+addpacket(0xf0, 3, NULL); 
+addpacket(0xf1, 2, NULL); 
+addpacket(0xf2, 6, NULL); 
+addpacket(0xf3, 8, "movetokafra", 2, 4); 
+addpacket(0xf4, 21, NULL); 
+addpacket(0xf5, 8, "movefromkafra", 2, 4); 
+addpacket(0xf6, 8, NULL); 
+addpacket(0xf7, 2, "closekafra", 0); 
+addpacket(0xf8, 2, NULL); 
+addpacket(0xf9, 26, "createparty", 2); 
+addpacket(0xfa, 3, NULL); 
+addpacket(0xfb, -1, NULL); 
+addpacket(0xfc, 6, "partyinvite", 2); 
+addpacket(0xfd, 27, NULL); 
+addpacket(0xfe, 30, NULL); 
+addpacket(0xff, 10, "replypartyinvite", 2, 6); 
+addpacket(0x100, 2, "leaveparty", 0); 
+addpacket(0x101, 6, NULL); 
+addpacket(0x102, 6, "partychangeoption", 2); 
+addpacket(0x103, 30, "removepartymember", 2, 6); 
+addpacket(0x104, 79, NULL); 
+addpacket(0x105, 31, NULL); 
+addpacket(0x106, 10, NULL); 
+addpacket(0x107, 10, NULL); 
+addpacket(0x108, -1, "partymessage", 2, 4); 
+addpacket(0x109, -1, NULL); 
+addpacket(0x10a, 4, NULL); 
+addpacket(0x10b, 6, NULL); 
+addpacket(0x10c, 6, NULL); 
+addpacket(0x10d, 2, NULL); 
+addpacket(0x10e, 11, NULL); 
+addpacket(0x10f, -1, NULL); 
+addpacket(0x110, 10, NULL); 
+addpacket(0x111, 39, NULL); 
+addpacket(0x112, 4, "skillup", 2); 
+addpacket(0x113, 10, "useskilltoid", 2, 4, 6); 
+addpacket(0x114, 31, NULL); 
+addpacket(0x115, 35, NULL); 
+addpacket(0x116, 10, "useskilltopos", 2, 4, 6, 8); 
+addpacket(0x117, 18, NULL); 
+addpacket(0x118, 2, "stopattack", 0); 
+addpacket(0x119, 13, NULL); 
+addpacket(0x11a, 15, NULL); 
+addpacket(0x11b, 20, "useskillmap", 2, 4); 
+addpacket(0x11c, 68, NULL); 
+addpacket(0x11d, 2, "requestmemo", 0); 
+addpacket(0x11e, 3, NULL); 
+addpacket(0x11f, 16, NULL); 
+addpacket(0x120, 6, NULL); 
+addpacket(0x121, 14, NULL); 
+addpacket(0x122, -1, NULL); 
+addpacket(0x123, -1, NULL); 
+addpacket(0x124, 21, NULL); 
+addpacket(0x125, 8, NULL); 
+addpacket(0x126, 8, "putitemtocart", 2, 4); 
+addpacket(0x127, 8, "getitemfromcart", 2, 4); 
+addpacket(0x128, 8, "movefromkafratocart", 2, 4); 
+addpacket(0x129, 8, "movetokafrafromcart", 2, 4); 
+addpacket(0x12a, 2, "removeoption", 0); 
+addpacket(0x12b, 2, NULL); 
+addpacket(0x12c, 3, NULL); 
+addpacket(0x12d, 4, NULL); 
+addpacket(0x12e, 2, "closevending", 0); 
+addpacket(0x12f, -1, NULL); 
+addpacket(0x130, 6, "vendinglistreq", 2); 
+addpacket(0x131, 86, NULL); 
+addpacket(0x132, 6, NULL); 
+addpacket(0x133, -1, NULL); 
+addpacket(0x134, -1, "purchasereq", 2, 4, 8); 
+addpacket(0x135, 7, NULL); 
+addpacket(0x136, -1, NULL); 
+addpacket(0x137, 6, NULL); 
+addpacket(0x138, 3, NULL); 
+addpacket(0x139, 16, NULL); 
+addpacket(0x13a, 4, NULL); 
+addpacket(0x13b, 4, NULL); 
+addpacket(0x13c, 4, NULL); 
+addpacket(0x13d, 6, NULL); 
+addpacket(0x13e, 24, NULL); 
+addpacket(0x13f, 26, "itemmonster", 2); 
+addpacket(0x140, 22, "mapmove", 2, 18, 20); 
+addpacket(0x141, 14, NULL); 
+addpacket(0x142, 6, NULL); 
+addpacket(0x143, 10, "npcamountinput", 2, 6); 
+addpacket(0x144, 23, NULL); 
+addpacket(0x145, 19, NULL); 
+addpacket(0x146, 6, "npccloseclicked", 2); 
+addpacket(0x147, 39, NULL); 
+addpacket(0x148, 8, NULL); 
+addpacket(0x149, 9, "gmreqnochat", 2, 6, 7); 
+addpacket(0x14a, 6, NULL); 
+addpacket(0x14b, 27, NULL); 
+addpacket(0x14c, -1, NULL); 
+addpacket(0x14d, 2, "guildcheckmaster", 0); 
+addpacket(0x14e, 6, NULL); 
+addpacket(0x14f, 6, "guildrequestinfo", 2); 
+addpacket(0x150, 110, NULL); 
+addpacket(0x151, 6, "guildrequestemblem", 2); 
+addpacket(0x152, -1, NULL); 
+addpacket(0x153, -1, "guildchangeemblem", 2, 4); 
+addpacket(0x154, -1, NULL); 
+addpacket(0x155, -1, "guildchangememberposition", 2); 
+addpacket(0x156, -1, NULL); 
+addpacket(0x157, 6, NULL); 
+addpacket(0x158, -1, NULL); 
+addpacket(0x159, 54, "guildleave", 2, 6, 10, 14); 
+addpacket(0x15a, 66, NULL); 
+addpacket(0x15b, 54, "guildexpulsion", 2, 6, 10, 14); 
+addpacket(0x15c, 90, NULL); 
+addpacket(0x15d, 42, "guildbreak", 2); 
+addpacket(0x15e, 6, NULL); 
+addpacket(0x15f, 42, NULL); 
+addpacket(0x160, -1, NULL); 
+addpacket(0x161, -1, "guildchangepositioninfo", 2); 
+addpacket(0x162, -1, NULL); 
+addpacket(0x163, -1, NULL); 
+addpacket(0x164, -1, NULL); 
+addpacket(0x165, 30, "createguild", 6); 
+addpacket(0x166, -1, NULL); 
+addpacket(0x167, 3, NULL); 
+addpacket(0x168, 14, "guildinvite", 2); 
+addpacket(0x169, 3, NULL); 
+addpacket(0x16a, 30, NULL); 
+addpacket(0x16b, 10, "guildreplyinvite", 2, 6); 
+addpacket(0x16c, 43, NULL); 
+addpacket(0x16d, 14, NULL); 
+addpacket(0x16e, 186, "guildchangenotice", 2, 6, 66); 
+addpacket(0x16f, 182, NULL); 
+addpacket(0x170, 14, "guildrequestalliance", 2); 
+addpacket(0x171, 30, NULL); 
+addpacket(0x172, 10, "guildreplyalliance", 2, 6); 
+addpacket(0x173, 3, NULL); 
+addpacket(0x174, -1, NULL); 
+addpacket(0x175, 6, NULL); 
+addpacket(0x176, 106, NULL); 
+addpacket(0x177, -1, NULL); 
+addpacket(0x178, 4, "itemidentify", 2); 
+addpacket(0x179, 5, NULL); 
+addpacket(0x17a, 4, "usecard", 2); 
+addpacket(0x17b, -1, NULL); 
+addpacket(0x17c, 6, "insertcard", 2, 4); 
+addpacket(0x17d, 7, NULL); 
+addpacket(0x17e, -1, "guildmessage", 2, 4); 
+addpacket(0x17f, -1, NULL); 
+addpacket(0x180, 6, "guildopposition", 2); 
+addpacket(0x181, 3, NULL); 
+addpacket(0x182, 106, NULL); 
+addpacket(0x183, 10, "guilddelalliance", 2, 6); 
+addpacket(0x184, 10, NULL); 
+addpacket(0x185, 34, NULL); 
+// addpacket(0x186, -1, NULL); 
+addpacket(0x187, 6, NULL); 
+addpacket(0x188, 8, NULL); 
+addpacket(0x189, 4, NULL); 
+addpacket(0x18a, 4, "quitgame", 0); 
+addpacket(0x18b, 4, NULL); 
+addpacket(0x18c, 29, NULL); 
+addpacket(0x18d, -1, NULL); 
+addpacket(0x18e, 10, "producemix", 2, 4, 6, 8); 
+addpacket(0x18f, 6, NULL); 
+addpacket(0x190, 90, "useskilltoposinfo", 2, 4, 6, 8, 10); 
+addpacket(0x191, 86, NULL); 
+addpacket(0x192, 24, NULL); 
+addpacket(0x193, 6, "solvecharname", 2); 
+addpacket(0x194, 30, NULL); 
+addpacket(0x195, 102, NULL); 
+addpacket(0x196, 9, NULL); 
+addpacket(0x197, 4, "resetchar", 2); 
+addpacket(0x198, 8, "changemaptype", 2, 4, 6); 
+addpacket(0x199, 4, NULL); 
+addpacket(0x19a, 14, NULL); 
+addpacket(0x19b, 10, NULL); 
+addpacket(0x19c, -1, "localbroadcast", 2, 4); 
+addpacket(0x19d, 6, "gmhide", 0); 
+addpacket(0x19e, 2, NULL); 
+addpacket(0x19f, 6, "catchpet", 2); 
+addpacket(0x1a0, 3, NULL); 
+addpacket(0x1a1, 3, "petmenu", 2); 
+addpacket(0x1a2, 35, NULL); 
+addpacket(0x1a3, 5, NULL); 
+addpacket(0x1a4, 11, NULL); 
+addpacket(0x1a5, 26, "changepetname", 2); 
+addpacket(0x1a6, -1, NULL); 
+addpacket(0x1a7, 4, "selectegg", 2); 
+addpacket(0x1a8, 4, NULL); 
+addpacket(0x1a9, 6, "sendemotion", 2); 
+addpacket(0x1aa, 10, NULL); 
+addpacket(0x1ab, 12, NULL); 
+addpacket(0x1ac, 6, NULL); 
+addpacket(0x1ad, -1, NULL); 
+addpacket(0x1ae, 4, "selectarrow", 2); 
+addpacket(0x1af, 4, "changecart", 2); 
+addpacket(0x1b0, 11, NULL); 
+addpacket(0x1b1, 7, NULL); 
+addpacket(0x1b2, -1, "openvending", 2, 4, 84, 85); 
+addpacket(0x1b3, 67, NULL); 
+addpacket(0x1b4, 12, NULL); 
+addpacket(0x1b5, 18, NULL); 
+addpacket(0x1b6, 114, NULL); 
+addpacket(0x1b7, 6, NULL); 
+addpacket(0x1b8, 3, NULL); 
+addpacket(0x1b9, 6, NULL); 
+addpacket(0x1ba, 26, "remove", 2); 
+addpacket(0x1bb, 26, "shift", 2); 
+addpacket(0x1bc, 26, "recall", 2); 
+addpacket(0x1bd, 26, "summon", 2); 
+addpacket(0x1be, 2, NULL); 
+addpacket(0x1bf, 3, NULL); 
+addpacket(0x1c0, 2, NULL); 
+addpacket(0x1c1, 14, NULL); 
+addpacket(0x1c2, 10, NULL); 
+addpacket(0x1c3, -1, NULL); 
+addpacket(0x1c4, 22, NULL); 
+addpacket(0x1c5, 22, NULL); 
+addpacket(0x1c6, 4, NULL); 
+addpacket(0x1c7, 2, NULL); 
+addpacket(0x1c8, 13, NULL); 
+addpacket(0x1c9, 97, NULL); 
+// addpacket(0x1ca, -1, NULL); 
+addpacket(0x1cb, 9, NULL); 
+addpacket(0x1cc, 9, NULL); 
+addpacket(0x1cd, 30, NULL); 
+addpacket(0x1ce, 6, "autospell", 2); 
+addpacket(0x1cf, 28, NULL); 
+addpacket(0x1d0, 8, NULL); 
+addpacket(0x1d1, 14, NULL); 
+addpacket(0x1d2, 10, NULL); 
+addpacket(0x1d3, 35, NULL); 
+addpacket(0x1d4, 6, NULL); 
+addpacket(0x1d5, -1, "npcstringinput", 2, 4, 8); 
+addpacket(0x1d6, 4, NULL); 
+addpacket(0x1d7, 11, NULL); 
+addpacket(0x1d8, 54, NULL); 
+addpacket(0x1d9, 53, NULL); 
+addpacket(0x1da, 60, NULL); 
+addpacket(0x1db, 2, NULL); 
+addpacket(0x1dc, -1, NULL); 
+addpacket(0x1dd, 47, NULL); 
+addpacket(0x1de, 33, NULL); 
+addpacket(0x1df, 6, "gmreqaccname", 2); 
+addpacket(0x1e0, 30, NULL); 
+addpacket(0x1e1, 8, NULL); 
+addpacket(0x1e2, 34, NULL); 
+addpacket(0x1e3, 14, NULL); 
+addpacket(0x1e4, 2, NULL); 
+addpacket(0x1e5, 6, NULL); 
+addpacket(0x1e6, 26, NULL); 
+addpacket(0x1e7, 2, "sndoridori", 0); 
+addpacket(0x1e8, 28, "createparty2", 2); 
+addpacket(0x1e9, 81, NULL); 
+addpacket(0x1ea, 6, NULL); 
+addpacket(0x1eb, 10, NULL); 
+addpacket(0x1ec, 26, NULL); 
+addpacket(0x1ed, 2, "snexplosionspirits", 0); 
+addpacket(0x1ee, -1, NULL); 
+addpacket(0x1ef, -1, NULL); 
+addpacket(0x1f0, -1, NULL); 
+addpacket(0x1f1, -1, NULL); 
+addpacket(0x1f2, 20, NULL); 
+addpacket(0x1f3, 10, NULL); 
+addpacket(0x1f4, 32, NULL); 
+addpacket(0x1f5, 9, NULL); 
+addpacket(0x1f6, 34, NULL); 
+addpacket(0x1f7, 14, "adoptreply", 0); 
+addpacket(0x1f8, 2, NULL); 
+addpacket(0x1f9, 6, "adoptrequest", 0); 
+addpacket(0x1fa, 48, NULL); 
+addpacket(0x1fb, 56, NULL); 
+addpacket(0x1fc, -1, NULL); 
+addpacket(0x1fd, 4, "repairitem", 2); 
+addpacket(0x1fe, 5, NULL); 
+addpacket(0x1ff, 10, NULL); 
+addpacket(0x200, 26, NULL); 
+addpacket(0x201, -1, NULL); 
+addpacket(0x202, 26, "friendslistadd", 2); 
+addpacket(0x203, 10, "friendslistremove", 2, 6); 
+addpacket(0x204, 18, NULL); 
+addpacket(0x205, 26, NULL); 
+addpacket(0x206, 11, NULL); 
+addpacket(0x207, 34, NULL); 
+addpacket(0x208, 11, "friendslistreply", 2, 6, 10); 
+addpacket(0x209, 36, NULL); 
+addpacket(0x20a, 10, NULL); 
+// addpacket(0x20b, -1, NULL); 
+// addpacket(0x20c, -1, NULL); 
+addpacket(0x20d, -1, NULL); 
+#if PACKETVER > 20040705
+// packet_ver: 6
+addpacket(0x72, 22, "wanttoconnection", 5, 9, 13, 17, 21); 
+addpacket(0x85, 8, "walktoxy", 5); 
+addpacket(0xa7, 13, "useitem", 5, 9); 
+addpacket(0x113, 15, "useskilltoid", 4, 9, 11); 
+addpacket(0x116, 15, "useskilltopos", 4, 9, 11, 13); 
+addpacket(0x190, 95, "useskilltoposinfo", 4, 9, 11, 13, 15); 
+addpacket(0x208, 14, "friendslistreply", 2, 6, 10); 
+addpacket(0x20e, 24, NULL); 
+#endif
+
+#if PACKETVER > 20040713
+// packet_ver: 7
+addpacket(0x72, 39, "wanttoconnection", 12, 22, 30, 34, 38); 
+addpacket(0x85, 9, "walktoxy", 6); 
+addpacket(0x9b, 13, "changedir", 5, 12); 
+addpacket(0x9f, 10, "takeitem", 6); 
+addpacket(0xa7, 17, "useitem", 6, 13); 
+addpacket(0x113, 19, "useskilltoid", 7, 9, 15); 
+addpacket(0x116, 19, "useskilltopos", 7, 9, 15, 17); 
+addpacket(0x190, 99, "useskilltoposinfo", 7, 9, 15, 17, 19); 
+#endif
+
+#if PACKETVER > 20040726
+// packet_ver: 8
+addpacket(0x72, 14, "dropitem", 5, 12); 
+addpacket(0x7e, 33, "wanttoconnection", 12, 18, 24, 28, 32); 
+addpacket(0x85, 20, "useskilltoid", 7, 12, 16); 
+addpacket(0x89, 15, "getcharnamerequest", 11); 
+addpacket(0x8c, 23, "useskilltopos", 3, 6, 17, 21); 
+addpacket(0x94, 10, "takeitem", 6); 
+addpacket(0x9b, 6, "walktoxy", 3); 
+addpacket(0x9f, 13, "changedir", 5, 12); 
+addpacket(0xa2, 103, "useskilltoposinfo", 3, 6, 17, 21, 23); 
+addpacket(0xa7, 12, "solvecharname", 8); 
+addpacket(0xf3, -1, "globalmessage", 2, 4); 
+addpacket(0xf5, 17, "useitem", 6, 12); 
+addpacket(0xf7, 10, "ticksend", 6); 
+addpacket(0x113, 16, "movetokafra", 5, 12); 
+addpacket(0x116, 2, "closekafra", 0); 
+addpacket(0x190, 26, "movefromkafra", 10, 22); 
+addpacket(0x193, 9, "actionrequest", 3, 8); 
+#endif
+
+#if PACKETVER > 20040809
+// packet_ver: 9
+addpacket(0x72, 17, "dropitem", 8, 15); 
+addpacket(0x7e, 37, "wanttoconnection", 9, 21, 28, 32, 36); 
+addpacket(0x85, 26, "useskilltoid", 11, 18, 22); 
+addpacket(0x89, 12, "getcharnamerequest", 8); 
+addpacket(0x8c, 40, "useskilltopos", 5, 15, 29, 38); 
+addpacket(0x94, 13, "takeitem", 9); 
+addpacket(0x9b, 15, "walktoxy", 12); 
+addpacket(0x9f, 12, "changedir", 7, 11); 
+addpacket(0xa2, 120, "useskilltoposinfo", 5, 15, 29, 38, 40); 
+addpacket(0xa7, 11, "solvecharname", 7); 
+addpacket(0xf5, 24, "useitem", 9, 20); 
+addpacket(0xf7, 13, "ticksend", 9); 
+addpacket(0x113, 23, "movetokafra", 5, 19); 
+addpacket(0x190, 26, "movefromkafra", 11, 22); 
+addpacket(0x193, 18, "actionrequest", 7, 17); 
+#endif
+
+#if PACKETVER > 20040816
+addpacket(0x212, 26, "rc", 2); 
+addpacket(0x213, 26, "check", 2); 
+addpacket(0x214, 42, NULL); 
+#endif
+
+#if PACKETVER > 20040817
+addpacket(0x20f, 10, "pvpinfo", 2, 6); 
+addpacket(0x210, 22, NULL); 
+#endif
+
+#if PACKETVER > 20040906
+// packet_ver: 10
+addpacket(0x72, 20, "useitem", 9, 20); 
+addpacket(0x7e, 19, "movetokafra", 3, 15); 
+addpacket(0x85, 23, "actionrequest", 9, 22); 
+addpacket(0x89, 9, "walktoxy", 6); 
+addpacket(0x8c, 105, "useskilltoposinfo", 10, 14, 18, 23, 25); 
+addpacket(0x94, 17, "dropitem", 6, 15); 
+addpacket(0x9b, 14, "getcharnamerequest", 10); 
+addpacket(0x9f, -1, "globalmessage", 2, 4); 
+addpacket(0xa2, 14, "solvecharname", 10); 
+addpacket(0xa7, 25, "useskilltopos", 10, 14, 18, 23); 
+addpacket(0xf3, 10, "changedir", 4, 9); 
+addpacket(0xf5, 34, "wanttoconnection", 7, 15, 25, 29, 33); 
+addpacket(0xf7, 2, "closekafra", 0); 
+addpacket(0x113, 11, "takeitem", 7); 
+addpacket(0x116, 11, "ticksend", 7); 
+addpacket(0x190, 22, "useskilltoid", 9, 15, 18); 
+addpacket(0x193, 17, "movefromkafra", 3, 13); 
+#endif
+
+#if PACKETVER > 20040920
+// packet_ver: 11
+addpacket(0x72, 18, "useitem", 10, 14); 
+addpacket(0x7e, 25, "movetokafra", 6, 21); 
+addpacket(0x85, 9, "actionrequest", 3, 8); 
+addpacket(0x89, 14, "walktoxy", 11); 
+addpacket(0x8c, 109, "useskilltoposinfo", 16, 20, 23, 27, 29); 
+addpacket(0x94, 19, "dropitem", 12, 17); 
+addpacket(0x9b, 10, "getcharnamerequest", 6); 
+addpacket(0xa2, 10, "solvecharname", 6); 
+addpacket(0xa7, 29, "useskilltopos", 6, 20, 23, 27); 
+addpacket(0xf3, 18, "changedir", 8, 17); 
+addpacket(0xf5, 32, "wanttoconnection", 10, 17, 23, 27, 31); 
+addpacket(0x113, 14, "takeitem", 10); 
+addpacket(0x116, 14, "ticksend", 10); 
+addpacket(0x190, 14, "useskilltoid", 4, 7, 10); 
+addpacket(0x193, 12, "movefromkafra", 4, 8); 
+#endif
+
+#if PACKETVER > 20041005
+// packet_ver: 12
+addpacket(0x72, 17, "useitem", 6, 13); 
+addpacket(0x7e, 16, "movetokafra", 5, 12); 
+addpacket(0x89, 6, "walktoxy", 3); 
+addpacket(0x8c, 103, "useskilltoposinfo", 2, 6, 17, 21, 23); 
+addpacket(0x94, 14, "dropitem", 5, 12); 
+addpacket(0x9b, 15, "getcharnamerequest", 11); 
+addpacket(0xa2, 12, "solvecharname", 8); 
+addpacket(0xa7, 23, "useskilltopos", 3, 6, 17, 21); 
+addpacket(0xf3, 13, "changedir", 5, 12); 
+addpacket(0xf5, 33, "wanttoconnection", 12, 18, 24, 28, 32); 
+addpacket(0x113, 10, "takeitem", 6); 
+addpacket(0x116, 10, "ticksend", 6); 
+addpacket(0x190, 20, "useskilltoid", 7, 12, 16); 
+addpacket(0x193, 26, "movefromkafra", 10, 22); 
+#endif
+
+#if PACKETVER > 20041025
+// packet_ver: 13
+addpacket(0x72, 13, "useitem", 5, 9); 
+addpacket(0x7e, 13, "movetokafra", 6, 9); 
+addpacket(0x85, 15, "actionrequest", 4, 14); 
+addpacket(0x8c, 108, "useskilltoposinfo", 6, 9, 23, 26, 28); 
+addpacket(0x94, 12, "dropitem", 6, 10); 
+addpacket(0x9b, 10, "getcharnamerequest", 6); 
+addpacket(0xa2, 16, "solvecharname", 12); 
+addpacket(0xa7, 28, "useskilltopos", 6, 9, 23, 26); 
+addpacket(0xf3, 15, "changedir", 6, 14); 
+addpacket(0xf5, 29, "wanttoconnection", 5, 14, 20, 24, 28); 
+addpacket(0x113, 9, "takeitem", 5); 
+addpacket(0x116, 9, "ticksend", 5); 
+addpacket(0x190, 26, "useskilltoid", 4, 10, 22); 
+addpacket(0x193, 22, "movefromkafra", 12, 18); 
+#endif
+
+#if PACKETVER > 20041101
+addpacket(0x84, -1, NULL); 
+addpacket(0x215, 6, NULL); 
+#endif
+
+#if PACKETVER > 20041108
+addpacket(0x84, 2, NULL); 
+addpacket(0x216, 6, NULL); 
+addpacket(0x217, 2, "blacksmith", 0); 
+addpacket(0x218, 2, "alchemist", 0); 
+addpacket(0x219, 282, NULL); 
+addpacket(0x21a, 282, NULL); 
+addpacket(0x21b, 10, NULL); 
+addpacket(0x21c, 10, NULL); 
+#endif
+
+#if PACKETVER > 20041115
+addpacket(0x21d, 6, "lesseffect", 2); 
+#endif
+
+#if PACKETVER > 20041129
+// packet_ver: 14
+addpacket(0x72, 22, "useskilltoid", 8, 12, 18); 
+addpacket(0x7e, 30, "useskilltopos", 4, 9, 22, 28); 
+addpacket(0x85, -1, "globalmessage", 2, 4); 
+addpacket(0x89, 7, "ticksend", 3); 
+addpacket(0x8c, 13, "getcharnamerequest", 9); 
+addpacket(0x94, 14, "movetokafra", 4, 10); 
+addpacket(0x9b, 2, "closekafra", 0); 
+addpacket(0x9f, 18, "actionrequest", 6, 17); 
+addpacket(0xa2, 7, "takeitem", 3); 
+addpacket(0xa7, 7, "walktoxy", 4); 
+addpacket(0xf3, 8, "changedir", 3, 7); 
+addpacket(0xf5, 29, "wanttoconnection", 3, 10, 20, 24, 28); 
+addpacket(0xf7, 14, "solvecharname", 10); 
+addpacket(0x113, 110, "useskilltoposinfo", 4, 9, 22, 28, 30); 
+addpacket(0x116, 12, "dropitem", 4, 10); 
+addpacket(0x190, 15, "useitem", 3, 11); 
+addpacket(0x193, 21, "movefromkafra", 4, 17); 
+addpacket(0x221, -1, NULL); 
+addpacket(0x222, 6, "weaponrefine", 2); 
+addpacket(0x223, 8, NULL); 
+#endif
+
+#if PACKETVER > 20041213
+// skipped: many packets being set to -1
+addpacket(0x66, 3, NULL); 
+addpacket(0x70, 3, NULL); 
+addpacket(0x1ca, 3, NULL); 
+addpacket(0x21e, 6, NULL); 
+addpacket(0x21f, 66, NULL); 
+addpacket(0x220, 10, NULL); 
+#endif
+
+#if PACKETVER > 20050110
+// packet_ver: 15
+addpacket(0x72, 26, "useskilltoid", 8, 16, 22); 
+addpacket(0x7e, 114, "useskilltoposinfo", 10, 18, 22, 32, 34); 
+addpacket(0x85, 23, "changedir", 12, 22); 
+addpacket(0x89, 9, "ticksend", 5); 
+addpacket(0x8c, 8, "getcharnamerequest", 4); 
+addpacket(0x94, 20, "movetokafra", 10, 16); 
+addpacket(0x9b, 32, "wanttoconnection", 3, 12, 23, 27, 31); 
+addpacket(0x9f, 17, "useitem", 5, 13); 
+addpacket(0xa2, 11, "solvecharname", 7); 
+addpacket(0xa7, 13, "walktoxy", 10); 
+addpacket(0xf3, -1, "globalmessage", 2, 4); 
+addpacket(0xf5, 9, "takeitem", 5); 
+addpacket(0xf7, 21, "movefromkafra", 11, 17); 
+addpacket(0x113, 34, "useskilltopos", 10, 18, 22, 32); 
+addpacket(0x116, 20, "dropitem", 15, 18); 
+addpacket(0x190, 20, "actionrequest", 9, 19); 
+addpacket(0x193, 2, "closekafra", 0); 
+#endif
+
+#if PACKETVER > 20050328
+addpacket(0x224, 10, NULL); 
+addpacket(0x225, 2, "taekwon", 0); 
+addpacket(0x226, 282, NULL); 
+#endif
+
+#if PACKETVER > 20050404
+addpacket(0x227, 18, NULL); 
+addpacket(0x228, 18, NULL); 
+#endif
+
+#if PACKETVER > 20050411
+addpacket(0x229, 15, NULL); 
+addpacket(0x22a, 58, NULL); 
+addpacket(0x22b, 57, NULL); 
+addpacket(0x22c, 64, NULL); 
+#endif
+
+#if PACKETVER > 20050425
+addpacket(0x22d, 5, "hommenu", 2, 4); 
+addpacket(0x232, 9, "hommoveto", 2, 6); 
+addpacket(0x233, 11, "homattack", 2, 6, 10); 
+addpacket(0x234, 6, "hommovetomaster", 2); 
+#endif
+
+#if PACKETVER > 20050509
+// packet_ver: 16
+addpacket(0x72, 25, "useskilltoid", 6, 10, 21); 
+addpacket(0x7e, 102, "useskilltoposinfo", 5, 9, 12, 20, 22); 
+addpacket(0x85, 11, "changedir", 7, 10); 
+addpacket(0x89, 8, "ticksend", 4); 
+addpacket(0x8c, 11, "getcharnamerequest", 7); 
+addpacket(0x94, 14, "movetokafra", 7, 10); 
+addpacket(0x9b, 26, "wanttoconnection", 4, 9, 17, 21, 25); 
+addpacket(0x9f, 14, "useitem", 4, 10); 
+addpacket(0xa2, 15, "solvecharname", 11); 
+addpacket(0xa7, 8, "walktoxy", 5); 
+addpacket(0xf5, 8, "takeitem", 4); 
+addpacket(0xf7, 22, "movefromkafra", 14, 18); 
+addpacket(0x113, 22, "useskilltopos", 5, 9, 12, 20); 
+addpacket(0x116, 10, "dropitem", 5, 8); 
+addpacket(0x190, 19, "actionrequest", 5, 18); 
+#endif
+
+#if PACKETVER > 20050523
+addpacket(0x22e, 69, NULL); 
+addpacket(0x230, 12, NULL); 
+#endif
+
+#if PACKETVER > 20050530
+addpacket(0x22e, 71, NULL); 
+addpacket(0x235, -1, NULL); 
+addpacket(0x236, 10, NULL); 
+addpacket(0x237, 2, "rankingpk", 0); 
+addpacket(0x238, 282, NULL); 
+#endif
+
+#if PACKETVER > 20050531
+addpacket(0x216, 2, NULL); 
+addpacket(0x239, 11, NULL); 
+#endif
+
+#if PACKETVER > 20050608
+addpacket(0x216, 6, NULL); 
+addpacket(0x217, 2, "blacksmith", 0); 
+addpacket(0x22f, 5, NULL); 
+addpacket(0x231, 26, "changehomunculusname", 0); 
+addpacket(0x23a, 4, NULL); 
+addpacket(0x23b, 36, "storagepassword", 2, 4, 20); 
+addpacket(0x23c, 6, NULL); 
+#endif
+
+#if PACKETVER > 20050622
+addpacket(0x22e, 71, NULL); 
+#endif
+
+#if PACKETVER > 20050628
+// packet_ver: 17
+addpacket(0x72, 34, "useskilltoid", 6, 17, 30); 
+addpacket(0x7e, 113, "useskilltoposinfo", 12, 15, 18, 31, 33); 
+addpacket(0x85, 17, "changedir", 8, 16); 
+addpacket(0x89, 13, "ticksend", 9); 
+addpacket(0x8c, 8, "getcharnamerequest", 4); 
+addpacket(0x94, 31, "movetokafra", 16, 27); 
+addpacket(0x9b, 32, "wanttoconnection", 9, 15, 23, 27, 31); 
+addpacket(0x9f, 19, "useitem", 9, 15); 
+addpacket(0xa2, 9, "solvecharname", 5); 
+addpacket(0xa7, 11, "walktoxy", 8); 
+addpacket(0xf5, 13, "takeitem", 9); 
+addpacket(0xf7, 18, "movefromkafra", 11, 14); 
+addpacket(0x113, 33, "useskilltopos", 12, 15, 18, 31); 
+addpacket(0x116, 12, "dropitem", 3, 10); 
+addpacket(0x190, 24, "actionrequest", 11, 23); 
+addpacket(0x216, -1, NULL); 
+addpacket(0x23d, -1, NULL); 
+addpacket(0x23e, 4, NULL); 
+#endif
+
+#if PACKETVER > 20050718
+// packet_ver: 18
+addpacket(0x72, 19, "useskilltoid", 5, 11, 15); 
+addpacket(0x7e, 110, "useskilltoposinfo", 9, 15, 23, 28, 30); 
+addpacket(0x85, 11, "changedir", 6, 10); 
+addpacket(0x89, 7, "ticksend", 3); 
+addpacket(0x8c, 11, "getcharnamerequest", 7); 
+addpacket(0x94, 21, "movetokafra", 12, 17); 
+addpacket(0x9b, 31, "wanttoconnection", 3, 13, 22, 26, 30); 
+addpacket(0x9f, 12, "useitem", 3, 8); 
+addpacket(0xa2, 18, "solvecharname", 14); 
+addpacket(0xa7, 15, "walktoxy", 12); 
+addpacket(0xf5, 7, "takeitem", 3); 
+addpacket(0xf7, 13, "movefromkafra", 5, 9); 
+addpacket(0x113, 30, "useskilltopos", 9, 15, 23, 28); 
+addpacket(0x116, 12, "dropitem", 6, 10); 
+addpacket(0x190, 21, "actionrequest", 5, 20); 
+addpacket(0x216, 6, NULL); 
+addpacket(0x23f, 2, "mailrefresh", 0); 
+addpacket(0x240, 8, NULL); 
+addpacket(0x241, 6, "mailread", 2); 
+addpacket(0x242, -1, NULL); 
+addpacket(0x243, 6, "maildelete", 2); 
+addpacket(0x244, 6, "mailgetattach", 2); 
+addpacket(0x245, 7, NULL); 
+addpacket(0x246, 4, "mailwinopen", 2); 
+addpacket(0x247, 8, "mailsetattach", 2, 4); 
+addpacket(0x248, 68, NULL); 
+addpacket(0x249, 3, NULL); 
+addpacket(0x24a, 70, NULL); 
+addpacket(0x24b, 4, "auctioncancelreg", 0); 
+addpacket(0x24c, 8, "auctionsetitem", 0); 
+addpacket(0x24d, 14, NULL); 
+addpacket(0x24e, 6, "auctioncancel", 0); 
+addpacket(0x24f, 10, "auctionbid", 0); 
+addpacket(0x250, 3, NULL); 
+addpacket(0x251, 2, NULL); 
+addpacket(0x252, -1, NULL); 
+#endif
+
+#if PACKETVER > 20050719
+// packet_ver: 19
+addpacket(0x72, 34, "useskilltoid", 6, 17, 30); 
+addpacket(0x7e, 113, "useskilltoposinfo", 12, 15, 18, 31, 33); 
+addpacket(0x85, 17, "changedir", 8, 16); 
+addpacket(0x89, 13, "ticksend", 9); 
+addpacket(0x8c, 8, "getcharnamerequest", 4); 
+addpacket(0x94, 31, "movetokafra", 16, 27); 
+addpacket(0x9b, 32, "wanttoconnection", 9, 15, 23, 27, 31); 
+addpacket(0x9f, 19, "useitem", 9, 15); 
+addpacket(0xa2, 9, "solvecharname", 5); 
+addpacket(0xa7, 11, "walktoxy", 8); 
+addpacket(0xf5, 13, "takeitem", 9); 
+addpacket(0xf7, 18, "movefromkafra", 11, 14); 
+addpacket(0x113, 33, "useskilltopos", 12, 15, 18, 31); 
+addpacket(0x116, 12, "dropitem", 3, 10); 
+addpacket(0x190, 24, "actionrequest", 11, 23); 
+#endif
+
+#if PACKETVER > 20050801
+addpacket(0x245, 3, NULL); 
+addpacket(0x251, 4, NULL); 
+#endif
+
+#if PACKETVER > 20050808
+addpacket(0x24d, 12, "auctionregister", 0); 
+addpacket(0x24e, 4, NULL); 
+#endif
+
+#if PACKETVER > 20050817
+addpacket(0x253, 3, NULL); 
+addpacket(0x254, 3, "feelsaveok", 0); 
+#endif
+
+#if PACKETVER > 20050829
+addpacket(0x240, -1, NULL); 
+addpacket(0x248, -1, "mailsend", 2, 4, 28, 68); 
+addpacket(0x255, 5, NULL); 
+addpacket(0x256, -1, NULL); 
+addpacket(0x257, 8, NULL); 
+#endif
+
+#if PACKETVER > 20050912
+addpacket(0x256, 5, NULL); 
+addpacket(0x258, 2, NULL); 
+addpacket(0x259, 3, NULL); 
+#endif
+
+#if PACKETVER > 20051010
+addpacket(0x20e, 32, NULL); 
+addpacket(0x25a, -1, NULL); 
+addpacket(0x25b, 6, "cooking", 0); 
+#endif
+
+#if PACKETVER > 20051013
+addpacket(0x7a, 6, NULL); 
+addpacket(0x251, 32, NULL); 
+addpacket(0x25c, 4, "auctionbuysell", 0); 
+#endif
+
+#if PACKETVER > 20051017
+addpacket(0x7a, 58, NULL); 
+addpacket(0x25d, 6, "auctionclose", 0); 
+addpacket(0x25e, 4, NULL); 
+#endif
+
+#if PACKETVER > 20051024
+addpacket(0x25f, 6, NULL); 
+addpacket(0x260, 6, NULL); 
+#endif
+
+#if PACKETVER > 20051107
+addpacket(0x24e, 6, "auctioncancel", 0); 
+addpacket(0x251, 34, "auctionsearch", 0); 
+#endif
+
+#if PACKETVER > 20060109
+addpacket(0x261, 11, NULL); 
+addpacket(0x262, 11, NULL); 
+addpacket(0x263, 11, NULL); 
+addpacket(0x264, 20, NULL); 
+addpacket(0x265, 20, NULL); 
+addpacket(0x266, 30, NULL); 
+addpacket(0x267, 4, NULL); 
+addpacket(0x268, 4, NULL); 
+addpacket(0x269, 4, NULL); 
+addpacket(0x26a, 4, NULL); 
+addpacket(0x26b, 4, NULL); 
+addpacket(0x26c, 4, NULL); 
+addpacket(0x26d, 4, NULL); 
+addpacket(0x26f, 2, NULL); 
+addpacket(0x270, 2, NULL); 
+addpacket(0x271, 38, NULL); 
+addpacket(0x272, 44, NULL); 
+#endif
+
+#if PACKETVER > 20060126
+addpacket(0x271, 40, NULL); 
+#endif
+
+#if PACKETVER > 20060306
+addpacket(0x273, 6, NULL); 
+addpacket(0x274, 8, NULL); 
+#endif
+
+#if PACKETVER > 20060313
+addpacket(0x273, 30, "mailreturn", 2, 6); 
+#endif
+
+#if PACKETVER > 20060327
+// packet_ver: 20
+addpacket(0x72, 26, "useskilltoid", 11, 18, 22); 
+addpacket(0x7e, 120, "useskilltoposinfo", 5, 15, 29, 38, 40); 
+addpacket(0x85, 12, "changedir", 7, 11); 
+// addpacket(0x89, 13, "ticksend", 9); 
+addpacket(0x8c, 12, "getcharnamerequest", 8); 
+addpacket(0x94, 23, "movetokafra", 5, 19); 
+addpacket(0x9b, 37, "wanttoconnection", 9, 21, 28, 32, 36); 
+addpacket(0x9f, 24, "useitem", 9, 20); 
+addpacket(0xa2, 11, "solvecharname", 7); 
+addpacket(0xa7, 15, "walktoxy", 12); 
+addpacket(0xf5, 13, "takeitem", 9); 
+addpacket(0xf7, 26, "movefromkafra", 11, 22); 
+addpacket(0x113, 40, "useskilltopos", 5, 15, 29, 38); 
+addpacket(0x116, 17, "dropitem", 8, 15); 
+addpacket(0x190, 18, "actionrequest", 7, 17); 
+#endif
+
+#if PACKETVER > 20061023
+addpacket(0x6d, 110, NULL); 
+#endif
+
+#if PACKETVER > 20060424
+addpacket(0x23e, 8, NULL); 
+addpacket(0x277, 84, NULL); 
+addpacket(0x278, 2, NULL); 
+addpacket(0x279, 2, NULL); 
+addpacket(0x27a, -1, NULL); 
+addpacket(0x27b, 14, NULL); 
+addpacket(0x27c, 60, NULL); 
+addpacket(0x27d, 62, NULL); 
+addpacket(0x27e, -1, NULL); 
+addpacket(0x27f, 8, NULL); 
+addpacket(0x280, 12, NULL); 
+addpacket(0x281, 4, NULL); 
+addpacket(0x282, 284, NULL); 
+addpacket(0x283, 6, NULL); 
+addpacket(0x284, 14, NULL); 
+addpacket(0x285, 6, NULL); 
+addpacket(0x286, 4, NULL); 
+addpacket(0x287, -1, NULL); 
+addpacket(0x288, 6, NULL); 
+addpacket(0x289, 8, NULL); 
+addpacket(0x28a, 18, NULL); 
+addpacket(0x28b, -1, NULL); 
+addpacket(0x28c, 46, NULL); 
+addpacket(0x28d, 34, NULL); 
+addpacket(0x28e, 4, NULL); 
+addpacket(0x28f, 6, NULL); 
+addpacket(0x290, 4, NULL); 
+addpacket(0x291, 4, NULL); 
+addpacket(0x292, 2, "autorevive", 0); 
+addpacket(0x293, 70, NULL); 
+addpacket(0x294, 10, NULL); 
+addpacket(0x295, -1, NULL); 
+addpacket(0x296, -1, NULL); 
+addpacket(0x297, -1, NULL); 
+addpacket(0x298, 8, NULL); 
+addpacket(0x299, 6, NULL); 
+addpacket(0x29a, 27, NULL); 
+addpacket(0x29c, 66, NULL); 
+addpacket(0x29d, -1, NULL); 
+addpacket(0x29e, 11, NULL); 
+addpacket(0x29f, 3, "mermenu", 0); 
+addpacket(0x2a0, -1, NULL); 
+addpacket(0x2a1, -1, NULL); 
+addpacket(0x2a2, 8, NULL); 
+#endif
+
+#if PACKETVER > 20070108
+// packet_ver: 21
+addpacket(0x72, 30, "useskilltoid", 10, 14, 26); 
+addpacket(0x7e, 120, "useskilltoposinfo", 10, 19, 23, 38, 40); 
+addpacket(0x85, 14, "changedir", 10, 13); 
+addpacket(0x89, 11, "ticksend", 7); 
+addpacket(0x8c, 17, "getcharnamerequest", 13); 
+addpacket(0x94, 17, "movetokafra", 4, 13); 
+addpacket(0x9b, 35, "wanttoconnection", 7, 21, 26, 30, 34); 
+addpacket(0x9f, 21, "useitem", 7, 17); 
+addpacket(0xa2, 10, "solvecharname", 6); 
+addpacket(0xa7, 8, "walktoxy", 5); 
+addpacket(0xf5, 11, "takeitem", 7); 
+addpacket(0xf7, 15, "movefromkafra", 3, 11); 
+addpacket(0x113, 40, "useskilltopos", 10, 19, 23, 38); 
+addpacket(0x116, 19, "dropitem", 11, 17); 
+addpacket(0x190, 10, "actionrequest", 4, 9); 
+#endif
+
+#if PACKETVER > 20070122
+addpacket(0x2a3, 18, NULL); 
+addpacket(0x2a4, 2, NULL); 
+#endif
+
+#if PACKETVER > 20070129
+addpacket(0x29b, 72, NULL); 
+addpacket(0x2a3, -1, NULL); 
+addpacket(0x2a4, -1, NULL); 
+addpacket(0x2a5, 8, NULL); 
+#endif
+
+#if PACKETVER > 20070205
+addpacket(0x2aa, 4, NULL); 
+addpacket(0x2ab, 36, NULL); 
+addpacket(0x2ac, 6, NULL); 
+#endif
+
+#if PACKETVER > 20070212
+// packet_ver: 22
+addpacket(0x72, 25, "useskilltoid", 6, 10, 21); 
+addpacket(0x7e, 102, "useskilltoposinfo", 5, 9, 12, 20, 22); 
+addpacket(0x85, 11, "changedir", 7, 10); 
+addpacket(0x89, 8, "ticksend", 4); 
+addpacket(0x8c, 11, "getcharnamerequest", 7); 
+addpacket(0x94, 14, "movetokafra", 7, 10); 
+addpacket(0x9b, 26, "wanttoconnection", 4, 9, 17, 21, 25); 
+addpacket(0x9f, 14, "useitem", 4, 10); 
+addpacket(0xa2, 15, "solvecharname", 11); 
+// addpacket(0xa7, 8, "walktoxy", 5); 
+addpacket(0xf5, 8, "takeitem", 4); 
+addpacket(0xf7, 22, "movefromkafra", 14, 18); 
+addpacket(0x113, 22, "useskilltopos", 5, 9, 12, 20); 
+addpacket(0x116, 10, "dropitem", 5, 8); 
+addpacket(0x190, 19, "actionrequest", 5, 18); 
+#endif
+
+#if PACKETVER > 20070507
+addpacket(0x1fd, 15, "repairitem", 2); 
+#endif
+
+#if PACKETVER > 20070227
+addpacket(0x288, 10, "cashshopbuy", 2, 4, 6); 
+addpacket(0x289, 12, NULL); 
+addpacket(0x2a6, 22, NULL); 
+addpacket(0x2a7, 22, NULL); 
+addpacket(0x2a8, 162, NULL); 
+addpacket(0x2a9, 58, NULL); 
+addpacket(0x2ad, 8, NULL); 
+addpacket(0x2b0, 85, NULL); 
+addpacket(0x2b1, -1, NULL); 
+addpacket(0x2b2, -1, NULL); 
+addpacket(0x2b3, 107, NULL); 
+addpacket(0x2b4, 6, NULL); 
+addpacket(0x2b5, -1, NULL); 
+addpacket(0x2b6, 7, "queststate", 2, 6); 
+addpacket(0x2b7, 7, NULL); 
+addpacket(0x2b8, 22, NULL); 
+addpacket(0x2b9, 191, NULL); 
+addpacket(0x2ba, 11, "hotkey", 2, 4, 5, 9); 
+addpacket(0x2bb, 8, NULL); 
+addpacket(0x2bc, 6, NULL); 
+addpacket(0x2bf, 10, NULL); 
+addpacket(0x2c0, 2, NULL); 
+addpacket(0x2c1, -1, NULL); 
+addpacket(0x2c2, -1, NULL); 
+addpacket(0x2c4, 26, "partyinvite2", 2); 
+addpacket(0x2c5, 30, NULL); 
+addpacket(0x2c6, 30, NULL); 
+addpacket(0x2c7, 7, "replypartyinvite2", 2, 6); 
+addpacket(0x2c8, 3, NULL); 
+addpacket(0x2c9, 3, NULL); 
+addpacket(0x2ca, 3, NULL); 
+addpacket(0x2cb, 20, NULL); 
+addpacket(0x2cc, 4, NULL); 
+addpacket(0x2cd, 26, NULL); 
+addpacket(0x2ce, 10, NULL); 
+addpacket(0x2cf, 6, NULL); 
+addpacket(0x2d0, -1, NULL); 
+addpacket(0x2d1, -1, NULL); 
+addpacket(0x2d2, -1, NULL); 
+addpacket(0x2d3, 4, NULL); 
+addpacket(0x2d4, 29, NULL); 
+addpacket(0x2d5, 2, NULL); 
+addpacket(0x2d6, 6, "viewplayerequip", 2); 
+addpacket(0x2d7, -1, NULL); 
+addpacket(0x2d8, 10, "equiptickbox", 6); 
+addpacket(0x2d9, 10, NULL); 
+addpacket(0x2da, 3, NULL); 
+addpacket(0x2db, -1, "battlechat", 2, 4); 
+addpacket(0x2dc, -1, NULL); 
+addpacket(0x2dd, 32, NULL); 
+addpacket(0x2de, 6, NULL); 
+addpacket(0x2df, 36, NULL); 
+addpacket(0x2e0, 34, NULL); 
+#endif
+
+#if PACKETVER > 20071023
+addpacket(0x2cb, 65, NULL); 
+addpacket(0x2cd, 71, NULL); 
+#endif
+
+#if PACKETVER > 20071106
+addpacket(0x78, 55, NULL); 
+addpacket(0x7c, 42, NULL); 
+addpacket(0x22c, 65, NULL); 
+addpacket(0x29b, 80, NULL); 
+#endif
+
+#if PACKETVER > 20071113
+addpacket(0x2e1, 33, NULL); 
+#endif
+
+#if PACKETVER > 20071120
+// 0x01df,10 <- ???
+addpacket(0x2e2, 14, NULL); 
+addpacket(0x2e3, 25, NULL); 
+addpacket(0x2e4, 8, NULL); 
+addpacket(0x2e5, 8, NULL); 
+addpacket(0x2e6, 6, NULL); 
+#endif
+
+#if PACKETVER > 20071127
+addpacket(0x2e7, -1, NULL); 
+#endif
+
+#if PACKETVER > 20080102
+addpacket(0x1df, 6, "gmreqaccname", 2); 
+addpacket(0x2e8, -1, NULL); 
+addpacket(0x2e9, -1, NULL); 
+addpacket(0x2ea, -1, NULL); 
+addpacket(0x2eb, 13, NULL); 
+addpacket(0x2ec, 67, NULL); 
+addpacket(0x2ed, 59, NULL); 
+addpacket(0x2ee, 60, NULL); 
+addpacket(0x2ef, 8, NULL); 
+#endif
+
+#if PACKETVER > 20080318
+addpacket(0x2bf, -1, NULL); 
+addpacket(0x2c0, -1, NULL); 
+addpacket(0x2f0, 10, NULL); 
+addpacket(0x2f1, 2, "progressbar", 0); 
+addpacket(0x2f2, 2, NULL); 
+#endif
+
+#if PACKETVER > 20080325
+addpacket(0x2f3, -1, NULL); 
+addpacket(0x2f4, -1, NULL); 
+addpacket(0x2f5, -1, NULL); 
+addpacket(0x2f6, -1, NULL); 
+addpacket(0x2f7, -1, NULL); 
+addpacket(0x2f8, -1, NULL); 
+addpacket(0x2f9, -1, NULL); 
+addpacket(0x2fa, -1, NULL); 
+addpacket(0x2fb, -1, NULL); 
+addpacket(0x2fc, -1, NULL); 
+addpacket(0x2fd, -1, NULL); 
+addpacket(0x2fe, -1, NULL); 
+addpacket(0x2ff, -1, NULL); 
+addpacket(0x300, -1, NULL); 
+#endif
+
+#if PACKETVER > 20080401
+addpacket(0x301, -1, NULL); 
+addpacket(0x302, -1, NULL); 
+addpacket(0x303, -1, NULL); 
+addpacket(0x304, -1, NULL); 
+addpacket(0x305, -1, NULL); 
+addpacket(0x306, -1, NULL); 
+addpacket(0x307, -1, NULL); 
+addpacket(0x308, -1, NULL); 
+addpacket(0x309, -1, NULL); 
+addpacket(0x30a, -1, NULL); 
+addpacket(0x30b, -1, NULL); 
+addpacket(0x30c, -1, NULL); 
+addpacket(0x30d, -1, NULL); 
+addpacket(0x30e, -1, NULL); 
+addpacket(0x30f, -1, NULL); 
+addpacket(0x310, -1, NULL); 
+addpacket(0x311, -1, NULL); 
+addpacket(0x312, -1, NULL); 
+addpacket(0x313, -1, NULL); 
+addpacket(0x314, -1, NULL); 
+addpacket(0x315, -1, NULL); 
+addpacket(0x316, -1, NULL); 
+addpacket(0x317, -1, NULL); 
+addpacket(0x318, -1, NULL); 
+addpacket(0x319, -1, NULL); 
+addpacket(0x31a, -1, NULL); 
+addpacket(0x31b, -1, NULL); 
+addpacket(0x31c, -1, NULL); 
+addpacket(0x31d, -1, NULL); 
+addpacket(0x31e, -1, NULL); 
+addpacket(0x31f, -1, NULL); 
+addpacket(0x320, -1, NULL); 
+addpacket(0x321, -1, NULL); 
+addpacket(0x322, -1, NULL); 
+addpacket(0x323, -1, NULL); 
+addpacket(0x324, -1, NULL); 
+addpacket(0x325, -1, NULL); 
+addpacket(0x326, -1, NULL); 
+addpacket(0x327, -1, NULL); 
+addpacket(0x328, -1, NULL); 
+addpacket(0x329, -1, NULL); 
+addpacket(0x32a, -1, NULL); 
+addpacket(0x32b, -1, NULL); 
+addpacket(0x32c, -1, NULL); 
+addpacket(0x32d, -1, NULL); 
+addpacket(0x32e, -1, NULL); 
+addpacket(0x32f, -1, NULL); 
+addpacket(0x330, -1, NULL); 
+addpacket(0x331, -1, NULL); 
+addpacket(0x332, -1, NULL); 
+addpacket(0x333, -1, NULL); 
+addpacket(0x334, -1, NULL); 
+addpacket(0x335, -1, NULL); 
+addpacket(0x336, -1, NULL); 
+addpacket(0x337, -1, NULL); 
+addpacket(0x338, -1, NULL); 
+addpacket(0x339, -1, NULL); 
+addpacket(0x33a, -1, NULL); 
+addpacket(0x33b, -1, NULL); 
+addpacket(0x33c, -1, NULL); 
+addpacket(0x33d, -1, NULL); 
+addpacket(0x33e, -1, NULL); 
+addpacket(0x33f, -1, NULL); 
+addpacket(0x340, -1, NULL); 
+addpacket(0x341, -1, NULL); 
+addpacket(0x342, -1, NULL); 
+addpacket(0x343, -1, NULL); 
+addpacket(0x344, -1, NULL); 
+addpacket(0x345, -1, NULL); 
+addpacket(0x346, -1, NULL); 
+addpacket(0x347, -1, NULL); 
+addpacket(0x348, -1, NULL); 
+addpacket(0x349, -1, NULL); 
+addpacket(0x34a, -1, NULL); 
+addpacket(0x34b, -1, NULL); 
+addpacket(0x34c, -1, NULL); 
+addpacket(0x34d, -1, NULL); 
+addpacket(0x34e, -1, NULL); 
+addpacket(0x34f, -1, NULL); 
+addpacket(0x350, -1, NULL); 
+addpacket(0x351, -1, NULL); 
+addpacket(0x352, -1, NULL); 
+addpacket(0x353, -1, NULL); 
+addpacket(0x354, -1, NULL); 
+addpacket(0x355, -1, NULL); 
+addpacket(0x356, -1, NULL); 
+addpacket(0x357, -1, NULL); 
+addpacket(0x358, -1, NULL); 
+addpacket(0x359, -1, NULL); 
+addpacket(0x35a, -1, NULL); 
+#endif
+
+#if PACKETVER > 20080527
+addpacket(0x35b, -1, NULL); 
+addpacket(0x35c, 2, NULL); 
+addpacket(0x35d, -1, NULL); 
+addpacket(0x35e, 2, NULL); 
+addpacket(0x35f, -1, NULL); 
+addpacket(0x389, -1, NULL); 
+#endif
+
+#if PACKETVER > 20080820
+addpacket(0x40c, -1, NULL); 
+addpacket(0x40d, -1, NULL); 
+addpacket(0x40e, -1, NULL); 
+addpacket(0x40f, -1, NULL); 
+addpacket(0x410, -1, NULL); 
+addpacket(0x411, -1, NULL); 
+addpacket(0x412, -1, NULL); 
+addpacket(0x413, -1, NULL); 
+addpacket(0x414, -1, NULL); 
+addpacket(0x415, -1, NULL); 
+addpacket(0x416, -1, NULL); 
+addpacket(0x417, -1, NULL); 
+addpacket(0x418, -1, NULL); 
+addpacket(0x419, -1, NULL); 
+addpacket(0x41a, -1, NULL); 
+addpacket(0x41b, -1, NULL); 
+addpacket(0x41c, -1, NULL); 
+addpacket(0x41d, -1, NULL); 
+addpacket(0x41e, -1, NULL); 
+addpacket(0x41f, -1, NULL); 
+addpacket(0x420, -1, NULL); 
+addpacket(0x421, -1, NULL); 
+addpacket(0x422, -1, NULL); 
+addpacket(0x423, -1, NULL); 
+addpacket(0x424, -1, NULL); 
+addpacket(0x425, -1, NULL); 
+addpacket(0x426, -1, NULL); 
+addpacket(0x427, -1, NULL); 
+addpacket(0x428, -1, NULL); 
+addpacket(0x429, -1, NULL); 
+addpacket(0x42a, -1, NULL); 
+addpacket(0x42b, -1, NULL); 
+addpacket(0x42c, -1, NULL); 
+addpacket(0x42d, -1, NULL); 
+addpacket(0x42e, -1, NULL); 
+addpacket(0x42f, -1, NULL); 
+addpacket(0x430, -1, NULL); 
+addpacket(0x431, -1, NULL); 
+addpacket(0x432, -1, NULL); 
+addpacket(0x433, -1, NULL); 
+addpacket(0x434, -1, NULL); 
+addpacket(0x435, -1, NULL); 
+#endif
+
+#if PACKETVER > 20080910
+// packet_ver: 23
+addpacket(0x436, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x437, 7, "actionrequest", 2, 6); 
+addpacket(0x438, 10, "useskilltoid", 2, 4, 6); 
+addpacket(0x439, 8, "useitem", 2, 4); 
+#endif
+
+#if PACKETVER > 20081113
+addpacket(0x43d, 8, NULL); 
+addpacket(0x43e, -1, NULL); 
+addpacket(0x43f, 8, NULL); 
+#endif
+
+#if PACKETVER > 20081126
+addpacket(0x1a2, 37, NULL); 
+addpacket(0x440, 10, NULL); 
+addpacket(0x441, 4, NULL); 
+#endif
+
+#if PACKETVER > 20081210
+addpacket(0x442, -1, NULL); 
+addpacket(0x443, 8, "skillselectmenu", 2, 6); 
+#endif
+
+#if PACKETVER > 20090114
+addpacket(0x43f, 25, NULL); 
+addpacket(0x444, -1, NULL); 
+addpacket(0x445, 10, NULL); 
+#endif
+
+#if PACKETVER > 20090218
+addpacket(0x446, 14, NULL); 
+#endif
+
+#if PACKETVER > 20090225
+addpacket(0x448, -1, NULL); 
+#endif
+
+#if PACKETVER > 20090330
+addpacket(0x449, 4, NULL); 
+#endif
+
+#if PACKETVER > 20090408
+addpacket(0x2a6, -1, NULL); 
+addpacket(0x2a7, -1, NULL); 
+addpacket(0x44a, 6, NULL); 
+// Renewal Clients
+#endif
+
+#if PACKETVER > 20080827
+// packet_ver: 24
+addpacket(0x72, 22, "useskilltoid", 9, 15, 18); 
+addpacket(0x7c, 44, NULL); 
+addpacket(0x7e, 105, "useskilltoposinfo", 10, 14, 18, 23, 25); 
+addpacket(0x85, 10, "changedir", 4, 9); 
+addpacket(0x89, 11, "ticksend", 7); 
+addpacket(0x8c, 14, "getcharnamerequest", 10); 
+addpacket(0x94, 19, "movetokafra", 3, 15); 
+addpacket(0x9b, 34, "wanttoconnection", 7, 15, 25, 29, 33); 
+addpacket(0x9f, 20, "useitem", 7, 20); 
+addpacket(0xa2, 14, "solvecharname", 10); 
+addpacket(0xa7, 9, "walktoxy", 6); 
+addpacket(0xf5, 11, "takeitem", 7); 
+addpacket(0xf7, 17, "movefromkafra", 3, 13); 
+addpacket(0x113, 25, "useskilltopos", 10, 14, 18, 23); 
+addpacket(0x116, 17, "dropitem", 6, 15); 
+addpacket(0x190, 23, "actionrequest", 9, 22); 
+addpacket(0x2e2, 20, NULL); 
+addpacket(0x2e3, 22, NULL); 
+addpacket(0x2e4, 11, NULL); 
+addpacket(0x2e5, 9, NULL); 
+#endif
+
+#if PACKETVER > 20080910
+// packet_ver: 25
+addpacket(0x436, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x437, 7, "actionrequest", 2, 6); 
+addpacket(0x438, 10, "useskilltoid", 2, 4, 6); 
+addpacket(0x439, 8, "useitem", 2, 4); 
+#endif
+
+#if PACKETVER > 20081112
+addpacket(0x43d, 8, NULL); 
+// addpacket(0x43e, -1, NULL); 
+addpacket(0x43f, 8, NULL); 
+#endif
+
+#if PACKETVER > 20081217
+addpacket(0x1a2, 37, NULL); 
+// addpacket(0x440, 10, NULL); 
+// addpacket(0x441, 4, NULL); 
+// addpacket(0x442, 8, NULL); 
+// addpacket(0x443, 8, NULL); 
+#endif
+
+#if PACKETVER > 20081217
+addpacket(0x6d, 114, NULL); 
+#endif
+
+#if PACKETVER > 20090121
+addpacket(0x43f, 25, NULL); 
+// addpacket(0x444, -1, NULL); 
+// addpacket(0x445, 10, NULL); 
+#endif
+
+#if PACKETVER > 20090218
+// addpacket(0x446, 14, NULL); 
+#endif
+
+#if PACKETVER > 20090226
+// addpacket(0x448, -1, NULL); 
+#endif
+
+#if PACKETVER > 20090401
+// addpacket(0x449, 4, NULL); 
+#endif
+
+#if PACKETVER > 20090514
+// addpacket(0x44b, 2, NULL); 
+#endif
+
+#if PACKETVER > 20090520
+// addpacket(0x7d0, 6, NULL); 
+// addpacket(0x7d1, 2, NULL); 
+// addpacket(0x7d2, -1, NULL); 
+// addpacket(0x7d3, 4, NULL); 
+// addpacket(0x7d4, 4, NULL); 
+// addpacket(0x7d5, 4, NULL); 
+// addpacket(0x7d6, 4, NULL); 
+// addpacket(0x447, 2, NULL); 
+#endif
+
+#if PACKETVER > 20090603
+addpacket(0x7d7, 8, "partychangeoption", 2, 6, 7); 
+addpacket(0x7d8, 8, NULL); 
+addpacket(0x7d9, 254, NULL); 
+addpacket(0x7da, 6, "partychangeleader", 2); 
+#endif
+
+#if PACKETVER > 20090610
+// addpacket(0x7db, 8, NULL); 
+#endif
+
+#if PACKETVER > 20090617
+addpacket(0x7d9, 268, NULL); 
+// addpacket(0x7dc, 6, NULL); 
+// addpacket(0x7dd, 54, NULL); 
+// addpacket(0x7de, 30, NULL); 
+// addpacket(0x7df, 54, NULL); 
+#endif
+
+#if PACKETVER > 20090701
+// addpacket(0x275, 37, NULL); 
+// addpacket(0x276, -1, NULL); 
+#endif
+
+#if PACKETVER > 20090708
+// addpacket(0x7e0, 58, NULL); 
+#endif
+
+#if PACKETVER > 20090715
+addpacket(0x7e1, 15, NULL); 
+#endif
+
+#if PACKETVER > 20090805
+addpacket(0x7e2, 8, NULL); 
+#endif
+
+#if PACKETVER > 20090818
+addpacket(0x7e3, 6, NULL); 
+addpacket(0x7e4, -1, "itemlistwindowselected", 2, 4, 8); 
+addpacket(0x7e6, 8, NULL); 
+#endif
+
+#if PACKETVER > 20090825
+// addpacket(0x7e6, 28, NULL); 
+addpacket(0x7e7, 5, NULL); 
+#endif
+
+#if PACKETVER > 20090922
+addpacket(0x7e5, 8, NULL); 
+addpacket(0x7e6, 8, NULL); 
+addpacket(0x7e7, 32, NULL); 
+addpacket(0x7e8, -1, NULL); 
+addpacket(0x7e9, 5, NULL); 
+#endif
+
+#if PACKETVER > 20090929
+// addpacket(0x7ea, 2, NULL); 
+// addpacket(0x7eb, -1, NULL); 
+// addpacket(0x7ec, 6, NULL); 
+// addpacket(0x7ed, 8, NULL); 
+// addpacket(0x7ee, 6, NULL); 
+// addpacket(0x7ef, 8, NULL); 
+// addpacket(0x7f0, 4, NULL); 
+// addpacket(0x7f2, 4, NULL); 
+// addpacket(0x7f3, 3, NULL); 
+#endif
+
+#if PACKETVER > 20091006
+// addpacket(0x7ec, 8, NULL); 
+// addpacket(0x7ed, 10, NULL); 
+// addpacket(0x7f0, 8, NULL); 
+// addpacket(0x7f1, 15, NULL); 
+// addpacket(0x7f2, 6, NULL); 
+// addpacket(0x7f3, 4, NULL); 
+// addpacket(0x7f4, 3, NULL); 
+#endif
+
+#if PACKETVER > 20091027
+addpacket(0x7f5, 6, "gmreqaccname", 2); 
+addpacket(0x7f6, 14, NULL); 
+#endif
+
+#if PACKETVER > 20091103
+addpacket(0x7f7, -1, NULL); 
+addpacket(0x7f8, -1, NULL); 
+addpacket(0x7f9, -1, NULL); 
+#endif
+
+#if PACKETVER > 20091117
+addpacket(0x7fa, 8, NULL); 
+#endif
+
+#if PACKETVER > 20091124
+addpacket(0x7fb, 25, NULL); 
+#endif
+
+#if PACKETVER > 20091201
+// addpacket(0x7fc, 10, NULL); 
+// addpacket(0x7fd, -1, NULL); 
+addpacket(0x7fe, 26, NULL); 
+// addpacket(0x7ff, -1, NULL); 
+#endif
+
+#if PACKETVER > 20091215
+addpacket(0x800, -1, NULL); 
+// addpacket(0x801, -1, NULL); 
+#endif
+
+#if PACKETVER > 20091222
+addpacket(0x802, 18, "bookingregreq", 2, 4, 6		); // Booking System
+addpacket(0x803, 4, NULL); 
+addpacket(0x804, 8, NULL); // Booking System
+addpacket(0x805, -1, NULL); 
+addpacket(0x806, 4, "bookingdelreq", 2		); // Booking System
+// addpacket(0x807, 2, NULL); 
+addpacket(0x808, 4, NULL); // Booking System
+// addpacket(0x809, 14, NULL); 
+// addpacket(0x80a, 50, NULL); 
+// addpacket(0x80b, 18, NULL); 
+// addpacket(0x80c, 6, NULL); 
+#endif
+
+#if PACKETVER > 20091229
+addpacket(0x804, 14, "bookingsearchreq", 2, 4, 6, 8, 12		); // Booking System
+addpacket(0x806, 2, "bookingdelreq", 0		); // Booking System
+addpacket(0x807, 4, NULL); 
+addpacket(0x808, 14, "bookingupdatereq", 2		); // Booking System
+addpacket(0x809, 50, NULL); 
+addpacket(0x80a, 18, NULL); 
+addpacket(0x80b, 6, NULL); // Booking System
+#endif
+
+#if PACKETVER > 20100105
+addpacket(0x801, -1, "purchasereq2", 2, 4, 8, 12); 
+#endif
+
+#if PACKETVER > 20100126
+// addpacket(0x80c, 2, NULL); 
+// addpacket(0x80d, 3, NULL); 
+addpacket(0x80e, 14, NULL); 
+#endif
+
+#if PACKETVER > 20100209
+// addpacket(0x7f0, 6, NULL); 
+#endif
+
+#if PACKETVER > 20100223
+addpacket(0x80f, 20, NULL); 
+#endif
+
+#if PACKETVER > 20100303
+addpacket(0x810, 3, NULL); 
+addpacket(0x811, -1, "reqopenbuyingstore", 2, 4, 8, 9, 89); 
+// addpacket(0x812, 86, NULL); 
+// addpacket(0x813, 6, NULL); 
+// addpacket(0x814, 6, NULL); 
+// addpacket(0x815, -1, NULL); 
+// addpacket(0x817, -1, NULL); 
+// addpacket(0x818, 6, NULL); 
+// addpacket(0x819, 4, NULL); 
+#endif
+
+#if PACKETVER > 20100309
+addpacket(0x813, -1, NULL); 
+// addpacket(0x814, 2, NULL); 
+// addpacket(0x815, 6, NULL); 
+addpacket(0x816, 6, NULL); 
+addpacket(0x818, -1, NULL); 
+// addpacket(0x819, 10, NULL); 
+// addpacket(0x81a, 4, NULL); 
+// addpacket(0x81b, 4, NULL); 
+// addpacket(0x81c, 6, NULL); 
+addpacket(0x81d, 22, NULL); 
+addpacket(0x81e, 8, NULL); 
+#endif
+
+#if PACKETVER > 20100323
+// addpacket(0x81f, -1, NULL); 
+#endif
+
+#if PACKETVER > 20100406
+// addpacket(0x81a, 6, NULL); 
+#endif
+
+#if PACKETVER > 20100413
+// addpacket(0x81a, 10, NULL); 
+addpacket(0x820, 11, NULL); 
+// addpacket(0x821, 2, NULL); 
+// addpacket(0x822, 9, NULL); 
+// addpacket(0x823, -1, NULL); 
+#endif
+
+#if PACKETVER > 20100414
+// addpacket(0x81b, 8, NULL); 
+#endif
+
+#if PACKETVER > 20100420
+addpacket(0x812, 8, NULL); 
+addpacket(0x814, 86, NULL); 
+addpacket(0x815, 2, "reqclosebuyingstore", 0); 
+addpacket(0x817, 6, "reqclickbuyingstore", 2); 
+addpacket(0x819, -1, "reqtradebuyingstore", 2, 4, 8, 12); 
+addpacket(0x81a, 4, NULL); 
+addpacket(0x81b, 10, NULL); 
+addpacket(0x81c, 10, NULL); 
+addpacket(0x824, 6, NULL); 
+#endif
+
+#if PACKETVER > 20100601
+// addpacket(0x825, -1, NULL); 
+// addpacket(0x826, 4, NULL); 
+addpacket(0x835, -1, "searchstoreinfo", 2, 4, 5, 9, 13, 14, 15); 
+addpacket(0x836, -1, NULL); 
+addpacket(0x837, 3, NULL); 
+// addpacket(0x838, 3, NULL); 
+#endif
+
+#if PACKETVER > 20100608
+addpacket(0x838, 2, "searchstoreinfonextpage", 0); 
+addpacket(0x83a, 4, NULL); // Search Stalls Feature
+addpacket(0x83b, 2, "closesearchstoreinfo", 0); 
+addpacket(0x83c, 12, "searchstoreinfolistitemclick", 2, 6, 10); 
+addpacket(0x83d, 6, NULL); 
+#endif
+
+#if PACKETVER > 20100615
+// addpacket(0x83e, 26, NULL); 
+#endif
+
+#if PACKETVER > 20100622
+// addpacket(0x83f, 22, NULL); 
+#endif
+
+#if PACKETVER > 20100629
+addpacket(0xaa, 9, NULL); 
+// addpacket(0x7f1, 18, NULL); 
+// addpacket(0x7f2, 8, NULL); 
+// addpacket(0x7f3, 6, NULL); 
+#endif
+
+#if PACKETVER > 20100701
+addpacket(0x83a, 5, NULL); // Search Stalls Feature
+#endif
+
+#if PACKETVER > 20100713
+// addpacket(0x827, 6, NULL); 
+// addpacket(0x828, 14, NULL); 
+// addpacket(0x829, 6, NULL); 
+// addpacket(0x82a, 10, NULL); 
+// addpacket(0x82b, 6, NULL); 
+// addpacket(0x82c, 14, NULL); 
+// addpacket(0x840, -1, NULL); 
+// addpacket(0x841, 19, NULL); 
+#endif
+
+#if PACKETVER > 20100714
+// addpacket(0x841, 4, NULL); 
+#endif
+
+#if PACKETVER > 20100803
+addpacket(0x839, 66, NULL); 
+addpacket(0x842, 6, "recall2", 2); 
+addpacket(0x843, 6, "remove2", 2); 
+#endif
+
+#if PACKETVER > 20101124
+// packet_ver: 26
+addpacket(0x288, -1, "cashshopbuy", 4, 8); 
+addpacket(0x436, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x35f, 5, "walktoxy", 2); 
+addpacket(0x360, 6, "ticksend", 2); 
+addpacket(0x361, 5, "changedir", 2, 4); 
+addpacket(0x362, 6, "takeitem", 2); 
+addpacket(0x363, 6, "dropitem", 2, 4); 
+addpacket(0x364, 8, "movetokafra", 2, 4); 
+addpacket(0x365, 8, "movefromkafra", 2, 4); 
+addpacket(0x366, 10, "useskilltopos", 2, 4, 6, 8); 
+addpacket(0x367, 90, "useskilltoposinfo", 2, 4, 6, 8, 10); 
+addpacket(0x368, 6, "getcharnamerequest", 2); 
+addpacket(0x369, 6, "solvecharname", 2); 
+addpacket(0x856, -1, NULL); 
+addpacket(0x857, -1, NULL); 
+addpacket(0x858, -1, NULL); 
+addpacket(0x859, -1, NULL); 
+#endif
+
+#if PACKETVER > 20111005
+// packet_ver: 27
+addpacket(0x364, 5, "walktoxy", 2); 
+addpacket(0x817, 6, "ticksend", 2); 
+addpacket(0x366, 5, "changedir", 2, 4); 
+addpacket(0x815, 6, "takeitem", 2); 
+addpacket(0x885, 6, "dropitem", 2, 4); 
+addpacket(0x893, 8, "movetokafra", 2, 4); 
+addpacket(0x897, 8, "movefromkafra", 2, 4); 
+addpacket(0x369, 10, "useskilltopos", 2, 4, 6, 8); 
+addpacket(0x8ad, 90, "useskilltoposinfo", 2, 4, 6, 8, 10); 
+addpacket(0x88a, 6, "getcharnamerequest", 2); 
+addpacket(0x838, 6, "solvecharname", 2); 
+addpacket(0x439, 8, "useitem", 2, 4); 
+#endif
+
+#if PACKETVER > 20111102
+// packet_ver: 28
+addpacket(0x436, 26, "friendslistadd", 2); 
+addpacket(0x898, 5, "hommenu", 4); 
+addpacket(0x281, 36, "storagepassword", 0); 
+addpacket(0x88d, 26, "partyinvite2", 2); 
+addpacket(0x83c, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x8aa, 7, "actionrequest", 2, 6); 
+addpacket(0x2c4, 10, "useskilltoid", 2, 4, 6); 
+addpacket(0x811, -1, "itemlistwindowselected", 2, 4, 8); 
+addpacket(0x890, 8, NULL); 
+addpacket(0x8a5, 18, "bookingregreq", 2, 4, 6); 
+addpacket(0x835, -1, "reqopenbuyingstore", 2, 4, 8, 9, 89); 
+addpacket(0x89b, 2, "reqclosebuyingstore", 0); 
+addpacket(0x8a1, 6, "reqclickbuyingstore", 2); 
+addpacket(0x89e, -1, "reqtradebuyingstore", 2, 4, 8, 12); 
+addpacket(0x8ab, -1, "searchstoreinfo", 2, 4, 5, 9, 13, 14, 15); 
+addpacket(0x88b, 2, "searchstoreinfonextpage", 0); 
+addpacket(0x8a2, 12, "searchstoreinfolistitemclick", 2, 6, 10); 
+#endif
+
+#if PACKETVER > 20120307
+addpacket(0x86a, 19, "wanttoconnection", 2, 6, 10, 14, 18); 
+addpacket(0x437, 5, "walktoxy", 2); 
+addpacket(0x887, 6, "ticksend", 2); 
+addpacket(0x890, 5, "changedir", 2, 4); 
+addpacket(0x865, 6, "takeitem", 2); 
+addpacket(0x2c4, 6, "dropitem", 2, 4); 
+addpacket(0x93b, 8, "movetokafra", 2, 4); 
+addpacket(0x963, 8, "movefromkafra", 2, 4); 
+addpacket(0x438, 10, "useskilltopos", 2, 4, 6, 8); 
+addpacket(0x366, 90, "useskilltoposinfo", 2, 4, 6, 8, 10); 
+addpacket(0x96a, 6, "getcharnamerequest", 2); 
+addpacket(0x368, 6, "solvecharname", 2); 
+addpacket(0x369, 26, "friendslistadd", 2); 
+addpacket(0x863, 5, "hommenu", 4); 
+addpacket(0x861, 36, "storagepassword", 0); 
+addpacket(0x929, 26, "partyinvite2", 2); 
+addpacket(0x885, 7, "actionrequest", 2, 6); 
+addpacket(0x889, 10, "useskilltoid", 2, 4, 6); 
+addpacket(0x870, -1, "itemlistwindowselected", 2, 4, 8); 
+addpacket(0x926, 18, "bookingregreq", 2, 4, 6); 
+addpacket(0x815, -1, "reqopenbuyingstore", 2, 4, 8, 9, 89); 
+addpacket(0x817, 2, "reqclosebuyingstore", 0); 
+addpacket(0x360, 6, "reqclickbuyingstore", 2); 
+addpacket(0x811, -1, "reqtradebuyingstore", 2, 4, 8, 12); 
+addpacket(0x884, -1, "searchstoreinfo", 2, 4, 5, 9, 13, 14, 15); 
+addpacket(0x835, 2, "searchstoreinfonextpage", 0); 
+addpacket(0x838, 12, "searchstoreinfolistitemclick", 2, 6, 10); 
+addpacket(0x439, 8, "useitem", 2, 4); 
+// Add new packets here
+// packet_ver: 29
 #endif
 
 // Deixe isto sempre por ultimo
