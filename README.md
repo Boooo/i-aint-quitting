@@ -22,7 +22,7 @@ Equipe
 
 ### Coordenadores
 - Dreaming			- Matheus
-- Otonii		- Leandro
+- Otonii		- Leandro Otoni
 - Roberto		- Roberto
 
 ### Desenvolvedores
