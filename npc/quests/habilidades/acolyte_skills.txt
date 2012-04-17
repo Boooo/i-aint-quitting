@@ -3,122 +3,113 @@
 //===== By: ==================================================
 //= kobra_k88
 //===== Current Version: =====================================
-//= 1.5
+//= 1.7
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= rAthena SVN - Cronus 3010+
 //===== Description: ========================================= 
-//= [Aegis Conversion]
 //= Quest for skills: Holy Light
 //===== Additional Comments: ================================= 
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.6 Fixed a typo in job check. (Bugreport:1531) [L0ne_W0lf]
+//= 1.7 Conversão do Aegis, Tradução e Revisão. [FreaK]
 //============================================================
 
-prt_church,173,23,4	script	Cleric#qsk_al	79,{
-	mes "[Acolyte Klift]";
-	mes "Ahh . Brothers ! Does the task of";
-	mes "caring for out lost sheep burden";
-	mes "and tire you ?";
-	mes "I am here to assist you.";
+prt_church,173,23,4	script	Noviça Chefe	79,{
+	mes "[Milla]";
+	mes "Ah... Você é um de nossos companheiros na fé!";
+	mes "Você veio em busca de mais poder para ajudar ao próximo em sua dor?";
+	mes "Então você veio ao lugar certo...";
+	mes "Eu posso ajudá-lo a encontrar o caminho.";
 	next;
-	switch(select("^3355FF' About acolyte's hidden ability '^000000 ..:^3355FF' Holy light '^000000 training:End conversation")) {
-	case 1:
-		mes "[Acolyte Klift]";
-		mes "Our members of the clergy";
-		mes "naturally learn a skill as";
-		mes "as they mature. As they approach ";
-		mes "their senior years as an acolyte";
-		mes "this special skill.";
-		next;
-		mes "[Acolyte Klift]";
-		mes "Faced with great danger and";
-		mes "an endless struggle with evil,";
-		mes "our brethren are much in need of assistance.";
-		mes "^3355FF' Holy Light '^000000 is that skill.";
-		mes "To gain this ability for yourself,";
-		mes "takes some work.";
-		next;
-		mes "[Acolyte Klift]";
-		mes "To gain the skill, you must find these items.";
-		mes "^FF33551 Opal^000000";
-		mes "^FF33551 Crystal Blue^000000";
-		mes "^FF33551 Rosary^000000 ";
-		next;
-		mes "[Acolyte Klift]";
-		mes "In order to be able to even use this skill,";
-		mes "one must be have sufficient experience.";
-		mes "^FF3355 Job Level 30^000000";
-		mes "is required to learn this skill.";
-		next;
-		mes "[Acolyte Klift]";
-		mes "As for a priest, because of their";
-		mes "already vast amount of experience,";
-		mes "they are able to gain this skill at any";
-		mes "job level.";
-		close;
-	case 2:
-		if (getskilllv("AL_HOLYLIGHT") == 1) {
-			mes "[Acolyte Klift]";
-			mes "Brother, you already possess";
-			mes "the skill of ` Holy Light '.";
-			mes "You cannot gain a skill you";
-			mes "already possess ..";
-			mes "I pray that you are using";
-			mes "this skill for the work of good . .";
+	switch (select("Me fale sobre a ^3355FF'Habilidade Secreta dos Noviços'^000000 ..","Ensine-me a ^3355FF'Luz Divina'!^000000 ","Não estou interessado...")) {
+		case 1:
+			mes "[Milla]";
+			mes "Nesta vida...";
+			mes "Somos capazes de desenvolver certas capacidades por nosso próprio esforço e dedicação...";
+			mes "Para outras... Precisamos ter a humildade para que nos sejam ensinadas.";
+			mes "Esse é o caso da habilidade secreta que você pergunta.";
+			mes "Seu próprio esforço não basta para aprendê-la, mas com uma pequena ajuda minha, você conseguirá.";
+			next;
+			mes "[Milla]";
+			mes "A ^3355FF'Luz Divina'^000000 é uma habilidade única.";
+			mes "Ela é capaz de acender uma chama sagrada no mais negro dos corações.";
+			mes "Esta é uma das poucas habilidades de ataque dos Noviços. Os demônios sofrerão especialmente o toque desta luz. ";
+			mes "Para aprender esta habilidade, é necessário que você consiga-me certos itens.";
+			mes "Desta forma, além destes serem necessários para o processo de aprendizado... ";
+			mes "...você também provará que está pronto para obtê-la.";
+			next;
+			mes "[Milla]";
+			mes "Este são os itens necessários.";
+			mes "Uma ^FF3355Opala^000000";
+			mes "Um ^FF3355Cristal Azul^000000";
+			mes "Um ^FF3355Rosário^000000";
+			mes "Tente não esquecer.";
+			next;
+			mes "[Milla]";
+			mes "Como eu disse, é necessário que você esteja pronto para este aprendizado.";
+			mes "Então, trate de alcançar ^FF3355Nível de Classe 30^000000";
+			mes "Antes de tentar aprender essa habilidade.";
+			mes "Sem este nível mínimo, você não será capaz de utilizar a 'Luz Divina' corretamente.";
+			next;
+			mes "[Milla]";
+			mes "Se por um acaso você já se tornou um Sacerdote e ainda não aprendeu esta habilidade...";
+			mes "Não se preocupe com seu Nível de Classe, apenas traga os itens necessários.";
+			mes "Não faria sentido esperar um Nível Mínimo de um Sacerdote...";
+			mes "Afinal, sendo um, você já está apto a aprendê-la há algum tempo, não?";
 			close;
-		}
-		else {
-			if (countitem(727) > 0 && countitem(991) > 0 && countitem(2608) > 0) {
-				if ((JobLevel > 29 && BaseJob == Job_Acolyte) || BaseJob == Job_Monk || BaseJob == Job_Priest) {
-					mes "[Acolyte Klift]";
-					mes "Your faith has proven worthy";
-					mes "for you to gain the ' Holy Light ' skill.";
-					mes "Your skill is adequate";
-					mes "to use this skill.";
-					mes "Use it wisely. . .";
+		case 2:
+			if (getskilllv("AL_HOLYLIGHT") == 1) {
+				mes "[Milla]";
+				mes "Vejo que você já aprendeu a habilidade secreta dos Noviços...";
+				mes "Fico feliz...";
+				mes "Espero que esta habilidade te ajude na luta contra as forças demoníacas.";
+				mes "A 'Luz Divina' é a maneira que nós, servos do Senhor encontramos de expurgar os pecados e o mal neste mundo.";
+				mes "É um presente de Deus em nossa luta,";
+				mes "É a Sua força canalizada através de nós para fazer o bem.";
+				close;
+			}
+			else {
+				if (countitem(727) > 0 && countitem(991) > 0 && countitem(2608) > 0) {
+					if ((JobLevel > 29 && BaseJob == Job_Acolyte) || BaseJob == Job_Monk || BaseJob == Job_Priest) {
+					mes "[Milla]";
+					mes "Você cumpriu todos os pré-requisitos...";
+					mes "Eu te abençôo...";
+					mes "E te declaro digno de usar a 'Luz Divina' em sua cruzada pelo Bem.";
+					mes "O Senhor estará sempre com você.";
+					mes "Amén.";
 					next;
 					delitem 727,1; //White_Jewel
 					delitem 991,1; //Crystal_Blue
 					delitem 2608,1; //Rosary
 					skill 156,1,0;
-					mes "[Acolyte Klift]";
-					mes "You now know ' Holy Light '";
-					mes "May you use this skill only in the";
-					mes "best conduct . . . . .";
+					mes "[Milla]";
+					mes "Agora... Você conhece a 'Luz Divina'.";
+					mes "Por favor, agradeça ao Senhor pelo presente que deu aos Seus servos...";
+					mes "Use esta habilidade para o Bem, sempre. Oremos.";
 					close;
+					}
 				}
+					mes "[Milla]";
+					mes "Oh.. Lamento muito.";
+					mes "Você ainda não é capaz de aprender esta habilidade. ";
+					mes "A 'Luz Divina' requer certas condições para ser passada aos Noviços...";
+					next;
+					mes "[Milla]";
+					mes "Por favor, lembre-se de trazer os itens a que me referi...";
+					mes "E de estar em Nível de Classe 30 ou acima.";
+					mes "Estes pré-requisitos são a forma de selecionarmos aqueles que estão prontos para o aprendizado desta habilidade.";
+					mes "Descubra suas faltas e as supere.";
+					mes "Que o Senhor esteja com você.";
+					close;
 			}
-			mes "[Acolyte Klift]";
-			mes "Oh, it is clear. . .";
-			mes "You are not yet ready to";
-			mes "receive the ' Holy Light ' skill.";
-			next;
-			mes "[Acolyte Klift]";
-			mes "You should listen carefully to what";
-			mes "is necessary for this skill.";
-			mes "If you listen closely,";
-			mes "you may learn what you lack.";
-			mes "So that you may improve upon yourself.";
+		case 3:
+			mes "[Milla]";
+			mes "...Muito bem.";
+			mes "Compreendo sua vontade.";
+			mes "Medite a respeito...";
+			mes "E tire algo bom de suas meditações.";
+			mes "Que o Senhor esteja sempre com você.";
 			close;
-		}
-	case 3:
-		mes "[Acolyte Klift]";
-		mes ". . . . .";
-		mes "I understand your zeal.";
-		mes "You have much time yet to";
-		mes "practice and gain experience.";
-		mes "Blessings upon you . . . . .";
-		close;
 	}
-}
 
-//============================================================ 
-// Old changelog
-//============================================================ 
-//= v1.0a Now using functions found in "Global_Functions.txt"
-//= for class checks.
-//= 1.2 Added Baby Class Support [Lupus]
-//= 1.3 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
-//= 1.4 Fixed an exploit [Lupus]
-//= 1.4a changed perm. variables to temp ones [Lupus]
-//============================================================
+}

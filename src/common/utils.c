@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -45,14 +45,14 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 
 		if( (i%16) == 15 )
 		{
-			fprintf(fp, "%03X %s  %s\n", i/16, hex, ascii);
+			fprintf(fp, "%03X %s  %s\n", (unsigned int)(i/16), hex, ascii);
 		}
 	}
 
 	if( (i%16) != 0 )
 	{
 		ascii[i%16] = 0;
-		fprintf(fp, "%03X %-48s  %-16s\n", i/16, hex, ascii);
+		fprintf(fp, "%03X %-48s  %-16s\n", (unsigned int)(i/16), hex, ascii);
 	}
 }
 

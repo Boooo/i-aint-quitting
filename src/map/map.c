@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
@@ -4044,11 +4044,6 @@ int do_init(int argc, char *argv[])
 	do_init_duel();
 
 	npc_event_do_oninit();	// npcのOnInitイベント?行
-
-	if( console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");

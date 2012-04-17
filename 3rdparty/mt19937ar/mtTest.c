@@ -1,14 +1,14 @@
 /* 
-   A C-program for MT19937, with initialization improved 2002/1/26.
+   A C-program for MT19937, with initialization improved 2002/2/10.
    Coded by Takuji Nishimura and Makoto Matsumoto.
+   This is a faster version by taking Shawn Cokus's optimization,
+   Matthe Bellew's simplification, Isaku Wada's real version.
 
-   Before using, initialize the state by using init_genrand(seed)  
+   Before using, initialize the state by using init_genrand(seed) 
    or init_by_array(init_key, key_length).
 
    Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
-   All rights reserved.
-   Copyright (C) 2005, Mutsuo Saito,
-   All rights reserved.
+   All rights reserved.                          
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions
@@ -51,6 +51,9 @@ int main(void)
     int i;
     unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
     init_by_array(init, length);
+    /* This is an example of initializing by an array.       */
+    /* You may use init_genrand(seed) with any 32bit integer */
+    /* as a seed for a simpler initialization                */
     printf("1000 outputs of genrand_int32()\n");
     for (i=0; i<1000; i++) {
       printf("%10lu ", genrand_int32());
@@ -61,5 +64,6 @@ int main(void)
       printf("%10.8f ", genrand_real2());
       if (i%5==4) printf("\n");
     }
+
     return 0;
 }

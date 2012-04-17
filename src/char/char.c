@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
@@ -4598,11 +4598,6 @@ int do_init(int argc, char **argv)
 	// ???
 	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
 	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
-
-	if( console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 	
 	//Cleaning the tables for NULL entrys @ startup [Sirius]
 	//Chardb clean

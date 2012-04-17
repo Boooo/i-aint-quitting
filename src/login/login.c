@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #include "../common/core.h"
 #include "../common/db.h"
@@ -1778,11 +1778,6 @@ int do_init(int argc, char** argv)
 			ShowFatalError("do_init: Failed to initialize account engine '%s'.\n", login_config.account_engine);
 			exit(EXIT_FAILURE);
 		}
-	}
-
-	if( login_config.console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
 	}
 
 	// server port open & binding

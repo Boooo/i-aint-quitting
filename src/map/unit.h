@@ -1,5 +1,5 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// For more information, see COPYING in the main folder
 
 #ifndef _UNIT_H_
 #define _UNIT_H_
@@ -46,8 +46,13 @@ struct unit_data {
 };
 
 struct view_data {
+#ifdef __64BIT__ 
+        	unsigned int class_; 
+#endif 
 	unsigned short
+#ifndef __64BIT__ 
 		class_,
+#endif
 		weapon,
 		shield, //Or left-hand weapon.
 		robe,
