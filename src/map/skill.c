@@ -6516,7 +6516,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 
 	case PF_SOULCHANGE:
 		{
-			unsigned int sp1 = 0, sp2 = 0;
+			unsigned int sp1 = 0, sp2 = 0,sptotal=0;
 			if (dstmd) {
 				if (dstmd->state.soul_change_flag) {
 					if(sd) clif_skill_fail(sd,skillid,USESKILL_FAIL_LEVEL,0);
@@ -6528,11 +6528,18 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				clif_skill_nodamage(src,bl,skillid,skilllv,1);
 				break;
 			}
+#ifdef RENEWAL
+			sptotal = sstatus->sp +tstatus->sp / 2;
+			status_set_sp(src, sptotal, 3);
+			status_set_sp(bl, sptotal, 3);
+			clif_skill_nodamage(src,bl,skillid,skilllv,1);
+#else
 			sp1 = sstatus->sp;
 			sp2 = tstatus->sp;
 			status_set_sp(src, sp2, 3);
 			status_set_sp(bl, sp1, 3);
 			clif_skill_nodamage(src,bl,skillid,skilllv,1);
+#endif
 		}
 		break;
 
@@ -6993,7 +7000,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 		break;
 	case RK_ENCHANTBLADE:
 		clif_skill_nodamage(src,bl,skillid,skilllv,// formula not confirmed
-			sc_start2(bl,type,100,skilllv,100+20*skilllv/*+sstatus->int_/2+status_get_lv(bl)/10*/,skill_get_time(skillid,skilllv)));
+			sc_start2(bl,type,100,skilllv,(100+20*skilllv)*(status_get_lv(bl)/150)+sstatus->int_,skill_get_time(skillid,skilllv)));
 		break;
 	case RK_DRAGONHOWLING:
 		if( flag&1)
