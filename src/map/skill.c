@@ -6516,7 +6516,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 
 	case PF_SOULCHANGE:
 		{
-			unsigned int sp1 = 0, sp2 = 0;
+			unsigned int sp1 = 0, sp2 = 0,sptotal=0;
 			if (dstmd) {
 				if (dstmd->state.soul_change_flag) {
 					if(sd) clif_skill_fail(sd,skillid,USESKILL_FAIL_LEVEL,0);
@@ -6528,11 +6528,18 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				clif_skill_nodamage(src,bl,skillid,skilllv,1);
 				break;
 			}
+#ifdef RENEWAL
+			sptotal = sstatus->sp +tstatus->sp / 2;
+			status_set_sp(src, sptotal, 3);
+			status_set_sp(bl, sptotal, 3);
+			clif_skill_nodamage(src,bl,skillid,skilllv,1);
+#else
 			sp1 = sstatus->sp;
 			sp2 = tstatus->sp;
 			status_set_sp(src, sp2, 3);
 			status_set_sp(bl, sp1, 3);
 			clif_skill_nodamage(src,bl,skillid,skilllv,1);
+#endif
 		}
 		break;
 
