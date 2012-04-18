@@ -1,4 +1,4 @@
-Cronus-Emulator
+﻿Cronus-Emulator
 ===============
 
 * Portal: (http://portal.cronus-emulator.com/)
@@ -21,15 +21,16 @@ Equipe
 - JAF			- João Angelo
 
 ### Coordenadores
-- Dreaming			- Matheus
+- Dreaming		- Matheus
 - Otonii		- Leandro Otoni
 - Roberto		- Roberto
 
 ### Desenvolvedores
-- Axl		- José Goís
-- Elf0			- 
+- Axl			- José Goís
+- Elf0			- Ticin
 - J4ND3RS0N		- Janderson
-- Joao Pedro	- João Pedro
+- Joao Pedro		- João Pedro
 - LyDe			- Luiz Fernando
-- Takyia Genji	- Raphael
+- Sicks 		- Bruno
+- Takyia Genji		- Raphael
 - Yum			- Luann Peixe
