@@ -1045,18 +1045,23 @@ ACMD_FUNC(jobchange)
 			{ "taekwon",	4046 },
 			{ "mestre taekwon",	4047 },
 			{ "espiritualista",	4049 },
+			//{ "gangsi",           4050 }, 
+ 	        //{ "bongun",           4050 }, 
+ 			//{ "munak",            4050 }, 
+ 			//{ "death knight",     4051 }, 
+ 			//{ "dark collector",   4052 }, 
 			{ "cavaleiro Rúnico",	4054 },
 			{ "arcano",		4055 },
 			{ "sentinela",			4056 },
 			{ "arcebispo",	4057 },
 			{ "mecânico",		4058 },
 			{ "sicário",		4059 },
-			{ "cavaleiro Rúnico (Trans)",	4060 },
-			{ "arcano (Trans)",		4061 },
-			{ "sentinela (Trans)",		4062 },
-			{ "arcebispo (Trans)",	4063 },
-			{ "mecânico (Trans)",		4064 },
-			{ "sicário (Trans)",	4065 },
+			{ "cavaleiro Rúnico2",	4060 },
+			{ "arcano2",		4061 },
+			{ "sentinela2",		4062 },
+			{ "arcebispo2",	4063 },
+			{ "mecânico2",		4064 },
+			{ "sicário2",	4065 },
 			{ "guardião real",	4066 },
 			{ "feiticeiro",		4067 },
 			{ "trovador",		4068 },
@@ -1064,13 +1069,29 @@ ACMD_FUNC(jobchange)
 			{ "shura",			4070 },
 			{ "bioquímico",		4071 },
 			{ "renegado",	4072 },
-			{ "guardião real (Trans)",	4073 },
-			{ "feiticeiro (Trans)",		4074 },
-			{ "trovador (Trans)",		4075 },
-			{ "musa (Trans)",		4076 },
-			{ "shura (Trans)",			4077 },
-			{ "bioquímico (Trans)",		4078 },
-			{ "renegado (Trans)",	4079 },
+			{ "guardião real2",	4073 },
+			{ "feiticeiro2",		4074 },
+			{ "trovador2",		4075 },
+			{ "shura2",		4076 },
+			{ "bioquímico2",		4078 },
+			{ "renegado2",	4079 },
+			{ "Mini Cavaleiro Rúnico",		4096 },
+			{ "Mini Arcano",	4097 },
+			{ "Mini Sentinela",	4098 },
+			{ "Mini Arcebispo",	4099 },
+			{ "Mini Mecânico",	4100 },
+			{ "Mini Sicário",		4101 },
+			{ "Mini Guarda Real",		4102 },
+			{ "Mini Feiticeiro",	4103 },
+			{ "Mini Trovador",	4104 },
+			{ "Mini Musa",	4105 },
+			{ "Mini Shura",		4106 },
+			{ "Mini Bioquímico",	4107 },
+			{ "Mini Renegado",	4108 },
+			//{ "super novice e",	4190 },
+			//{ "super baby e",	4191 },
+			//{ "kagerou",		4211 },
+			//{ "oboro",		4212 },
 		};
 
 		for (i=0; i < ARRAYLENGTH(jobs); i++) {
@@ -1122,26 +1143,29 @@ ACMD_FUNC(jobchange)
 			clif_displaymessage(fd, "4040 Mini Arruaceiro         4041 Mini Alquimísta          4042 Mini Bardo     4043 Mini Odalisca");
 			clif_displaymessage(fd, "4045 Mini Super Aprendiz");
 			clif_displaymessage(fd, "---- 3rd Classes Bebê ----");
-			clif_displaymessage(fd, "4096 Mini Cavaleiro Rúnico    4097 Mini Arcano        4098 Mini Sentinela");
-			clif_displaymessage(fd, "4099 Mini Arcebispo    4100 Mini Mecânico       4101 Mini Sicário");
-			clif_displaymessage(fd, "4102 Mini Guarda Real    4103 Mini Feiticeiro      4104 Mini Trovador");
-			clif_displaymessage(fd, "4105 Mini Musa       4106 Mini Shura          4107 Mini Bioquímico");
+			clif_displaymessage(fd, "4096 Mini Cavaleiro Rúnico	4097 Mini Arcano        4098 Mini Sentinela");
+			clif_displaymessage(fd, "4099 Mini Arcebispo		4100 Mini Mecânico      4101 Mini Sicário");
+			clif_displaymessage(fd, "4102 Mini Guarda Real		4103 Mini Feiticeiro    4104 Mini Trovador");
+			clif_displaymessage(fd, "4105 Mini Musa				4106 Mini Shura         4107 Mini Bioquímico");
 			clif_displaymessage(fd, "4108 Mini Renegado");
-			clif_displaymessage(fd, "---- Montarias, modos e Outros ----");
+			/*clif_displaymessage(fd, "---- Montarias, modos e Outros ----");
 			clif_displaymessage(fd, "  13 Cavaleiro (Peco)    21 Crusader (Peco)  22 Wedding          26 Christmas");
 			clif_displaymessage(fd, "  27 Summer 4014 Lorde (Peco) 4022 Paladino (Peco)  4036 Mini Cavaleiro (Peco)");
 			clif_displaymessage(fd, "4044 Mini Templário (Peco) 4048 Mestre Taekwon (Union) 4080 Rune Knight (Dragon)");
 			clif_displaymessage(fd, "4081 Cavaleiro Rúnico T. (Dragon) 4082 Guarda Real (Gryphon)");
 			clif_displaymessage(fd, "4083 Guarda Real T. (Gryphon) 4084 Sentinela (Warg) 4085 Sentinela T. (Warg)");
-			clif_displaymessage(fd, "4086 Mecânico (Mado) 4087 Mecânico T. (Mado)");
+			clif_displaymessage(fd, "4086 Mecânico (Mado) 4087 Mecânico T. (Mado)");*/
 			return -1;
 		}
 	}
 
-	if (job == 13 || job == 21 || job == 22 || job == 26 || job == 27
-		|| job == 4014 || job == 4022 || job == 4036 || job == 4044 || job == 4048
+	if (job == 13 || job == 21 || job == 22 || job == 26 || job == 27 || job == 4014 || job == 4022 || job == 4036 || job == 4044 || job == 4048
+		|| (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2) || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2)
 	) // Deny direct transformation into dummy jobs
-		return 0;
+	{	
+		clif_displaymessage(fd, "Você não pode mudar para esta classe com este comando."); 
+ 		return 0;
+	}
 
 	if (pcdb_checkid(job))
 	{
@@ -1155,34 +1179,34 @@ ACMD_FUNC(jobchange)
 			clif_displaymessage(fd, "Por favor, insira o ID de uma classe (use: @job/@jobchange <Nome ou ID da classe>).");
 			clif_displaymessage(fd, "----- Aprendiz / 1st Classes -----");
 			clif_displaymessage(fd, "0 Aprendiz           1 Espadachim         2 Mago              3 Arqueiro");
-			clif_displaymessage(fd, "4 Noviço              5 Mercador            6 Gatuno");
+			clif_displaymessage(fd, "4 Noviço             5 Mercador           6 Gatuno");
 			clif_displaymessage(fd, "----- 2nd Classes -----");
-			clif_displaymessage(fd, " 7 Cavaleiro           8 Sacerdote             9 Bruxo               10 Ferreiro");
+			clif_displaymessage(fd, " 7 Cavaleiro         8 Sacerdote            9 Bruxo             10 Ferreiro");
 			clif_displaymessage(fd, "11 Caçador           12 Mercenário          14 Templário        15 Monge");
-			clif_displaymessage(fd, "16 Sábio              17 Arruaceiro           18 Alquemista        19 Bardo");
+			clif_displaymessage(fd, "16 Sábio             17 Arruaceiro          18 Alquemista       19 Bardo");
 			clif_displaymessage(fd, "20 Odalisca");
 			clif_displaymessage(fd, "----- Aprendiz T. / 1st Transclasses -----");
-			clif_displaymessage(fd, "4001 Aprendiz T.    4002 Espadachim T. 4003 Mago T.      4004 Arqueiro T.");
-			clif_displaymessage(fd, "4005 Noviço T.       4006 Mercador T.    4007 Gatuno T.");
+			clif_displaymessage(fd, "4001 Aprendiz T.    4002 Espadachim T.		4003 Mago T.      4004 Arqueiro T.");
+			clif_displaymessage(fd, "4005 Noviço T.      4006 Mercador T.		4007 Gatuno T.");
 			clif_displaymessage(fd, "----- 2nd Transclasses -----");
-			clif_displaymessage(fd, "4008 Lorde          4009 Sumo Sacerdote  4010 Arquimago    4011 Mestre-Ferreiro");
-			clif_displaymessage(fd, "4012 Atirador       4013 Algoz                 4015 Paladino         4016 Mestre");
-			clif_displaymessage(fd, "4017 Professor     4018 Desordeiro         4019 Criador          4020 Menestrel");
+			clif_displaymessage(fd, "4008 Lorde         4009 Sumo Sacerdote		4010 Arquimago    4011 Mestre-Ferreiro");
+			clif_displaymessage(fd, "4012 Atirador      4013 Algoz				4015 Paladino     4016 Mestre");
+			clif_displaymessage(fd, "4017 Professor     4018 Desordeiro			4019 Criador      4020 Menestrel");
 			clif_displaymessage(fd, "4021 Cigana");
 			clif_displaymessage(fd, "----- 3rd Classes (3rd normal) -----");
-			clif_displaymessage(fd, "4054 Cavaleiro Rúnico        4055 Arcano                   4056 Sentinela      4057 Arcebispo");
-			clif_displaymessage(fd, "4058 Mecânico                4059 Sicário                  4066 Guarda Real    4067 Feiticeiro");
-			clif_displaymessage(fd, "4068 Trovador                4069 Musa                     4070 Sura           4071 Bioquímico");
+			clif_displaymessage(fd, "4054 Cavaleiro Rúnico        4055 Arcano         4056 Sentinela      4057 Arcebispo");
+			clif_displaymessage(fd, "4058 Mecânico                4059 Sicário        4066 Guarda Real    4067 Feiticeiro");
+			clif_displaymessage(fd, "4068 Trovador                4069 Musa           4070 Sura           4071 Bioquímico");
 			clif_displaymessage(fd, "4072 Renegado");
 			clif_displaymessage(fd, "----- 3rd Classes (3rd Transclasses) -----");
-			clif_displaymessage(fd, "4060 Cavaleiro Rúnico        4061 Arcano                   4062 Sentinela      4063 Arcebispo");
-			clif_displaymessage(fd, "4064 Mecânico                4065 Sicário                  4073 Guarda Real    4074 Feiticeiro");
-			clif_displaymessage(fd, "4075 Trovador                4076 Musa                     4077 Sura           4078 Bioquímico");
+			clif_displaymessage(fd, "4060 Cavaleiro Rúnico        4061 Arcano         4062 Sentinela      4063 Arcebispo");
+			clif_displaymessage(fd, "4064 Mecânico                4065 Sicário        4073 Guarda Real    4074 Feiticeiro");
+			clif_displaymessage(fd, "4075 Trovador                4076 Musa           4077 Sura           4078 Bioquímico");
 			clif_displaymessage(fd, "4079 Renegado");
 			clif_displaymessage(fd, "----- Classes expandidas -----");
-			clif_displaymessage(fd, "  23 Super Aprendiz	24 Justiceiro        25 Ninja            26 Xmas");
-			clif_displaymessage(fd, "  27 Summer         4046 Taekwon        4047 Mestre Taekwon	4049 Espiritualista");
-			clif_displaymessage(fd, "4050 Gangsi         4051 Death Knight   4052 Dark Collector");
+			clif_displaymessage(fd, "  23 Super Aprendiz	24 Justiceiro       25 Ninja				26 Xmas");
+			clif_displaymessage(fd, "  27 Summer			4046 Taekwon        4047 Mestre Taekwon		4049 Espiritualista");
+			clif_displaymessage(fd, "4050 Gangsi			4051 Death Knight   4052 Dark Collector");
 			clif_displaymessage(fd, "---- 1st e 2nd Classes Bebê ----");
 			clif_displaymessage(fd, "4023 Mini Aprendiz           4024 Mini Espadachim          4025 Mini Mago      4026 Mini Arqueiro");
 			clif_displaymessage(fd, "4027 Mini Noviço             4028 Mini Mercador            4029 Mini Gatuno    4030 Mini Cavaleiro");
@@ -1191,18 +1215,18 @@ ACMD_FUNC(jobchange)
 			clif_displaymessage(fd, "4040 Mini Arruaceiro         4041 Mini Alquimísta          4042 Mini Bardo     4043 Mini Odalisca");
 			clif_displaymessage(fd, "4045 Mini Super Aprendiz");
 			clif_displaymessage(fd, "---- 3rd Classes Bebê ----");
-			clif_displaymessage(fd, "4096 Mini Cavaleiro Rúnico    4097 Mini Arcano        4098 Mini Sentinela");
-			clif_displaymessage(fd, "4099 Mini Arcebispo    4100 Mini Mecânico       4101 Mini Sicário");
-			clif_displaymessage(fd, "4102 Mini Guarda Real    4103 Mini Feiticeiro      4104 Mini Trovador");
-			clif_displaymessage(fd, "4105 Mini Musa       4106 Mini Shura          4107 Mini Bioquímico");
+			clif_displaymessage(fd, "4096 Mini Cavaleiro Rúnico     4097 Mini Arcano        4098 Mini Sentinela");
+			clif_displaymessage(fd, "4099 Mini Arcebispo			4100 Mini Mecânico      4101 Mini Sicário");
+			clif_displaymessage(fd, "4102 Mini Guarda Real			4103 Mini Feiticeiro    4104 Mini Trovador");
+			clif_displaymessage(fd, "4105 Mini Musa					4106 Mini Shura         4107 Mini Bioquímico");
 			clif_displaymessage(fd, "4108 Mini Renegado");
-			clif_displaymessage(fd, "---- Montarias, modos e Outros ----");
+			/*clif_displaymessage(fd, "---- Montarias, modos e Outros ----");
 			clif_displaymessage(fd, "  13 Cavaleiro (Peco)    21 Crusader (Peco)  22 Wedding          26 Christmas");
 			clif_displaymessage(fd, "  27 Summer 4014 Lorde (Peco) 4022 Paladino (Peco)  4036 Mini Cavaleiro (Peco)");
 			clif_displaymessage(fd, "4044 Mini Templário (Peco) 4048 Mestre Taekwon (Union) 4080 Rune Knight (Dragon)");
 			clif_displaymessage(fd, "4081 Cavaleiro Rúnico T. (Dragon) 4082 Guarda Real (Gryphon)");
 			clif_displaymessage(fd, "4083 Guarda Real T. (Gryphon) 4084 Sentinela (Warg) 4085 Sentinela T. (Warg)");
-			clif_displaymessage(fd, "4086 Mecânico (Mado) 4087 Mecânico T. (Mado)");
+			clif_displaymessage(fd, "4086 Mecânico (Mado) 4087 Mecânico T. (Mado)");*/
 		return -1;
 	}
 
