@@ -2015,7 +2015,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 						if( level > 100 )
 							skillratio += skillratio * (level - 100) / 200;
 						if( sstatus->rhw.ele == ELE_FIRE )
-							skillratio +=  skillratio * 1/2;
+							skillratio +=  skillratio / 2;
 					}
 					break;
 				case RK_CRUSHSTRIKE:
