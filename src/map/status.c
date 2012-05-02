@@ -355,7 +355,7 @@ void initChangeTables(void)
 	set_sc( LK_CONCENTRATION     , SC_CONCENTRATION   , SI_CONCENTRATION   , SCB_BATK|SCB_WATK|SCB_HIT|SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_DSPD );
 	set_sc( LK_TENSIONRELAX      , SC_TENSIONRELAX    , SI_TENSIONRELAX    , SCB_REGEN );
 	set_sc( LK_BERSERK           , SC_BERSERK         , SI_BERSERK         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2|SCB_FLEE|SCB_SPEED|SCB_ASPD|SCB_MAXHP|SCB_REGEN );
-	set_sc( HP_ASSUMPTIO         , SC_ASSUMPTIO       , SI_ASSUMPTIO       , SCB_NONE );
+	set_sc( HP_ASSUMPTIO         , SC_ASSUMPTIO       , SI_ASSUMPTIO       , SCB_MDEF|SCB_DEF);
 	add_sc( HP_BASILICA          , SC_BASILICA        );
 	set_sc( HW_MAGICPOWER        , SC_MAGICPOWER      , SI_MAGICPOWER      , SCB_MATK );
 	add_sc( PA_SACRIFICE         , SC_SACRIFICE       );
@@ -464,7 +464,7 @@ void initChangeTables(void)
 
 	set_sc( CASH_BLESSING        , SC_BLESSING        , SI_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
 	set_sc( CASH_INCAGI          , SC_INCREASEAGI     , SI_INCREASEAGI     , SCB_AGI|SCB_SPEED );
-	set_sc( CASH_ASSUMPTIO       , SC_ASSUMPTIO       , SI_ASSUMPTIO       , SCB_NONE );
+	set_sc( CASH_ASSUMPTIO       , SC_ASSUMPTIO       , SI_ASSUMPTIO       , SCB_MDEF|SCB_MDEF2 );
 
 	//set_sc( ALL_PARTYFLEE        , SC_INCFLEE         , SI_PARTYFLEE       , SCB_NONE );
 	set_sc( ALL_ODINS_POWER      , SC_ODINS_POWER     , SI_ODINS_POWER     , SCB_MATK|SCB_BATK|SCB_MDEF|SCB_DEF );
@@ -4479,6 +4479,10 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STEELBODY])
 		return 90;
 #endif
+#ifdef RENEWAL
+	if(sc->data[SC_ASSUMPTIO])
+		def += 200;
+#endif
 	if(sc->data[SC_ARMORCHANGE])
 		def += sc->data[SC_ARMORCHANGE]->val2;
 	if(sc->data[SC_DRUMBATTLE])
@@ -4593,6 +4597,10 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 #ifndef RENEWAL
 	if(sc->data[SC_STEELBODY])
 		return 90;
+#endif
+#ifdef RENEWAL
+	if(sc->data[SC_ASSUMPTIO])
+		mdef += 200;
 #endif
 	if(sc->data[SC_ARMORCHANGE])
 		mdef += sc->data[SC_ARMORCHANGE]->val3;
@@ -7961,9 +7969,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			opt_flag = 0;
 			break;
 		case SC_ASSUMPTIO:
+#ifndef RENEWAL
 			sc->opt3 |= OPT3_ASSUMPTIO;
 			opt_flag = 0;
 			break;
+#endif
 		case SC_WARM: //SG skills [Komurka]
 			sc->opt3 |= OPT3_WARM;
 			opt_flag = 0;
@@ -8813,9 +8823,11 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		opt_flag = 0;
 		break;
 	case SC_ASSUMPTIO:
+#ifndef RENEWAL
 		sc->opt3 &= ~OPT3_ASSUMPTIO;
 		opt_flag = 0;
 		break;
+#endif
 	case SC_WARM: //SG skills [Komurka]
 		sc->opt3 &= ~OPT3_WARM;
 		opt_flag = 0;
